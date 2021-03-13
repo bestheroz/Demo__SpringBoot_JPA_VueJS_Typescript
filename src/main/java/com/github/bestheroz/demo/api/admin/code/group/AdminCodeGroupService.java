@@ -1,0 +1,21 @@
+package com.github.bestheroz.demo.api.admin.code.group;
+
+import com.github.bestheroz.demo.api.entity.code.TableCodeRepository;
+import com.github.bestheroz.demo.api.entity.code.group.TableCodeGroupRepository;
+import javax.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Slf4j
+@Service
+public class AdminCodeGroupService {
+  @Resource private TableCodeGroupRepository tableCodeGroupRepository;
+  @Resource private TableCodeRepository tableCodeRepository;
+
+  @Transactional
+  public void delete(final String codeGroup) {
+    this.tableCodeRepository.deleteByCodeGroup(codeGroup);
+    this.tableCodeGroupRepository.deleteById(codeGroup);
+  }
+}
