@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+    branches-ignore: [ main, RC/** ]
+
+jobs:
+  npm-test:
+    name: npm install & lint
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+        node-version: [ 14 ]
+
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@main
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node
+        uses: actions/cache@main
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: npm install
+        run: |
+          cd vue
+          npm ci
+        env:
+          CI: true
+
+      - uses: ./.github/actions/test
