@@ -77,7 +77,7 @@ management:
     enabled-by-default: false
 variable:
   app:
-    title: Demo Of (SpringBoot + JPA + VueJs + Typescript)
+    title: Demo of (SpringBoot + JPA + VueJs + Typescript)
 ---
 spring:
   config:
