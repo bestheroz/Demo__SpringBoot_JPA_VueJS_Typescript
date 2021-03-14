@@ -26,9 +26,8 @@ public class AuthController {
 
   @PostMapping(value = "/login")
   @ResponseBody
-  ResponseEntity<ApiResult> login(@RequestBody final TableMemberEntity tableMemberEntity) {
-    return Result.ok(
-        this.authService.login(tableMemberEntity.getId(), tableMemberEntity.getPassword()));
+  ResponseEntity<ApiResult> login(@RequestBody final TableMemberEntity payload) {
+    return Result.ok(this.authService.login(payload.getId(), payload.getPassword()));
   }
 
   @GetMapping(value = "/me")
@@ -47,9 +46,8 @@ public class AuthController {
   }
 
   @PostMapping(value = "/initPassword")
-  ResponseEntity<ApiResult> initPassword(@RequestBody final TableMemberEntity tableMemberEntity) {
-    this.authService.initPassword(tableMemberEntity.getId(), tableMemberEntity.getPassword());
-    return Result.ok();
+  ResponseEntity<ApiResult> initPassword(@RequestBody final TableMemberEntity payload) {
+    return Result.ok(this.authService.initPassword(payload.getId(), payload.getPassword()));
   }
 
   @DeleteMapping(value = "/logout")

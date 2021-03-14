@@ -85,11 +85,7 @@ public class AuthService implements UserDetailsService {
               this.tableMemberRepository.save(tableMemberEntity);
               return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
             })
-        .orElseThrow(
-            () -> {
-              // 1. 유저가 없으면
-              return new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER);
-            });
+        .orElseThrow(() -> new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER));
   }
 
   void logout() {
@@ -121,10 +117,10 @@ public class AuthService implements UserDetailsService {
             });
   }
 
-  void initPassword(final String id, final String password) {
-    this.tableMemberRepository
+  UserVO initPassword(final String id, final String password) {
+    return this.tableMemberRepository
         .findById(id)
-        .ifPresentOrElse(
+        .map(
             tableMemberEntity -> {
               if (StringUtils.isNotEmpty(tableMemberEntity.getPassword())) {
                 log.warn(ExceptionCode.FAIL_INVALID_REQUEST.toString());
@@ -133,11 +129,10 @@ public class AuthService implements UserDetailsService {
 
               tableMemberEntity.setPassword(password);
               this.tableMemberRepository.save(tableMemberEntity);
-            },
-            () -> {
-              // 1. 유저가 없으면
-              log.warn(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER.toString());
-              throw new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER);
-            });
+              final UserVO userVO = new UserVO();
+              BeanUtils.copyProperties(tableMemberEntity, userVO);
+              return userVO;
+            })
+        .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
   }
 }
