@@ -11,6 +11,8 @@ public interface TableMemberMenuRepository
     extends CrudRepository<TableMemberMenuEntity, TableMemberMenuEntityId> {
   List<TableMemberMenuEntity> findAllByAuthority(Integer authority, Sort sort);
 
+  List<TableMemberMenuEntity> findAllById(Integer authority);
+
   void deleteByAuthorityAndIdNotIn(Integer authority, List<Integer> ids);
 
   @Query("DELETE FROM MEMBER_MENU WHERE id = (:id)")

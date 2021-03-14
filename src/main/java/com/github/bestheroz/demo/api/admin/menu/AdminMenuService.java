@@ -1,6 +1,5 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuEntity;
 import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuRepository;
 import com.github.bestheroz.demo.api.entity.menu.TableMenuEntity;
 import com.github.bestheroz.demo.api.entity.menu.TableMenuRepository;
@@ -17,9 +16,13 @@ public class AdminMenuService {
   @Transactional
   public void put(final TableMenuEntity tableMenuEntity, final Integer id) {
     this.tableMenuRepository.save(tableMenuEntity);
-    final TableMemberMenuEntity tableMemberMenuRepository = new TableMemberMenuEntity();
-    BeanUtils.copyProperties(tableMenuEntity, tableMemberMenuRepository);
-    this.tableMemberMenuRepository.save(tableMemberMenuRepository);
+    this.tableMemberMenuRepository
+        .findAllById(id)
+        .forEach(
+            item -> {
+              BeanUtils.copyProperties(tableMenuEntity, item);
+              this.tableMemberMenuRepository.save(item);
+            });
   }
 
   @Transactional
