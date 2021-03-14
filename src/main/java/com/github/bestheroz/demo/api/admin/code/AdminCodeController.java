@@ -44,17 +44,16 @@ public class AdminCodeController {
       @PathVariable(value = "codeGroup") final String codeGroup,
       @PathVariable(value = "code") final String code,
       @RequestBody final TableCodeEntity tableCodeEntity) {
-    this.tableCodeRepository
-        .findById(new TableCodeEntityId(codeGroup, code))
-        .ifPresentOrElse(
-            (item) -> {
-              BeanUtils.copyProperties(tableCodeEntity, item);
-              this.tableCodeRepository.save(item);
-            },
-            () -> {
-              throw BusinessException.FAIL_NO_DATA_SUCCESS;
-            });
-    return Result.ok();
+    return Result.ok(
+        this.tableCodeRepository
+            .findById(new TableCodeEntityId(codeGroup, code))
+            .map(
+                (item) -> {
+                  BeanUtils.copyProperties(tableCodeEntity, item);
+                  this.tableCodeRepository.save(item);
+                  return item;
+                })
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
   @DeleteMapping(value = "{codeGroup}/{code}")
