@@ -77,26 +77,6 @@ public class JwtTokenProvider {
   public UserVO getUserVO(final String token) {
     Assert.hasText(token, "token parameter must not be empty or null");
     try {
-      log.debug(
-          JWT.require(ALGORITHM)
-              .acceptExpiresAt(expiresAtAccessToken)
-              .build()
-              .verify(token)
-              .getClaims()
-              .get("userVO")
-              .asString());
-      log.debug(
-          "{}",
-          MapperUtils.getObjectMapper()
-              .readValue(
-                  JWT.require(ALGORITHM)
-                      .acceptExpiresAt(expiresAtAccessToken)
-                      .build()
-                      .verify(token)
-                      .getClaims()
-                      .get("userVO")
-                      .asString(),
-                  UserVO.class));
       return MapperUtils.getObjectMapper()
           .readValue(
               JWT.require(ALGORITHM)
