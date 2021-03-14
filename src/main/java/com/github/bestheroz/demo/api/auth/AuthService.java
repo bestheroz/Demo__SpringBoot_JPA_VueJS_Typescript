@@ -6,12 +6,12 @@ import com.github.bestheroz.standard.common.authenticate.UserVO;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
-import com.github.bestheroz.standard.common.util.MapperUtils;
 import java.time.Instant;
 import java.util.Map;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -75,7 +75,8 @@ public class AuthService implements UserDetailsService {
               }
 
               tableMemberEntity.setLoginFailCnt(0);
-              final UserVO userVO = MapperUtils.toObject(tableMemberEntity, UserVO.class);
+              final UserVO userVO = new UserVO();
+              BeanUtils.copyProperties(tableMemberEntity, userVO);
               final String accessToken = JwtTokenProvider.createAccessToken(userVO);
               final String refreshToken = JwtTokenProvider.createRefreshToken(userVO);
               SecurityContextHolder.getContext()
@@ -106,7 +107,8 @@ public class AuthService implements UserDetailsService {
         .findByIdAndToken(JwtTokenProvider.getUserPk(refreshToken), refreshToken)
         .map(
             tableMemberEntity -> {
-              final UserVO userVO = MapperUtils.toObject(tableMemberEntity, UserVO.class);
+              final UserVO userVO = new UserVO();
+              BeanUtils.copyProperties(tableMemberEntity, userVO);
               final String newAccessToken = JwtTokenProvider.createAccessToken(userVO);
               SecurityContextHolder.getContext()
                   .setAuthentication(JwtTokenProvider.getAuthentication(newAccessToken));

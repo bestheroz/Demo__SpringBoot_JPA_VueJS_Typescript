@@ -17,7 +17,6 @@ ext.comonsIoVersion = "2.8.0"
 ext.tikaVersion = "1.25"
 ext.poiVersion = "5.0.0"
 ext.sentryVersion = "4.3.0"
-ext.gsonVersion = "2.8.6"
 ext.h2Version = "1.4.200"
 
 dependencies {
@@ -30,7 +29,6 @@ dependencies {
     implementation "org.projectlombok:lombok:$lombokVersion"
     implementation "com.auth0:java-jwt:$javaJwtVersion"
     implementation "org.apache.commons:commons-lang3:$lang3Version"
-    implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "org.apache.tika:tika-core:$tikaVersion"
     implementation "commons-io:commons-io:$comonsIoVersion"
     implementation "org.apache.poi:poi:$poiVersion"
