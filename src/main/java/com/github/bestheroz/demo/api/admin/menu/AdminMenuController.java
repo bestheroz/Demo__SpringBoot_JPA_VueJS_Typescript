@@ -59,8 +59,8 @@ public class AdminMenuController {
   }
 
   @PostMapping(value = "save")
-  public ResponseEntity<ApiResult> save(@RequestBody final List<TableMenuEntity> menus) {
-    menus.forEach(menu -> this.tableMenuRepository.save(menu));
+  public ResponseEntity<ApiResult> save(@RequestBody final List<TableMenuEntity> payload) {
+    payload.forEach(menu -> this.tableMenuRepository.save(menu));
     return Result.created();
   }
 }

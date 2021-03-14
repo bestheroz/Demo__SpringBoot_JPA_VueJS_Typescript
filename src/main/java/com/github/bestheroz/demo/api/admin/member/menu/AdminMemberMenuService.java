@@ -16,10 +16,10 @@ public class AdminMemberMenuService {
 
   @Transactional
   public List<TableMemberMenuEntity> save(
-      final Integer authority, final List<TableMemberMenuEntity> menus) {
+      final Integer authority, final List<TableMemberMenuEntity> payload) {
     this.tableMemberMenuRepository.deleteByAuthorityAndIdNotIn(
-        authority, menus.stream().map(TableMemberMenuEntity::getId).collect(Collectors.toList()));
-    return menus.stream()
+        authority, payload.stream().map(TableMemberMenuEntity::getId).collect(Collectors.toList()));
+    return payload.stream()
         .map(
             menu -> {
               return this.tableMemberMenuRepository

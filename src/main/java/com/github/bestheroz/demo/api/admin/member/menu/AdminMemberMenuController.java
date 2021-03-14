@@ -31,7 +31,7 @@ public class AdminMemberMenuController {
   @PostMapping(value = "save")
   public ResponseEntity<ApiResult> save(
       @PathVariable(value = "authority") final Integer authority,
-      @RequestBody final List<TableMemberMenuEntity> menus) {
-    return Result.created(this.adminMemberMenuService.save(authority, menus));
+      @RequestBody final List<TableMemberMenuEntity> payload) {
+    return Result.created(this.adminMemberMenuService.save(authority, payload));
   }
 }
