@@ -5,7 +5,7 @@
       reload-button
       @click:reload="getList"
       add-button
-      @click:add="dialog = true"
+      @click:add="showAddDialog"
       save-button
       save-text="순서저장"
       @click:save="saveItems"
@@ -25,7 +25,7 @@
                 v-for="item in items"
                 class="elevation-1"
                 dense
-                @dblclick="onEdit(item)"
+                @dblclick="showEditDialog(item)"
               >
                 <v-list-item-icon>
                   <v-icon v-text="item.icon" />
@@ -53,8 +53,9 @@
     <menu-edit-dialog
       v-model="editItem"
       :dialog.sync="dialog"
-      @finished="getList"
-      v-if="editItem"
+      @created="onCreated"
+      @modified="onUpdated"
+      v-if="dialog"
     />
   </div>
 </template>
@@ -68,6 +69,7 @@ import MenuEditDialog from "@/views/admin/menu/components/MenuEditDialog.vue";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
 import { defaultTableMenuEntity } from "@/common/values";
+import _ from "lodash";
 
 interface MenuVO extends TableMenuEntity {
   children: TableMenuEntity[];
@@ -105,8 +107,27 @@ export default class extends Vue {
     this.items = response?.data || [];
   }
 
-  protected onEdit(value: TableMenuEntity): void {
-    this.editItem = { ...value };
+  protected onCreated(value: TableMenuEntity): void {
+    this.items = [value, ...this.items];
+  }
+
+  protected onUpdated(value: TableMenuEntity): void {
+    const findIndex = this.items.findIndex(
+      (item) => item.id === this.editItem.id,
+    );
+    this.items = [
+      ...this.items.slice(0, findIndex),
+      value,
+      ...this.items.slice(findIndex + 1),
+    ];
+  }
+
+  protected showAddDialog(): void {
+    this.editItem = defaultTableMenuEntity();
+    this.dialog = true;
+  }
+  protected showEditDialog(value: TableMenuEntity): void {
+    this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
 
@@ -120,7 +141,9 @@ export default class extends Vue {
       this.saving = false;
       if (response?.code?.startsWith("S")) {
         await this.$store.dispatch("initDrawers");
-        this.getList().then();
+        this.items = this.items.filter(
+          (item) => item.id !== (response.data?.id || 0),
+        );
       }
     }
   }

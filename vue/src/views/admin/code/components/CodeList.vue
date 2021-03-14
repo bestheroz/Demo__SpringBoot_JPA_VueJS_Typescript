@@ -92,6 +92,7 @@ import { confirmDelete } from "@/utils/alerts";
 import CodeEditDialog from "@/views/admin/code/components/CodeEditDialog.vue";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
 import { defaultTableCodeEntity } from "@/common/values";
+import _ from "lodash";
 
 @Component({
   name: "CodeList",
@@ -189,7 +190,7 @@ export default class extends Vue {
   }
 
   protected editItem(value: TableCodeEntity): void {
-    this.item = { ...value };
+    this.item = _.cloneDeep(value);
     this.dialog = true;
   }
 

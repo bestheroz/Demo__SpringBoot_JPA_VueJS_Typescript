@@ -68,6 +68,7 @@ import CodeGroupEditDialog from "@/views/admin/code/components/CodeGroupEditDial
 import { confirmDelete } from "@/utils/alerts";
 import qs from "qs";
 import { defaultTableCodeGroupEntity } from "@/common/values";
+import _ from "lodash";
 
 @Component({
   name: "CodeGroupList",
@@ -147,7 +148,7 @@ export default class extends Vue {
   }
 
   protected editItem(value: TableCodeGroupEntity): void {
-    this.item = { ...value };
+    this.item = _.cloneDeep(value);
     this.dialog = true;
   }
 

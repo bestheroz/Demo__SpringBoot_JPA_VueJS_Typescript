@@ -117,7 +117,7 @@ export default class extends Vue {
     if (!isValid) {
       return;
     }
-    this.isNew ? await this.create() : await this.put();
+    this.isNew ? await this.create() : await this.update();
   }
 
   protected async create(): Promise<void> {
@@ -130,11 +130,11 @@ export default class extends Vue {
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initDrawers");
       this.syncedDialog = false;
-      this.$emit("finished");
+      this.$emit("created", response.data);
     }
   }
 
-  protected async put(): Promise<void> {
+  protected async update(): Promise<void> {
     this.saving = true;
     const response = await putApi<TableMenuEntity>(
       `${this.ENDPOINT_URL}${this.item.id}/`,
@@ -144,7 +144,7 @@ export default class extends Vue {
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initDrawers");
       this.syncedDialog = false;
-      this.$emit("finished");
+      this.$emit("modified", response.data);
     }
   }
 
