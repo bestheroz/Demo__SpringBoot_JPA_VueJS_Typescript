@@ -2,10 +2,12 @@ package com.github.bestheroz.demo.api.admin.code.group;
 
 import com.github.bestheroz.demo.api.entity.code.group.TableCodeGroupEntity;
 import com.github.bestheroz.demo.api.entity.code.group.TableCodeGroupRepository;
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,23 +31,29 @@ public class AdminCodeGroupController {
   }
 
   @PostMapping
-  ResponseEntity<ApiResult> post(@RequestBody final TableCodeGroupEntity tableCodeGroupEntity) {
-    this.tableCodeGroupRepository.save(tableCodeGroupEntity);
-    return Result.created();
+  ResponseEntity<ApiResult> post(@RequestBody final TableCodeGroupEntity payload) {
+    this.tableCodeGroupRepository.save(payload);
+    return Result.created(payload);
   }
 
   @PutMapping(value = "{codeGroup}")
   ResponseEntity<ApiResult> put(
       @PathVariable(value = "codeGroup") final String codeGroup,
-      @RequestBody final TableCodeGroupEntity tableCodeGroupEntity) {
-    tableCodeGroupEntity.setCodeGroup(codeGroup);
-    this.tableCodeGroupRepository.save(tableCodeGroupEntity);
-    return Result.ok();
+      @RequestBody final TableCodeGroupEntity payload) {
+    return Result.ok(
+        this.tableCodeGroupRepository
+            .findById(codeGroup)
+            .map(
+                (item) -> {
+                  BeanUtils.copyProperties(payload, item);
+                  this.tableCodeGroupRepository.save(item);
+                  return item;
+                })
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
   @DeleteMapping(value = "{codeGroup}")
   ResponseEntity<ApiResult> delete(@PathVariable(value = "codeGroup") final String codeGroup) {
-    this.adminCodeGroupService.delete(codeGroup);
-    return Result.ok();
+    return Result.ok(this.adminCodeGroupService.delete(codeGroup));
   }
 }

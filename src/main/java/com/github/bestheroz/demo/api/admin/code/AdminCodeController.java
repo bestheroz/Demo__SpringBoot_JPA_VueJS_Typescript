@@ -33,23 +33,23 @@ public class AdminCodeController {
   @PostMapping(value = "{codeGroup}")
   public ResponseEntity<ApiResult> post(
       @PathVariable(value = "codeGroup") final String codeGroup,
-      @RequestBody final TableCodeEntity tableCodeEntity) {
-    tableCodeEntity.setCodeGroup(codeGroup);
-    this.tableCodeRepository.save(tableCodeEntity);
-    return Result.created();
+      @RequestBody final TableCodeEntity payload) {
+    payload.setCodeGroup(codeGroup);
+    this.tableCodeRepository.save(payload);
+    return Result.created(payload);
   }
 
   @PutMapping(value = "{codeGroup}/{code}")
   public ResponseEntity<ApiResult> put(
       @PathVariable(value = "codeGroup") final String codeGroup,
       @PathVariable(value = "code") final String code,
-      @RequestBody final TableCodeEntity tableCodeEntity) {
+      @RequestBody final TableCodeEntity payload) {
     return Result.ok(
         this.tableCodeRepository
             .findById(new TableCodeEntityId(codeGroup, code))
             .map(
                 (item) -> {
-                  BeanUtils.copyProperties(tableCodeEntity, item);
+                  BeanUtils.copyProperties(payload, item);
                   this.tableCodeRepository.save(item);
                   return item;
                 })
@@ -60,7 +60,14 @@ public class AdminCodeController {
   public ResponseEntity<ApiResult> delete(
       @PathVariable(value = "codeGroup") final String codeGroup,
       @PathVariable(value = "code") final String code) {
-    this.tableCodeRepository.deleteById(new TableCodeEntityId(codeGroup, code));
-    return Result.ok();
+    return Result.ok(
+        this.tableCodeRepository
+            .findById(new TableCodeEntityId(codeGroup, code))
+            .map(
+                (item) -> {
+                  this.tableCodeRepository.deleteById(new TableCodeEntityId(codeGroup, code));
+                  return item;
+                })
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 }

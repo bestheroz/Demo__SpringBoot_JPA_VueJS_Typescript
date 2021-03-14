@@ -15,18 +15,18 @@ public class AdminMenuService {
   @Resource private TableMemberMenuRepository tableMemberMenuRepository;
 
   @Transactional
-  public TableMenuEntity put(final TableMenuEntity tableMenuEntity, final Integer id) {
+  public TableMenuEntity put(final TableMenuEntity payload, final Integer id) {
     return this.tableMenuRepository
         .findById(id)
         .map(
             (item) -> {
-              BeanUtils.copyProperties(tableMenuEntity, item);
+              BeanUtils.copyProperties(payload, item);
               this.tableMenuRepository.save(item);
               this.tableMemberMenuRepository
                   .findAllById(id)
                   .forEach(
                       memberMenu -> {
-                        BeanUtils.copyProperties(tableMenuEntity, memberMenu);
+                        BeanUtils.copyProperties(payload, memberMenu);
                         this.tableMemberMenuRepository.save(memberMenu);
                       });
               return item;
@@ -35,16 +35,15 @@ public class AdminMenuService {
   }
 
   @Transactional
-  public void delete(final Integer id) {
-    this.tableMenuRepository
+  public TableMenuEntity delete(final Integer id) {
+    return this.tableMenuRepository
         .findById(id)
-        .ifPresentOrElse(
+        .map(
             (item) -> {
               this.tableMenuRepository.deleteById(id);
               this.tableMemberMenuRepository.deleteAllById(id);
-            },
-            () -> {
-              throw BusinessException.FAIL_NO_DATA_SUCCESS;
-            });
+              return item;
+            })
+        .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
   }
 }

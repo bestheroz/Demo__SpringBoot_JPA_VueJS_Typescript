@@ -48,49 +48,53 @@ public class AdminMemberController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResult> post(@RequestBody final TableMemberEntity tableMemberEntity) {
-    this.tableMemberRepository.save(tableMemberEntity);
-    return Result.created();
+  public ResponseEntity<ApiResult> post(@RequestBody final TableMemberEntity payload) {
+    this.tableMemberRepository.save(payload);
+    return Result.created(payload);
   }
 
   @PatchMapping(value = "{id}")
   public ResponseEntity<ApiResult> patch(
-      @PathVariable(value = "id") final String id,
-      @RequestBody final TableMemberEntity tableMemberEntity) {
-    this.tableMemberRepository
-        .findById(id)
-        .ifPresentOrElse(
-            (item) -> {
-              item.setName(tableMemberEntity.getName());
-              item.setAuthority(tableMemberEntity.getAuthority());
-              item.setExpired(tableMemberEntity.getExpired());
-              item.setAvailable(tableMemberEntity.isAvailable());
-              this.tableMemberRepository.save(item);
-            },
-            () -> {
-              throw new BusinessException(BusinessException.FAIL_NO_DATA_SUCCESS);
-            });
-    return Result.ok();
+      @PathVariable(value = "id") final String id, @RequestBody final TableMemberEntity payload) {
+    return Result.ok(
+        this.tableMemberRepository
+            .findById(id)
+            .map(
+                (item) -> {
+                  item.setName(payload.getName());
+                  item.setAuthority(payload.getAuthority());
+                  item.setExpired(payload.getExpired());
+                  item.setAvailable(payload.isAvailable());
+                  this.tableMemberRepository.save(item);
+                  return item;
+                })
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
   @DeleteMapping(value = "{id}")
   public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final String id) {
-    this.tableMemberRepository.deleteById(id);
-    return Result.ok();
+    return Result.ok(
+        this.tableMemberRepository
+            .findById(id)
+            .map(
+                (item) -> {
+                  this.tableMemberRepository.deleteById(id);
+                  return item;
+                })
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
   @PostMapping(value = "{id}/resetPassword")
   public ResponseEntity<ApiResult> resetPassword(@PathVariable(value = "id") final String id) {
-    this.tableMemberRepository
-        .findById(id)
-        .ifPresentOrElse(
-            (item) -> {
-              item.setPassword(null);
-              this.tableMemberRepository.save(item);
-            },
-            () -> {
-              throw new BusinessException(BusinessException.FAIL_NO_DATA_SUCCESS);
-            });
-    return Result.ok();
+    return Result.ok(
+        this.tableMemberRepository
+            .findById(id)
+            .map(
+                (item) -> {
+                  item.setPassword(null);
+                  this.tableMemberRepository.save(item);
+                  return item;
+                })
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 }

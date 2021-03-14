@@ -41,23 +41,21 @@ public class AdminMenuController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResult> post(@RequestBody final TableMenuEntity tableMenuEntity) {
-    this.tableMenuRepository.save(tableMenuEntity);
-    return Result.created();
+  public ResponseEntity<ApiResult> post(@RequestBody final TableMenuEntity payload) {
+    this.tableMenuRepository.save(payload);
+    return Result.created(payload);
   }
 
   @PutMapping(value = "{id}")
   public ResponseEntity<ApiResult> put(
       @PathVariable(value = "id") final Integer id,
       @RequestBody final TableMenuEntity tableMenuEntity) {
-    this.adminMenuService.put(tableMenuEntity, id);
-    return Result.ok();
+    return Result.ok(this.adminMenuService.put(tableMenuEntity, id));
   }
 
   @DeleteMapping(value = "{id}")
   public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Integer id) {
-    this.adminMenuService.delete(id);
-    return Result.ok();
+    return Result.ok(this.adminMenuService.delete(id));
   }
 
   @PostMapping(value = "save")

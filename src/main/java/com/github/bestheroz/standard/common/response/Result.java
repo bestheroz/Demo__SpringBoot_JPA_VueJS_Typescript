@@ -11,8 +11,18 @@ public class Result {
 
   private Result() {}
 
-  public static ResponseEntity<ApiResult> created() { // TODO : created 적용좀 하자.
+  public static ResponseEntity<ApiResult> created() {
     return ResponseEntity.status(201).body(ApiResult.ok());
+  }
+
+  public static ResponseEntity<ApiResult> created(final Object data) {
+    if (data instanceof Optional) {
+      return ((Optional<?>) data)
+          .map(o -> ResponseEntity.status(201).body(ApiResult.ok(data)))
+          .orElseGet(() -> ResponseEntity.status(201).body(ApiResult.ok()));
+    } else {
+      return ResponseEntity.status(201).body(ApiResult.ok(data));
+    }
   }
 
   public static ResponseEntity<ApiResult> ok() {
