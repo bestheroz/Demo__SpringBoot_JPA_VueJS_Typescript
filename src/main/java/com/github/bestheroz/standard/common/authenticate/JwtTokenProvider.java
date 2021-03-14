@@ -3,6 +3,7 @@ package com.github.bestheroz.standard.common.authenticate;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.util.MapperUtils;
 import java.sql.Date;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -75,16 +77,18 @@ public class JwtTokenProvider {
   public UserVO getUserVO(final String token) {
     Assert.hasText(token, "token parameter must not be empty or null");
     try {
-      return MapperUtils.toObject(
-          JWT.require(ALGORITHM)
-              .acceptExpiresAt(expiresAtAccessToken)
-              .build()
-              .verify(token)
-              .getClaims()
-              .get("userVO")
-              .asString(),
-          UserVO.class);
-    } catch (final JWTVerificationException | NullPointerException e) {
+      return MapperUtils.getObjectMapper()
+          .readValue(
+              JWT.require(ALGORITHM)
+                  .acceptExpiresAt(expiresAtAccessToken)
+                  .build()
+                  .verify(token)
+                  .getClaims()
+                  .get("userVO")
+                  .asString(),
+              UserVO.class);
+    } catch (final JWTVerificationException | NullPointerException | JsonProcessingException e) {
+      log.warn(ExceptionUtils.getStackTrace(e));
       throw BusinessException.FAIL_TRY_LOGIN_FIRST;
     }
   }

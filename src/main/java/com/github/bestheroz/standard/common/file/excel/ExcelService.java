@@ -1,18 +1,19 @@
 package com.github.bestheroz.standard.common.file.excel;
 
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.util.FileUtils;
-import com.github.bestheroz.standard.common.util.MapperUtils;
 import com.github.bestheroz.standard.context.abstractview.AbstractExcelXView;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -24,6 +25,7 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.springframework.beans.BeanUtils;
 
 @Slf4j
 public class ExcelService extends AbstractExcelXView {
@@ -37,7 +39,7 @@ public class ExcelService extends AbstractExcelXView {
       final HttpServletResponse response) {
     @SuppressWarnings("unchecked")
     final List<ExcelVO> excelVOs = (List<ExcelVO>) model.get(AbstractExcelXView.EXCEL_VOS);
-    final JsonArray listData = MapperUtils.toJsonArray(model.get(AbstractExcelXView.LIST_DATA));
+    final List<?> listData = (List<?>) model.get(AbstractExcelXView.LIST_DATA);
     final String fileName =
         FileUtils.getEncodedFileName(request, (String) model.get(AbstractExcelXView.FILE_NAME));
 
@@ -82,18 +84,30 @@ public class ExcelService extends AbstractExcelXView {
   }
 
   private void addRowData(
-      final SXSSFSheet sheet, final List<ExcelVO> excelVOs, final JsonArray listData) {
+      final SXSSFSheet sheet, final List<ExcelVO> excelVOs, final List<?> listData) {
     for (int i = 0; i < listData.size(); i++) {
       if (i != 0 && i % 100 == 0) {
         log.debug("[Excel]{} write {} rows", sheet.getSheetName(), i + 1);
       }
       final SXSSFRow row = sheet.createRow(3 + i);
-      final JsonObject jo = listData.get(i).getAsJsonObject();
-      for (int j = 0; j < excelVOs.size(); j++) {
-        final String value = jo.get(excelVOs.get(j).getDbColName()).getAsString();
-        if (StringUtils.isNotEmpty(value)) {
-          this.writeColumnData(excelVOs, j, row.createCell(j), value);
+      final Object data = listData.get(i);
+      try {
+        for (int j = 0; j < excelVOs.size(); j++) {
+          final String dbColName = excelVOs.get(j).getDbColName();
+          final String value =
+              String.valueOf(
+                  Objects.requireNonNull(
+                          BeanUtils.findMethod(
+                              data.getClass(),
+                              "get" + dbColName.toUpperCase().charAt(0) + dbColName.substring(1)))
+                      .invoke(null));
+          if (StringUtils.isNotEmpty(value)) {
+            this.writeColumnData(excelVOs, j, row.createCell(j), value);
+          }
         }
+      } catch (final IllegalAccessException | InvocationTargetException e) {
+        log.warn(ExceptionUtils.getStackTrace(e));
+        throw new BusinessException(e);
       }
     }
   }

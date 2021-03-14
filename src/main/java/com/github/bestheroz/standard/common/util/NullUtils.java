@@ -1,7 +1,5 @@
 package com.github.bestheroz.standard.common.util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
@@ -52,24 +50,6 @@ public class NullUtils {
     }
   }
 
-  public boolean isEmpty(final JsonElement json) {
-    try {
-      if (json == null) {
-        return true;
-      }
-      if (json.isJsonObject()) {
-        return json.isJsonNull() || json.getAsJsonObject().entrySet().isEmpty();
-      } else if (json.isJsonArray()) {
-        return json.isJsonNull() || json.getAsJsonArray().size() == 0;
-      } else {
-        return json.isJsonNull();
-      }
-    } catch (final Throwable e) {
-      log.warn(ExceptionUtils.getStackTrace(e));
-      return true;
-    }
-  }
-
   public boolean isEmpty(final MultipartFile multipartFile) {
     try {
       return multipartFile == null || multipartFile.isEmpty();
@@ -97,10 +77,6 @@ public class NullUtils {
     }
   }
 
-  public boolean isNotEmpty(final JsonElement json) {
-    return !isEmpty(json);
-  }
-
   public boolean isNotEmpty(final MultipartFile multipartFile) {
     return !isEmpty(multipartFile);
   }
@@ -123,15 +99,6 @@ public class NullUtils {
   }
 
   public int size(final Set<?> list) {
-    try {
-      return list == null ? 0 : list.size();
-    } catch (final Throwable e) {
-      log.warn(ExceptionUtils.getStackTrace(e));
-      return 0;
-    }
-  }
-
-  public int size(final JsonArray list) {
     try {
       return list == null ? 0 : list.size();
     } catch (final Throwable e) {

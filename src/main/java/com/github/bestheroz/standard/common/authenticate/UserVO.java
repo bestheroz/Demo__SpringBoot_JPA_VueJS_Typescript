@@ -1,15 +1,18 @@
 package com.github.bestheroz.standard.common.authenticate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserVO implements UserDetails, Serializable {
   private static final long serialVersionUID = -3806331610004769750L;
@@ -19,6 +22,7 @@ public class UserVO implements UserDetails, Serializable {
   private String theme;
 
   @Override
+  @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
   }
