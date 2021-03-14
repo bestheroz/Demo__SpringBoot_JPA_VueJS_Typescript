@@ -3,10 +3,12 @@ package com.github.bestheroz.demo.api.admin.code;
 import com.github.bestheroz.demo.api.entity.code.TableCodeEntity;
 import com.github.bestheroz.demo.api.entity.code.TableCodeEntityId;
 import com.github.bestheroz.demo.api.entity.code.TableCodeRepository;
+import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,9 +44,16 @@ public class AdminCodeController {
       @PathVariable(value = "codeGroup") final String codeGroup,
       @PathVariable(value = "code") final String code,
       @RequestBody final TableCodeEntity tableCodeEntity) {
-    tableCodeEntity.setCodeGroup(codeGroup);
-    tableCodeEntity.setCode(code);
-    this.tableCodeRepository.save(tableCodeEntity);
+    this.tableCodeRepository
+        .findById(new TableCodeEntityId(codeGroup, code))
+        .ifPresentOrElse(
+            (item) -> {
+              BeanUtils.copyProperties(tableCodeEntity, item);
+              this.tableCodeRepository.save(item);
+            },
+            () -> {
+              throw BusinessException.FAIL_NO_DATA_SUCCESS;
+            });
     return Result.ok();
   }
 
