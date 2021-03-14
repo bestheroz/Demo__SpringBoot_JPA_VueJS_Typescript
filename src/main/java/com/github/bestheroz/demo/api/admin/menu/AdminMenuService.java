@@ -15,10 +15,10 @@ public class AdminMenuService {
   @Resource private TableMemberMenuRepository tableMemberMenuRepository;
 
   @Transactional
-  public void put(final TableMenuEntity tableMenuEntity, final Integer id) {
-    this.tableMenuRepository
+  public TableMenuEntity put(final TableMenuEntity tableMenuEntity, final Integer id) {
+    return this.tableMenuRepository
         .findById(id)
-        .ifPresentOrElse(
+        .map(
             (item) -> {
               BeanUtils.copyProperties(tableMenuEntity, item);
               this.tableMenuRepository.save(item);
@@ -29,10 +29,9 @@ public class AdminMenuService {
                         BeanUtils.copyProperties(tableMenuEntity, memberMenu);
                         this.tableMemberMenuRepository.save(memberMenu);
                       });
-            },
-            () -> {
-              throw BusinessException.FAIL_NO_DATA_SUCCESS;
-            });
+              return item;
+            })
+        .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
   }
 
   @Transactional
