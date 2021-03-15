@@ -1,56 +1,31 @@
 package com.github.bestheroz.standard.common.filter;
 
-import com.github.bestheroz.standard.common.util.CaseUtils;
-import com.github.bestheroz.standard.common.util.NullUtils;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 
 @Data
 public class DataTableFilterDTO {
   private Map<String, Object> filter;
-  private long page;
+  private int page;
   private List<String> sortBy;
+  private List<Boolean> sortDesc;
   private short itemsPerPage;
 
-  public long getStartIndex() {
-    return (this.page - 1) * this.itemsPerPage;
-  }
-
-  public long getEndIndex() {
-    return this.page * this.itemsPerPage;
-  }
-
-  public String getOrderByLimitString() {
-    return MessageFormat.format("{0} {1}", this.getOrderByString(), this.getLimitString());
-  }
-
-  public String getLimitString() {
-    if (this.itemsPerPage == Short.MAX_VALUE) {
-      return StringUtils.EMPTY;
-    } else {
-      return MessageFormat.format(
-          "LIMIT {0}, {1}",
-          String.valueOf(this.getStartIndex()), String.valueOf(this.getEndIndex()));
+  private Sort getSort() {
+    final List<Order> orders = new ArrayList<>();
+    for (int i = 0; i < this.sortBy.size(); i++) {
+      orders.add(
+          this.sortDesc.get(i) ? Order.desc(this.sortBy.get(i)) : Order.asc(this.sortBy.get(i)));
     }
+    return Sort.by(orders);
   }
 
-  public String getOrderByString() {
-    if (NullUtils.isEmpty(this.sortBy)) {
-      return StringUtils.EMPTY;
-    } else {
-      final List<String> append = new ArrayList<>();
-      for (final String s : this.sortBy) {
-        append.add(
-            MessageFormat.format(
-                "{0} {1}",
-                CaseUtils.getSnakeCaseToCamelCase(s.replaceFirst("-", "")),
-                s.startsWith("-") ? "DESC" : "ASC"));
-      }
-      return "ORDER BY " + StringUtils.join(append, ",");
-    }
+  public PageRequest getPageRequest() {
+    return PageRequest.of(this.getPage() - 1, this.getItemsPerPage(), this.getSort());
   }
 }

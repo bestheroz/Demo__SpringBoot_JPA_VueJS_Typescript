@@ -26,13 +26,7 @@ public class AdminMemberController {
 
   @GetMapping
   ResponseEntity<ApiResult> getItems(final DataTableFilterDTO dataTableFilterDTO) {
-    // TODO: dataTableFilter
-    // final int count = this.tableMemberRepository.countForDataTable(dataTableFilterDTO);
-    // return Result.ok(
-    //        count > 0 ? this.tableMemberRepository.getItemsForDataTable(dataTableFilterDTO) :
-    // List.of(),
-    //        count);
-    return Result.ok(this.tableMemberRepository.findAll(), this.tableMemberRepository.count());
+    return Result.ok(this.tableMemberRepository.findAll(dataTableFilterDTO.getPageRequest()));
   }
 
   @GetMapping(value = "{id}")

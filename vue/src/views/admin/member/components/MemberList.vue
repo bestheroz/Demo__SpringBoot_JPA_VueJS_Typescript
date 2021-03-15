@@ -82,10 +82,9 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import type {
-  DataTableHeader,
+  DataTableHeader, PageResult,
   Pagination,
   SelectItem,
-  TableMemberEntity,
 } from "@/common/types";
 import { deleteApi, getApi, getCodesApi, getExcelApi } from "@/utils/apis";
 import envs from "@/constants/envs";
@@ -95,6 +94,7 @@ import { confirmDelete } from "@/utils/alerts";
 import DataTableFilter from "@/components/datatable/DataTableFilter.vue";
 import qs from "qs";
 import { defaultTableMemberEntity } from "@/common/values";
+import {TableMemberEntity} from "@/common/entitys";
 
 @Component({
   name: "MemberList",
@@ -189,11 +189,11 @@ export default class extends Vue {
     this.selected = [];
     this.items = [];
     this.loading = true;
-    const response = await getApi<TableMemberEntity[]>(
+    const response = await getApi<PageResult<TableMemberEntity>>(
       `admin/members/?${this.queryString}`,
     );
     this.loading = false;
-    this.items = response?.data || [];
+    this.items = response?.data?.content || [];
   }
 
   protected editItem(value: TableMemberEntity): void {
