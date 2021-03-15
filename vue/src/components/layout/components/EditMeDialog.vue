@@ -100,10 +100,12 @@ import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
 import { defaultMemberEntity } from "@/common/values";
 import type { MemberEntity } from "@/common/entities";
+import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 
 @Component({
   name: "EditMeDialog",
   components: {
+    CreatedUpdatedBar,
     DialogActionButton,
     DialogTitle,
     ButtonIconTooltip,

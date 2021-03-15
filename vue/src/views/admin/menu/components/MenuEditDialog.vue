@@ -70,6 +70,11 @@
                 <v-icon v-text="item.icon" size="3.5rem" />
               </v-col>
             </v-row>
+            <created-updated-bar
+              :created-date-time="item.created"
+              :updated-date-time="item.updated"
+              v-if="!isNew"
+            />
           </ValidationObserver>
         </v-card-text>
         <dialog-action-button
@@ -91,10 +96,16 @@ import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
 import type { MenuEntity } from "@/common/entities";
+import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 
 @Component({
   name: "MenuEditDialog",
-  components: { DialogActionButton, DialogTitle, ButtonIconTooltip },
+  components: {
+    CreatedUpdatedBar,
+    DialogActionButton,
+    DialogTitle,
+    ButtonIconTooltip,
+  },
 })
 export default class extends Vue {
   @VModel({ required: true }) item!: MenuEntity;

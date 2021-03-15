@@ -1,5 +1,5 @@
 import store from "@/store";
-import { SelectItem } from "@/common/types";
+import { DateTime, SelectItem } from "@/common/types";
 import dayjs from "dayjs";
 import _ from "lodash";
 
@@ -10,18 +10,14 @@ export function getMemberNm(value: string | undefined | null): string {
   return find?.text || value || "-";
 }
 
-export function formatDatetime(
-  value: string | number | Date | undefined | null,
-): string {
+export function formatDatetime(value: DateTime | undefined | null): string {
   if (value === undefined || value === null || value === "") {
     return "-";
   }
   return dayjs(value).format("YYYY-MM-DD HH:mm:ss");
 }
 
-export function formatDate(
-  value: string | number | Date | undefined | null,
-): string {
+export function formatDate(value: DateTime | undefined | null): string {
   if (value === undefined || value === null || value === "") {
     return "-";
   }

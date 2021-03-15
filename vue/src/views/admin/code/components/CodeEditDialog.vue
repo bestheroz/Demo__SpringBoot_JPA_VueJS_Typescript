@@ -99,6 +99,11 @@
                 </ValidationProvider>
               </v-col>
             </v-row>
+            <created-updated-bar
+              :created-date-time="item.created"
+              :updated-date-time="item.updated"
+              v-if="!isNew"
+            />
           </ValidationObserver>
         </v-card-text>
         <v-divider />
@@ -121,10 +126,16 @@ import DialogTitle from "@/components/title/DialogTitle.vue";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
 import type { CodeEntity } from "@/common/entities";
+import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 
 @Component({
   name: "CodeEditDialog",
-  components: { DialogActionButton, ButtonIconTooltip, DialogTitle },
+  components: {
+    CreatedUpdatedBar,
+    DialogActionButton,
+    ButtonIconTooltip,
+    DialogTitle,
+  },
 })
 export default class extends Vue {
   @VModel({ required: true }) item!: CodeEntity;
