@@ -1,5 +1,5 @@
 <template>
-  <v-container id="login" class="fill-height" tag="section">
+  <v-container class="fill-height" tag="section">
     <v-row justify="center">
       <v-card min-width="25vw" width="25vw" class="elevation-12">
         <v-toolbar color="primary" dark flat>
@@ -23,7 +23,7 @@
               rules="required"
             >
               <v-text-field
-                v-model="id"
+                v-model="userId"
                 label="ID..."
                 :error-messages="errors"
                 :success="valid"
@@ -63,7 +63,11 @@
         </ValidationObserver>
       </v-card>
     </v-row>
-    <new-password-dialog :id="id" :dialog.sync="dialog" v-if="dialog" />
+    <new-password-dialog
+      :user-id="userId"
+      :dialog.sync="dialog"
+      v-if="dialog"
+    />
   </v-container>
 </template>
 
@@ -84,7 +88,7 @@ import { toastCloseAll, toastError } from "@/utils/alerts";
 export default class extends Vue {
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
-  id: string | null = null;
+  userId: string | null = null;
   password: string | null = null;
   show1 = false;
   title: string | null = null;
@@ -123,7 +127,7 @@ export default class extends Vue {
           refreshToken: string;
         }>
       >("api/auth/login", {
-        id: this.id,
+        userId: this.userId,
         password: pbkdf2Password,
       });
       this.loading = false;

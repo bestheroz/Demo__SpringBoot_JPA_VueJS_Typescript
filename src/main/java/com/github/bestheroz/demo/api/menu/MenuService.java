@@ -33,7 +33,7 @@ public class MenuService {
 
       parents =
           items.stream()
-              .filter(menu -> menu.getParentId().equals(0))
+              .filter(menu -> menu.getParentId().equals(0L))
               .map(
                   item -> {
                     final MenuVO menuVO = new MenuVO();
@@ -47,7 +47,7 @@ public class MenuService {
               authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name"));
       parents =
           items.stream()
-              .filter(menu -> menu.getParentId().equals(0))
+              .filter(menu -> menu.getParentId().equals(0L))
               .map(
                   item -> {
                     final MenuVO menuVO = new MenuVO();
@@ -57,18 +57,19 @@ public class MenuService {
               .collect(Collectors.toList());
     }
 
-    parents.forEach(
-        parent ->
-            parent.setChildren(
-                items.stream()
-                    .filter(menu -> menu.getParentId().equals(parent.getId()))
-                    .map(
-                        item -> {
-                          final MenuVO menuVO = new MenuVO();
-                          BeanUtils.copyProperties(item, menuVO);
-                          return menuVO;
-                        })
-                    .collect(Collectors.toList())));
-    return parents;
+    return parents.stream()
+        .peek(
+            parent ->
+                parent.setChildren(
+                    items.stream()
+                        .filter(menu -> menu.getParentId().equals(parent.getId()))
+                        .map(
+                            item -> {
+                              final MenuVO menuVO = new MenuVO();
+                              BeanUtils.copyProperties(item, menuVO);
+                              return menuVO;
+                            })
+                        .collect(Collectors.toList())))
+        .collect(Collectors.toList());
   }
 }

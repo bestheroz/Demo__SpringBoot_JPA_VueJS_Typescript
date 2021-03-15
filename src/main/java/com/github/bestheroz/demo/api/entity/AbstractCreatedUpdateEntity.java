@@ -19,7 +19,7 @@ public abstract class AbstractCreatedUpdateEntity {
   protected void onCreate() {
     this.updated = this.created = Instant.now();
     if (AuthenticationUtils.isLoggedIn()) {
-      this.updatedBy = this.createdBy = AuthenticationUtils.getUserPk();
+      this.updatedBy = this.createdBy = AuthenticationUtils.getUserId();
     }
   }
 
@@ -27,7 +27,7 @@ public abstract class AbstractCreatedUpdateEntity {
   protected void onUpdate() {
     this.updated = Instant.now();
     if (AuthenticationUtils.isLoggedIn()) {
-      this.updatedBy = AuthenticationUtils.getUserPk();
+      this.updatedBy = AuthenticationUtils.getUserId();
     }
   }
 }

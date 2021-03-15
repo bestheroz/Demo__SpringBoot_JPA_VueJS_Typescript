@@ -15,7 +15,7 @@ public class AdminMenuService {
   @Resource private TableMemberMenuRepository tableMemberMenuRepository;
 
   @Transactional
-  public TableMenuEntity put(final TableMenuEntity payload, final Integer id) {
+  public TableMenuEntity put(final TableMenuEntity payload, final Long id) {
     return this.tableMenuRepository
         .findById(id)
         .map(
@@ -34,12 +34,12 @@ public class AdminMenuService {
   }
 
   @Transactional
-  public TableMenuEntity delete(final Integer id) {
+  public TableMenuEntity delete(final Long id) {
     return this.tableMenuRepository
         .findById(id)
         .map(
             (item) -> {
-              this.tableMenuRepository.deleteById(id);
+              this.tableMenuRepository.delete(item);
               this.tableMemberMenuRepository.deleteAllById(id);
               return item;
             })

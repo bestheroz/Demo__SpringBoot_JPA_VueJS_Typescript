@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class TableMemberMenuEntityId implements Serializable {
   private static final long serialVersionUID = -4897596840013190393L;
   @Id private Integer authority;
-  @Id private Integer id;
+  @Id private Long id;
 }

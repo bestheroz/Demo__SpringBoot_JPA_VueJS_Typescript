@@ -16,13 +16,13 @@ public class AdminCodeGroupService {
   @Resource private TableCodeRepository tableCodeRepository;
 
   @Transactional
-  public TableCodeGroupEntity delete(final String codeGroup) {
+  public TableCodeGroupEntity delete(final Long id) {
     return this.tableCodeGroupRepository
-        .findById(codeGroup)
+        .findById(id)
         .map(
             (item) -> {
-              this.tableCodeRepository.deleteByCodeGroup(codeGroup);
-              this.tableCodeGroupRepository.deleteById(codeGroup);
+              this.tableCodeRepository.deleteByCodeGroup(item.getCodeGroup());
+              this.tableCodeGroupRepository.delete(item);
               return item;
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);

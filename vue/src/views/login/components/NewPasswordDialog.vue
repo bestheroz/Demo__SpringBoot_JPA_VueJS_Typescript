@@ -82,7 +82,7 @@ import DialogTitle from "@/components/title/DialogTitle.vue";
 })
 export default class extends Vue {
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
-  @Prop({ required: true }) readonly id!: string;
+  @Prop({ required: true }) readonly userId!: string;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
   loading = false;
@@ -107,7 +107,7 @@ export default class extends Vue {
           refreshToken: string;
         }>
       >("api/auth/initPassword", {
-        id: this.id,
+        id: this.userId,
         password: pbkdf2Password,
       });
       if (response?.data?.code?.startsWith("S")) {

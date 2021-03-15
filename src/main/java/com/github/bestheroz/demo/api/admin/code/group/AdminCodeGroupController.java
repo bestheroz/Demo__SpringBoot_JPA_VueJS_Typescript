@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "api/admin/code/groups")
+@RequestMapping(value = "api/admin/code-groups/")
 public class AdminCodeGroupController {
   @Resource private TableCodeGroupRepository tableCodeGroupRepository;
   @Resource private AdminCodeGroupService adminCodeGroupService;
@@ -35,13 +35,12 @@ public class AdminCodeGroupController {
     return Result.created(this.tableCodeGroupRepository.save(payload));
   }
 
-  @PutMapping(value = "{codeGroup}")
+  @PutMapping(value = "{id}")
   ResponseEntity<ApiResult> put(
-      @PathVariable(value = "codeGroup") final String codeGroup,
-      @RequestBody final TableCodeGroupEntity payload) {
+      @PathVariable(value = "id") final Long id, @RequestBody final TableCodeGroupEntity payload) {
     return Result.ok(
         this.tableCodeGroupRepository
-            .findById(codeGroup)
+            .findById(id)
             .map(
                 (item) -> {
                   BeanUtils.copyProperties(payload, item);
@@ -50,8 +49,8 @@ public class AdminCodeGroupController {
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
-  @DeleteMapping(value = "{codeGroup}")
-  ResponseEntity<ApiResult> delete(@PathVariable(value = "codeGroup") final String codeGroup) {
-    return Result.ok(this.adminCodeGroupService.delete(codeGroup));
+  @DeleteMapping(value = "{id}")
+  ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Long id) {
+    return Result.ok(this.adminCodeGroupService.delete(id));
   }
 }

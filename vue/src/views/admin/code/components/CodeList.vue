@@ -7,7 +7,7 @@
         delete-button
         reload-button
         :delete-disabled="!selected || selected.length === 0"
-        @click:add="dialog = true"
+        @click:add="showAddDialog"
         @click:delete="remove"
         @click:reload="getList"
       />
@@ -181,7 +181,7 @@ export default class extends Vue {
     }
     this.loading = true;
     const response = await getApi<TableCodeEntity[]>(
-      `admin/codes/${this.codeGroup}`,
+      `admin/code-groups/${this.codeGroup}/codes/`,
     );
     this.loading = false;
     this.items = response?.data || [];
@@ -202,6 +202,11 @@ export default class extends Vue {
     ];
   }
 
+  protected showAddDialog(): void {
+    this.editItem = { ...defaultTableCodeEntity(), codeGroup: this.codeGroup };
+    this.dialog = true;
+  }
+
   protected showEditDialog(value: TableCodeEntity): void {
     this.editItem = _.cloneDeep(value);
     this.dialog = true;
@@ -212,7 +217,7 @@ export default class extends Vue {
     if (result.value) {
       this.loading = true;
       const response = await deleteApi<TableCodeEntity>(
-        `admin/codes/${this.codeGroup}/${this.selected[0].code}/`,
+        `admin/code-groups/${this.codeGroup}/codes/${this.selected[0].id}`,
       );
       this.loading = false;
       if (response?.code?.startsWith("S")) {

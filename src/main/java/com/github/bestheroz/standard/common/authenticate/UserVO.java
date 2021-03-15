@@ -16,7 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 public class UserVO implements UserDetails, Serializable {
   private static final long serialVersionUID = -3806331610004769750L;
-  private String id;
+  private Long id;
+  private String userId;
   private String name;
   private Integer authority;
   private String theme;
@@ -34,7 +35,7 @@ public class UserVO implements UserDetails, Serializable {
 
   @Override
   public String getUsername() {
-    return this.getId();
+    return this.getUserId();
   }
 
   @Override

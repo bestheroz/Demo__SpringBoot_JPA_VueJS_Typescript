@@ -1,7 +1,6 @@
 package com.github.bestheroz.demo.api.admin.code;
 
 import com.github.bestheroz.demo.api.entity.code.TableCodeEntity;
-import com.github.bestheroz.demo.api.entity.code.TableCodeEntityId;
 import com.github.bestheroz.demo.api.entity.code.TableCodeRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.response.ApiResult;
@@ -21,16 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "api/admin/codes")
+@RequestMapping(value = "api/admin/code-groups/{codeGroup}/codes")
 public class AdminCodeController {
   @Resource private TableCodeRepository tableCodeRepository;
 
-  @GetMapping(value = "{codeGroup}")
+  @GetMapping()
   ResponseEntity<ApiResult> getItems(@PathVariable(value = "codeGroup") final String codeGroup) {
     return Result.ok(this.tableCodeRepository.findAllByCodeGroup(codeGroup));
   }
 
-  @PostMapping(value = "{codeGroup}")
+  @PostMapping()
   public ResponseEntity<ApiResult> post(
       @PathVariable(value = "codeGroup") final String codeGroup,
       @RequestBody final TableCodeEntity payload) {
@@ -38,14 +37,14 @@ public class AdminCodeController {
     return Result.created(this.tableCodeRepository.save(payload));
   }
 
-  @PutMapping(value = "{codeGroup}/{code}")
+  @PutMapping(value = "{id}")
   public ResponseEntity<ApiResult> put(
       @PathVariable(value = "codeGroup") final String codeGroup,
-      @PathVariable(value = "code") final String code,
+      @PathVariable(value = "id") final Long id,
       @RequestBody final TableCodeEntity payload) {
     return Result.ok(
         this.tableCodeRepository
-            .findById(new TableCodeEntityId(codeGroup, code))
+            .findByCodeGroupAndId(codeGroup, id)
             .map(
                 (item) -> {
                   BeanUtils.copyProperties(payload, item);
@@ -54,16 +53,16 @@ public class AdminCodeController {
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
-  @DeleteMapping(value = "{codeGroup}/{code}")
+  @DeleteMapping(value = "{id}")
   public ResponseEntity<ApiResult> delete(
       @PathVariable(value = "codeGroup") final String codeGroup,
-      @PathVariable(value = "code") final String code) {
+      @PathVariable(value = "id") final Long id) {
     return Result.ok(
         this.tableCodeRepository
-            .findById(new TableCodeEntityId(codeGroup, code))
+            .findByCodeGroupAndId(codeGroup, id)
             .map(
                 (item) -> {
-                  this.tableCodeRepository.deleteById(new TableCodeEntityId(codeGroup, code));
+                  this.tableCodeRepository.delete(item);
                   return item;
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));

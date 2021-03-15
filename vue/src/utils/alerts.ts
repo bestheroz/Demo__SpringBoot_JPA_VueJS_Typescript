@@ -5,7 +5,7 @@ import Swal from "sweetalert2/src/sweetalert2.js";
 
 const Toast = Swal.mixin({
   toast: true,
-  position: "bottom-end",
+  position: "center",
   showConfirmButton: true,
   confirmButtonText: "X",
   didOpen: (toast) => {
@@ -16,6 +16,7 @@ const Toast = Swal.mixin({
 
 export function toastSuccess(message: string, timer = 5000): void {
   Toast.fire({
+    position: "bottom-end",
     icon: "success",
     iconColor: "var(--v-success-base)",
     timer: timer,

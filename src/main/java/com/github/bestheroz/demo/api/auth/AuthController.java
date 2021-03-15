@@ -27,7 +27,7 @@ public class AuthController {
   @PostMapping(value = "/login")
   @ResponseBody
   ResponseEntity<ApiResult> login(@RequestBody final TableMemberEntity payload) {
-    return Result.ok(this.authService.login(payload.getId(), payload.getPassword()));
+    return Result.ok(this.authService.login(payload.getUserId(), payload.getPassword()));
   }
 
   @GetMapping(value = "/me")
@@ -35,7 +35,7 @@ public class AuthController {
       @RequestHeader(value = "Authorization") final String token) {
     return Result.ok(
         this.tableMemberRepository
-            .findById(JwtTokenProvider.getUserPk(token))
+            .findByUserId(JwtTokenProvider.getUserId(token))
             .orElseThrow(() -> BusinessException.FAIL_TRY_LOGIN_FIRST));
   }
 

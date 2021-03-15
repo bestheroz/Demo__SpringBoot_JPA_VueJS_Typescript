@@ -36,7 +36,7 @@ public class MemberController {
   ResponseEntity<ApiResult> getMyInfo() {
     return Result.ok(
         this.tableMemberRepository
-            .findById(AuthenticationUtils.getUserPk())
+            .findByUserId(AuthenticationUtils.getUserId())
             .map(
                 item -> {
                   item.setPassword(null);
@@ -48,7 +48,7 @@ public class MemberController {
   @PatchMapping("mine")
   public ResponseEntity<ApiResult> editMe(@RequestBody final TableMemberEntity payload) {
     return this.tableMemberRepository
-        .findById(AuthenticationUtils.getUserPk())
+        .findByUserId(AuthenticationUtils.getUserId())
         .map(
             tableMemberEntity -> {
               final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
@@ -68,7 +68,7 @@ public class MemberController {
   @PostMapping(value = "mine/changePassword")
   public ResponseEntity<ApiResult> changePassword(@RequestBody final Map<String, String> payload) {
     return this.tableMemberRepository
-        .findById(AuthenticationUtils.getUserPk())
+        .findByUserId(AuthenticationUtils.getUserId())
         .map(
             tableMemberEntity -> {
               final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
@@ -92,7 +92,7 @@ public class MemberController {
   @PostMapping(value = "mine/changeTheme")
   public ResponseEntity<ApiResult> changeTheme(@RequestBody final Map<String, String> payload) {
     return this.tableMemberRepository
-        .findById(AuthenticationUtils.getUserPk())
+        .findByUserId(AuthenticationUtils.getUserId())
         .map(
             tableMemberEntity -> {
               tableMemberEntity.setTheme(payload.get("theme"));

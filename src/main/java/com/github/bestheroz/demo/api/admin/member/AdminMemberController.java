@@ -30,7 +30,7 @@ public class AdminMemberController {
   }
 
   @GetMapping(value = "{id}")
-  ResponseEntity<ApiResult> getItem(@PathVariable(value = "id") final String id) {
+  ResponseEntity<ApiResult> getItem(@PathVariable(value = "id") final Long id) {
     return Result.ok(
         this.tableMemberRepository
             .findById(id)
@@ -48,7 +48,7 @@ public class AdminMemberController {
 
   @PatchMapping(value = "{id}")
   public ResponseEntity<ApiResult> patch(
-      @PathVariable(value = "id") final String id, @RequestBody final TableMemberEntity payload) {
+      @PathVariable(value = "id") final Long id, @RequestBody final TableMemberEntity payload) {
     return Result.ok(
         this.tableMemberRepository
             .findById(id)
@@ -64,20 +64,20 @@ public class AdminMemberController {
   }
 
   @DeleteMapping(value = "{id}")
-  public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final String id) {
+  public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Long id) {
     return Result.ok(
         this.tableMemberRepository
             .findById(id)
             .map(
                 (item) -> {
-                  this.tableMemberRepository.deleteById(id);
+                  this.tableMemberRepository.delete(item);
                   return item;
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
   @PostMapping(value = "{id}/resetPassword")
-  public ResponseEntity<ApiResult> resetPassword(@PathVariable(value = "id") final String id) {
+  public ResponseEntity<ApiResult> resetPassword(@PathVariable(value = "id") final Long id) {
     return Result.ok(
         this.tableMemberRepository
             .findById(id)

@@ -19,10 +19,10 @@ import lombok.NoArgsConstructor;
 public class TableMemberMenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 6518292219807880047L;
   @Id private Integer authority;
-  @Id private Integer id;
+  @Id private Long id;
   private String name;
   private String type;
-  private Integer parentId;
+  private Long parentId;
   private Integer displayOrder;
   private String icon;
   private String url;

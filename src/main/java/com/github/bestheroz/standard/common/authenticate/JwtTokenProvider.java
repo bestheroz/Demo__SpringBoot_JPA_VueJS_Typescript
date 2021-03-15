@@ -27,11 +27,11 @@ public class JwtTokenProvider {
 
   public String createAccessToken(final UserVO userVO) {
     Assert.notNull(userVO, "userVO parameter must not be empty or null");
-    Assert.hasText(userVO.getId(), "userPk parameter must not be empty or null");
+    Assert.hasText(userVO.getUserId(), "userId parameter must not be empty or null");
     Assert.hasText(userVO.getName(), "userName parameter must not be empty or null");
     Assert.notNull(userVO.getAuthority(), "authority parameter must not be empty or null");
     return JWT.create()
-        .withClaim("userPk", userVO.getId())
+        .withClaim("userId", userVO.getUserId())
         .withClaim("userVO", MapperUtils.toString(userVO))
         .withExpiresAt(
             Date.from(
@@ -41,9 +41,9 @@ public class JwtTokenProvider {
 
   public String createRefreshToken(final UserVO userVO) {
     Assert.notNull(userVO, "userVO parameter must not be empty or null");
-    Assert.hasText(userVO.getId(), "userPk parameter must not be empty or null");
+    Assert.hasText(userVO.getUserId(), "userId parameter must not be empty or null");
     return JWT.create()
-        .withClaim("userPk", userVO.getId())
+        .withClaim("userId", userVO.getUserId())
         .withExpiresAt(
             Date.from(
                 OffsetDateTime.now().plusSeconds(expiresAtRefreshToken.intValue()).toInstant()))
@@ -54,12 +54,17 @@ public class JwtTokenProvider {
     Assert.hasText(token, "token parameter must not be empty or null");
     final UserVO userVO = getUserVO(token);
     final UserDetails userDetails =
-        new UserVO(getUserPk(token), userVO.getName(), userVO.getAuthority(), userVO.getTheme());
+        new UserVO(
+            userVO.getId(),
+            userVO.getUserId(),
+            userVO.getName(),
+            userVO.getAuthority(),
+            userVO.getTheme());
     return new UsernamePasswordAuthenticationToken(
         userDetails, StringUtils.EMPTY, userDetails.getAuthorities());
   }
 
-  public String getUserPk(final String token) {
+  public String getUserId(final String token) {
     Assert.hasText(token, "token parameter must not be empty or null");
     try {
       return JWT.require(ALGORITHM)
@@ -67,7 +72,7 @@ public class JwtTokenProvider {
           .build()
           .verify(token)
           .getClaims()
-          .get("userPk")
+          .get("userId")
           .asString();
     } catch (final JWTVerificationException | NullPointerException e) {
       throw BusinessException.FAIL_TRY_LOGIN_FIRST;
@@ -96,11 +101,6 @@ public class JwtTokenProvider {
   public String resolveAccessToken(final HttpServletRequest request) {
     final String authorization = request.getHeader("Authorization");
     return StringUtils.equals(authorization, "null") ? null : authorization;
-  }
-
-  public String resolveRefreshToken(final HttpServletRequest request) {
-    final String authorizationR = request.getHeader("AuthorizationR");
-    return StringUtils.equals(authorizationR, "null") ? null : authorizationR;
   }
 
   public boolean validateAccessToken(final String token) {

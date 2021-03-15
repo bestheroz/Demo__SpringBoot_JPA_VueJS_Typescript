@@ -42,7 +42,7 @@ public class AuthenticationUtils {
     }
   }
 
-  public String getUserPk() {
+  public String getUserId() {
     try {
       return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getName())
           .map(item -> StringUtils.equals(item, "anonymousUser") ? "-" : item)

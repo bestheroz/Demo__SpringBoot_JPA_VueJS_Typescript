@@ -142,7 +142,6 @@ export default class extends Vue {
       await this.$store.dispatch("reissueAccessToken");
       await this.$store.dispatch("initMemberCodes");
       this.syncedDialog = false;
-      this.$emit("finished");
     }
   }
 }

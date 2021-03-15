@@ -21,11 +21,11 @@ public class TableMenuEntity extends AbstractCreatedUpdateEntity implements Seri
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   private String name;
   private String type;
-  private Integer parentId;
+  private Long parentId;
   private Integer displayOrder;
   private String url;
   private String icon;

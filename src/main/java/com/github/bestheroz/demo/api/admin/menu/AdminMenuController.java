@@ -48,13 +48,13 @@ public class AdminMenuController {
 
   @PutMapping(value = "{id}")
   public ResponseEntity<ApiResult> put(
-      @PathVariable(value = "id") final Integer id,
+      @PathVariable(value = "id") final Long id,
       @RequestBody final TableMenuEntity tableMenuEntity) {
     return Result.ok(this.adminMenuService.put(tableMenuEntity, id));
   }
 
   @DeleteMapping(value = "{id}")
-  public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Integer id) {
+  public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Long id) {
     return Result.ok(this.adminMenuService.delete(id));
   }
 

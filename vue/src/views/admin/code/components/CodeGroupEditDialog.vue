@@ -78,7 +78,7 @@ export default class extends Vue {
   loading = false;
 
   get isNew(): boolean {
-    return !this.item.codeGroup;
+    return !this.item.id;
   }
 
   protected async save(): Promise<void> {
@@ -92,7 +92,7 @@ export default class extends Vue {
   protected async create(): Promise<void> {
     this.loading = true;
     const response = await postApi<TableCodeGroupEntity>(
-      "admin/code/groups/",
+      "admin/code-groups/",
       this.item,
     );
     this.loading = false;
@@ -105,7 +105,7 @@ export default class extends Vue {
   protected async put(): Promise<void> {
     this.loading = true;
     const response = await putApi<TableCodeGroupEntity>(
-      `admin/code/groups/${this.item.codeGroup}/`,
+      `admin/code-groups/${this.item.id}/`,
       this.item,
     );
     this.loading = false;

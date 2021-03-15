@@ -138,7 +138,7 @@ export default class extends Vue {
   }
 
   get isNew(): boolean {
-    return !this.item.code;
+    return !this.item.id;
   }
 
   async save(): Promise<void> {
@@ -152,7 +152,7 @@ export default class extends Vue {
   async create(): Promise<void> {
     this.loading = true;
     const response = await postApi<TableCodeEntity>(
-      `admin/codes/${this.item.codeGroup}`,
+      `admin/code-groups/${this.item.codeGroup}/codes`,
       this.item,
     );
     this.loading = false;
@@ -165,7 +165,7 @@ export default class extends Vue {
   async put(): Promise<void> {
     this.loading = true;
     const response = await putApi<TableCodeEntity>(
-      `admin/codes/${this.item.codeGroup}/${this.item.code}/`,
+      `admin/code-groups/${this.item.codeGroup}/codes/${this.item.id}/`,
       this.item,
     );
     this.loading = false;

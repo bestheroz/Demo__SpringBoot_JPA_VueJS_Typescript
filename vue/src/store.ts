@@ -3,9 +3,8 @@ import Vuex, { ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import { DrawerItem, SelectItem } from "@/common/types";
 import { axiosInstance, getApi, postApi } from "@/utils/apis";
-/* eslint-disable camelcase */
+// eslint-disable-next-line camelcase
 import jwt_decode from "jwt-decode";
-/* eslint-enable camelcase */
 import axios from "axios";
 import envs from "@/constants/envs";
 import router from "@/router";
@@ -25,6 +24,7 @@ const user = {
     user: (state: any) => {
       return {
         id: state.user.id,
+        user: state.user.user,
         name: state.user.name,
         authority: state.user.authority,
         theme: state.user.theme,
@@ -53,7 +53,7 @@ const user = {
     setAccessToken(state: any, accessToken: string): void {
       const jwt = jwt_decode<{
         exp: number;
-        userPk: string;
+        userId: string;
         userVO: string;
       }>(accessToken);
       state.user = JSON.parse(jwt.userVO);

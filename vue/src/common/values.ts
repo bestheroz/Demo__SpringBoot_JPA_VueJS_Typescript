@@ -7,16 +7,24 @@ import {
 } from "@/common/entities";
 import dayjs from "dayjs";
 export function defaultUser(): {
-  id: string | null;
+  id: number | null;
+  userId: string | null;
   name: string | null;
   authority: string | null;
   theme: string;
 } {
-  return { id: null, name: null, authority: null, theme: "light" };
+  return {
+    id: null,
+    userId: null,
+    name: null,
+    authority: null,
+    theme: "light",
+  };
 }
 
 export function defaultTableMemberEntity(): TableMemberEntity {
   return {
+    userId: null,
     name: null,
     loginFailCnt: null,
     expired: dayjs().add(1, "years").endOf("day"),
@@ -57,7 +65,7 @@ export function defaultTableCodeEntity(): TableCodeEntity {
 export function defaultTableMemberMenuEntity(): TableMemberMenuEntity {
   return {
     authority: null,
-    id: null,
+    menuId: null,
     name: null,
     type: null,
     parentId: null,

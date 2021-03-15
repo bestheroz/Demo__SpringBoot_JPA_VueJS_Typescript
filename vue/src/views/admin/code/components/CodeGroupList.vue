@@ -4,7 +4,7 @@
       <button-set
         :loading="saving"
         add-button
-        @click:add="dialog = true"
+        @click:add="showAddDialog"
         delete-button
         :delete-disabled="!selected || selected.length === 0"
         @click:delete="remove"
@@ -144,7 +144,7 @@ export default class extends Vue {
     this.selected = [];
     this.items = [];
     this.loading = true;
-    const response = await getApi<TableCodeGroupEntity[]>("admin/code/groups/");
+    const response = await getApi<TableCodeGroupEntity[]>("admin/code-groups/");
     this.loading = false;
     this.items = response?.data || [];
   }
@@ -163,6 +163,10 @@ export default class extends Vue {
       ...this.items.slice(findIndex + 1),
     ];
   }
+  protected showAddDialog(): void {
+    this.editItem = defaultTableCodeGroupEntity();
+    this.dialog = true;
+  }
 
   protected showEditDialog(value: TableCodeGroupEntity): void {
     this.editItem = _.cloneDeep(value);
@@ -174,7 +178,7 @@ export default class extends Vue {
     if (result.value) {
       this.saving = true;
       const response = await deleteApi<TableCodeGroupEntity>(
-        `admin/code/groups/${this.selected[0].codeGroup}/`,
+        `admin/code-groups/${this.selected[0].codeGroup}/`,
       );
       this.saving = false;
       if (response?.code?.startsWith("S")) {

@@ -32,20 +32,21 @@ public class AuthService implements UserDetailsService {
       throw new UsernameNotFoundException("No user found");
     }
     return this.tableMemberRepository
-        .findById(username)
+        .findByUserId(username)
         .map(
             tableMemberEntity ->
                 new UserVO(
                     tableMemberEntity.getId(),
+                    tableMemberEntity.getUserId(),
                     tableMemberEntity.getName(),
                     tableMemberEntity.getAuthority(),
                     tableMemberEntity.getTheme()))
         .orElseThrow(() -> new UsernameNotFoundException("No user found by `" + username + "`"));
   }
 
-  Map<String, String> login(final String id, final String password) {
+  Map<String, String> login(final String userId, final String password) {
     return this.tableMemberRepository
-        .findById(id)
+        .findByUserId(userId)
         .map(
             tableMemberEntity -> {
               // 2. 패스워드를 생성한 적이 없으면
@@ -90,7 +91,7 @@ public class AuthService implements UserDetailsService {
 
   void logout() {
     this.tableMemberRepository
-        .findById(AuthenticationUtils.getUserPk())
+        .findByUserId(AuthenticationUtils.getUserId())
         .ifPresent(
             item -> {
               item.setToken(null);
@@ -100,7 +101,7 @@ public class AuthService implements UserDetailsService {
 
   String getNewAccessToken(final String refreshToken) {
     return this.tableMemberRepository
-        .findByIdAndToken(JwtTokenProvider.getUserPk(refreshToken), refreshToken)
+        .findByUserIdAndToken(JwtTokenProvider.getUserId(refreshToken), refreshToken)
         .map(
             tableMemberEntity -> {
               final UserVO userVO = new UserVO();
@@ -117,7 +118,7 @@ public class AuthService implements UserDetailsService {
             });
   }
 
-  UserVO initPassword(final String id, final String password) {
+  UserVO initPassword(final Long id, final String password) {
     return this.tableMemberRepository
         .findById(id)
         .map(
