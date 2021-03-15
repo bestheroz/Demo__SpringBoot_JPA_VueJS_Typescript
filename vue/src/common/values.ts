@@ -4,7 +4,7 @@ import {
   TableMemberEntity,
   TableMemberMenuEntity,
   TableMenuEntity,
-} from "@/common/types";
+} from "@/common/entities";
 import dayjs from "dayjs";
 export function defaultUser(): {
   id: string | null;

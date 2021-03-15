@@ -62,7 +62,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import type { TableMenuEntity } from "@/common/types";
 import { deleteApi, getApi, postApi } from "@/utils/apis";
 import { confirmDelete } from "@/utils/alerts";
 import MenuEditDialog from "@/views/admin/menu/components/MenuEditDialog.vue";
@@ -70,6 +69,7 @@ import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
 import { defaultTableMenuEntity } from "@/common/values";
 import _ from "lodash";
+import type { TableMenuEntity } from "@/common/entities";
 
 interface MenuVO extends TableMenuEntity {
   children: TableMenuEntity[];

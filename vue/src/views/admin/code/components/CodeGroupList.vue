@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
-import type { DataTableHeader, TableCodeGroupEntity } from "@/common/types";
+import type { DataTableHeader } from "@/common/types";
 import { Pagination } from "@/common/types";
 import { deleteApi, getApi } from "@/utils/apis";
 import envs from "@/constants/envs";
@@ -69,6 +69,7 @@ import { confirmDelete } from "@/utils/alerts";
 import qs from "qs";
 import { defaultTableCodeGroupEntity } from "@/common/values";
 import _ from "lodash";
+import type { TableCodeGroupEntity } from "@/common/entities";
 
 @Component({
   name: "CodeGroupList",

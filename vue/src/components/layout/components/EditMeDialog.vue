@@ -90,7 +90,6 @@
 
 <script lang="ts">
 import { Component, PropSync, Ref, Vue } from "vue-property-decorator";
-import type { TableMemberEntity } from "@/common/types";
 import { getApi, patchApi } from "@/utils/apis";
 import DatetimePicker from "@/components/picker/DatetimePicker.vue";
 import ChangePasswordDialog from "@/components/layout/components/ChangePasswordDialog.vue";
@@ -100,6 +99,7 @@ import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
 import { defaultTableMemberEntity } from "@/common/values";
+import type { TableMemberEntity } from "@/common/entities";
 
 @Component({
   name: "EditMeDialog",

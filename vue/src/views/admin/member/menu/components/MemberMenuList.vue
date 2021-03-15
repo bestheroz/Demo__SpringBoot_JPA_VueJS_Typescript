@@ -73,11 +73,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import type { TableMemberMenuEntity, TableMenuEntity } from "@/common/types";
 import { getApi, postApi } from "@/utils/apis";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
 import { defaultTableMemberMenuEntity } from "@/common/values";
+import type { TableMemberMenuEntity, TableMenuEntity } from "@/common/entities";
 
 @Component({
   name: "MemberMenuList",

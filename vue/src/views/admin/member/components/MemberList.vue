@@ -82,7 +82,8 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import type {
-  DataTableHeader, PageResult,
+  DataTableHeader,
+  PageResult,
   Pagination,
   SelectItem,
 } from "@/common/types";
@@ -94,7 +95,7 @@ import { confirmDelete } from "@/utils/alerts";
 import DataTableFilter from "@/components/datatable/DataTableFilter.vue";
 import qs from "qs";
 import { defaultTableMemberEntity } from "@/common/values";
-import {TableMemberEntity} from "@/common/entitys";
+import type { TableMemberEntity } from "@/common/entities";
 
 @Component({
   name: "MemberList",

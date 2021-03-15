@@ -1,6 +1,4 @@
-import dayjs from "dayjs";
-
-export type DateTime = dayjs.ConfigType;
+import { DateTime } from "@/common/types";
 
 export interface TableMemberEntity {
   id?: string | null;
@@ -31,10 +29,6 @@ export interface TableMenuEntity {
   createdBy?: string | null;
   updated?: DateTime | null;
   updatedBy?: string | null;
-}
-
-export interface DrawerItem extends TableMenuEntity {
-  children?: DrawerItem[];
 }
 
 export interface TableCodeGroupEntity {

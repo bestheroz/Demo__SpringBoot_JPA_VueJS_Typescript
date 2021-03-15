@@ -59,12 +59,12 @@
 
 <script lang="ts">
 import { Component, PropSync, Ref, VModel, Vue } from "vue-property-decorator";
-import type { TableCodeGroupEntity } from "@/common/types";
 import { postApi, putApi } from "@/utils/apis";
 import { ValidationObserver } from "vee-validate";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
+import type { TableCodeGroupEntity } from "@/common/entities";
 
 @Component({
   name: "CodeGroupEditDialog",

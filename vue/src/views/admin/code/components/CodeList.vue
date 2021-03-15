@@ -79,11 +79,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import type {
-  DataTableHeader,
-  SelectItem,
-  TableCodeEntity,
-} from "@/common/types";
+import type { DataTableHeader, SelectItem } from "@/common/types";
 import { deleteApi, getApi, getCodesApi } from "@/utils/apis";
 import envs from "@/constants/envs";
 import DataTableFilter from "@/components/datatable/DataTableFilter.vue";
@@ -93,6 +89,7 @@ import CodeEditDialog from "@/views/admin/code/components/CodeEditDialog.vue";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
 import { defaultTableCodeEntity } from "@/common/values";
 import _ from "lodash";
+import type { TableCodeEntity } from "@/common/entities";
 
 @Component({
   name: "CodeList",

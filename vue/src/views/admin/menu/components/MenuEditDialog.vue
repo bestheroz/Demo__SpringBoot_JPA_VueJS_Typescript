@@ -84,12 +84,13 @@
 
 <script lang="ts">
 import { Component, PropSync, Ref, VModel, Vue } from "vue-property-decorator";
-import type { SelectItem, TableMenuEntity } from "@/common/types";
+import type { SelectItem } from "@/common/types";
 import { getCodesApi, postApi, putApi } from "@/utils/apis";
 import { ValidationObserver } from "vee-validate";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
+import type { TableMenuEntity } from "@/common/entities";
 
 @Component({
   name: "MenuEditDialog",

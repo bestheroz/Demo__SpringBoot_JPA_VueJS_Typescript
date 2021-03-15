@@ -1,3 +1,8 @@
+import dayjs from "dayjs";
+import type { TableMenuEntity } from "@/common/entities";
+
+export type DateTime = dayjs.ConfigType;
+
 export interface SelectItem {
   value: string;
   text: string;
@@ -28,8 +33,8 @@ export interface Pagination {
   itemsPerPage: number; // -1 for All
 }
 
-export interface PageResult<T>{
-  content: T[]
+export interface PageResult<T> {
+  content: T[];
   empty: boolean;
   first: boolean;
   last: boolean;
@@ -40,14 +45,14 @@ export interface PageResult<T>{
     pageNumber: number;
     pageSize: number;
     paged: boolean;
-    sort:{empty: boolean;
-    sorted: boolean;
-    unsorted: boolean;};
+    sort: { empty: boolean; sorted: boolean; unsorted: boolean };
     unpaged: boolean;
   };
-  sort:{empty: boolean;
-    sorted: boolean;
-    unsorted: boolean;};
+  sort: { empty: boolean; sorted: boolean; unsorted: boolean };
   totalElements: number;
   totalPages: number;
+}
+
+export interface DrawerItem extends TableMenuEntity {
+  children?: DrawerItem[];
 }

@@ -20,10 +20,10 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import type { TableCodeGroupEntity } from "@/common/types";
 import CodeList from "@/views/admin/code/components/CodeList.vue";
 import CodeGroupList from "@/views/admin/code/components/CodeGroupList.vue";
 import { defaultTableCodeGroupEntity } from "@/common/values";
+import type { TableCodeGroupEntity } from "@/common/entities";
 
 @Component({
   name: "Code",

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex, { ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import { DrawerItem, SelectItem, TableMemberEntity } from "@/common/types";
+import { DrawerItem, SelectItem } from "@/common/types";
 import { axiosInstance, getApi, postApi } from "@/utils/apis";
 /* eslint-disable camelcase */
 import jwt_decode from "jwt-decode";
@@ -10,6 +10,7 @@ import axios from "axios";
 import envs from "@/constants/envs";
 import router from "@/router";
 import { defaultUser } from "@/common/values";
+import type { TableMemberEntity } from "@/common/entities";
 
 Vue.use(Vuex);
 
