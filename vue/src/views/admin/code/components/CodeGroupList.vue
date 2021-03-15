@@ -178,7 +178,7 @@ export default class extends Vue {
     if (result.value) {
       this.saving = true;
       const response = await deleteApi<TableCodeGroupEntity>(
-        `admin/code-groups/${this.selected[0].codeGroup}/`,
+        `admin/code-groups/${this.selected[0].id}/`,
       );
       this.saving = false;
       if (response?.code?.startsWith("S")) {
