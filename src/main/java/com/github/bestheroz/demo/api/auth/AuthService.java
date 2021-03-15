@@ -128,9 +128,8 @@ public class AuthService implements UserDetailsService {
               }
 
               tableMemberEntity.setPassword(password);
-              this.tableMemberRepository.save(tableMemberEntity);
               final UserVO userVO = new UserVO();
-              BeanUtils.copyProperties(tableMemberEntity, userVO);
+              BeanUtils.copyProperties(this.tableMemberRepository.save(tableMemberEntity), userVO);
               return userVO;
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);

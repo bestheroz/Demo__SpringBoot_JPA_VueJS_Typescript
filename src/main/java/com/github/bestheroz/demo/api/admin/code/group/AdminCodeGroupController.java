@@ -32,8 +32,7 @@ public class AdminCodeGroupController {
 
   @PostMapping
   ResponseEntity<ApiResult> post(@RequestBody final TableCodeGroupEntity payload) {
-    this.tableCodeGroupRepository.save(payload);
-    return Result.created(payload);
+    return Result.created(this.tableCodeGroupRepository.save(payload));
   }
 
   @PutMapping(value = "{codeGroup}")
@@ -46,8 +45,7 @@ public class AdminCodeGroupController {
             .map(
                 (item) -> {
                   BeanUtils.copyProperties(payload, item);
-                  this.tableCodeGroupRepository.save(item);
-                  return item;
+                  return this.tableCodeGroupRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }

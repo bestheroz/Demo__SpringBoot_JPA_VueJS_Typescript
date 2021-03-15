@@ -3,10 +3,10 @@
     <button-set
       :loading="saving"
       add-button
-      @click:add="dialog = true"
+      @click:add="showAddDialog"
       delete-button
       :delete-disabled="!selected || selected.length === 0"
-      @click:delete="deleteItem"
+      @click:delete="remove"
       reload-button
       @click:reload="getList"
       excel-button
@@ -27,7 +27,7 @@
           show-select
           dense
           :height="height"
-          :footer-props="envs.FOOTER_PROPS_MAX_1000"
+          :footer-props="envs.FOOTER_PROPS_MAX_100"
         >
           <template #header>
             <data-table-filter
@@ -38,7 +38,7 @@
           <template #[`item.id`]="{ item }">
             <a
               class="text--anchor"
-              @click="editItem({ ...item, password: undefined })"
+              @click="showEditDialog({ ...item, password: undefined })"
             >
               {{ item.id }}
             </a>
@@ -71,9 +71,10 @@
       </v-card-text>
     </v-card>
     <member-edit-dialog
-      v-model="item"
+      v-model="editItem"
       :dialog.sync="dialog"
-      @finished="getList"
+      @created="onCreated"
+      @modified="onUpdated"
       v-if="dialog"
     />
   </div>
@@ -119,7 +120,7 @@ export default class extends Vue {
   items: TableMemberEntity[] = [];
   loading = false;
   saving = false;
-  item: TableMemberEntity = defaultTableMemberEntity();
+  editItem: TableMemberEntity = defaultTableMemberEntity();
   AUTHORITY: SelectItem[] = [];
   dialog = false;
   datatableFilter: { [p: string]: string | number } = {};
@@ -197,12 +198,31 @@ export default class extends Vue {
     this.items = response?.data?.content || [];
   }
 
-  protected editItem(value: TableMemberEntity): void {
-    this.item = value;
+  protected onCreated(value: TableMemberEntity): void {
+    this.items = [value, ...this.items];
+  }
+
+  protected onUpdated(value: TableMemberEntity): void {
+    const findIndex = this.items.findIndex(
+      (item) => item.id === this.editItem.id,
+    );
+    this.items = [
+      ...this.items.slice(0, findIndex),
+      value,
+      ...this.items.slice(findIndex + 1),
+    ];
+  }
+  protected showAddDialog(): void {
+    this.editItem = defaultTableMemberEntity();
     this.dialog = true;
   }
 
-  protected async deleteItem(): Promise<void> {
+  protected showEditDialog(value: TableMemberEntity): void {
+    this.editItem = value;
+    this.dialog = true;
+  }
+
+  protected async remove(): Promise<void> {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
@@ -212,7 +232,9 @@ export default class extends Vue {
       this.saving = false;
       if (response?.code?.startsWith("S")) {
         await this.$store.dispatch("initMemberCodes");
-        this.getList().then();
+        this.items = this.items.filter(
+          (item) => item.id !== (response.data?.id || 0),
+        );
       }
     }
   }

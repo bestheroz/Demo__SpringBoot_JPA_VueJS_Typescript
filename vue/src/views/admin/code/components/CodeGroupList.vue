@@ -7,7 +7,7 @@
         @click:add="dialog = true"
         delete-button
         :delete-disabled="!selected || selected.length === 0"
-        @click:delete="deleteItem"
+        @click:delete="remove"
         reload-button
         @click:reload="getList"
       />
@@ -25,7 +25,7 @@
           show-select
           dense
           :height="height"
-          :footer-props="envs.FOOTER_PROPS_MAX_1000"
+          :footer-props="envs.FOOTER_PROPS_MAX_100"
         >
           <template #header>
             <data-table-filter
@@ -34,7 +34,7 @@
             />
           </template>
           <template #[`item.codeGroup`]="{ item }">
-            <a class="text--anchor" @click="editItem(item)">
+            <a class="text--anchor" @click="showEditDialog(item)">
               {{ item.codeGroup }}
             </a>
           </template>
@@ -48,9 +48,10 @@
       </v-card-text>
     </v-card>
     <code-group-edit-dialog
-      v-model="item"
+      v-model="editItem"
       :dialog.sync="dialog"
-      @finished="getList"
+      @created="onCreated"
+      @modified="onUpdated"
       v-if="dialog"
     />
   </div>
@@ -94,7 +95,7 @@ export default class extends Vue {
   saving = false;
   dialog = false;
   datatableFilter: { [p: string]: string | number } = {};
-  item: TableCodeGroupEntity = defaultTableCodeGroupEntity();
+  editItem: TableCodeGroupEntity = defaultTableCodeGroupEntity();
 
   get headers(): DataTableHeader[] {
     return [
@@ -148,18 +149,32 @@ export default class extends Vue {
     this.items = response?.data || [];
   }
 
-  protected editItem(value: TableCodeGroupEntity): void {
-    this.item = _.cloneDeep(value);
+  protected onCreated(value: TableCodeGroupEntity): void {
+    this.items = [value, ...this.items];
+  }
+
+  protected onUpdated(value: TableCodeGroupEntity): void {
+    const findIndex = this.items.findIndex(
+      (item) => item.codeGroup === this.editItem.codeGroup,
+    );
+    this.items = [
+      ...this.items.slice(0, findIndex),
+      value,
+      ...this.items.slice(findIndex + 1),
+    ];
+  }
+
+  protected showEditDialog(value: TableCodeGroupEntity): void {
+    this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
 
-  protected async deleteItem(): Promise<void> {
-    this.item = this.selected[0];
+  protected async remove(): Promise<void> {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
       const response = await deleteApi<TableCodeGroupEntity>(
-        `admin/code/groups/${this.item.codeGroup}/`,
+        `admin/code/groups/${this.selected[0].codeGroup}/`,
       );
       this.saving = false;
       if (response?.code?.startsWith("S")) {

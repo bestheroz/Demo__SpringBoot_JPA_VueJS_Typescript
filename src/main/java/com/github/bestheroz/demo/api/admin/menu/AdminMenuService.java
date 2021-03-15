@@ -21,7 +21,6 @@ public class AdminMenuService {
         .map(
             (item) -> {
               BeanUtils.copyProperties(payload, item);
-              this.tableMenuRepository.save(item);
               this.tableMemberMenuRepository
                   .findAllById(id)
                   .forEach(
@@ -29,7 +28,7 @@ public class AdminMenuService {
                         BeanUtils.copyProperties(payload, memberMenu);
                         this.tableMemberMenuRepository.save(memberMenu);
                       });
-              return item;
+              return this.tableMenuRepository.save(item);
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
   }

@@ -7,6 +7,7 @@ import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,7 @@ public class AdminMenuController {
 
   @PostMapping
   public ResponseEntity<ApiResult> post(@RequestBody final TableMenuEntity payload) {
-    this.tableMenuRepository.save(payload);
-    return Result.created(payload);
+    return Result.created(this.tableMenuRepository.save(payload));
   }
 
   @PutMapping(value = "{id}")
@@ -60,7 +60,9 @@ public class AdminMenuController {
 
   @PostMapping(value = "save")
   public ResponseEntity<ApiResult> save(@RequestBody final List<TableMenuEntity> payload) {
-    payload.forEach(menu -> this.tableMenuRepository.save(menu));
-    return Result.created();
+    return Result.created(
+        payload.stream()
+            .map(menu -> this.tableMenuRepository.save(menu))
+            .collect(Collectors.toList()));
   }
 }

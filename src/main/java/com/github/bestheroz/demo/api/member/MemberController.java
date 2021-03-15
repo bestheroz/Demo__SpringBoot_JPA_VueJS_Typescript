@@ -59,14 +59,9 @@ public class MemberController {
                 throw new BusinessException(ExceptionCode.FAIL_MATCH_PASSWORD);
               }
               tableMemberEntity.setName(payload.getName());
-              this.tableMemberRepository.save(tableMemberEntity);
-              return Result.ok();
+              return Result.ok(this.tableMemberRepository.save(tableMemberEntity));
             })
-        .orElseThrow(
-            () -> {
-              // 1. 유저가 없으면
-              return new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER);
-            });
+        .orElseThrow(() -> new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER));
   }
 
   @PostMapping(value = "mine/changePassword")
@@ -83,8 +78,7 @@ public class MemberController {
                 throw new BusinessException(ExceptionCode.FAIL_MATCH_OLD_PASSWORD);
               }
               tableMemberEntity.setPassword(payload.get("newPassword"));
-              this.tableMemberRepository.save(tableMemberEntity);
-              return Result.ok();
+              return Result.ok(this.tableMemberRepository.save(tableMemberEntity));
             })
         .orElseThrow(
             () -> {
@@ -100,8 +94,7 @@ public class MemberController {
         .map(
             tableMemberEntity -> {
               tableMemberEntity.setTheme(payload.get("theme"));
-              this.tableMemberRepository.save(tableMemberEntity);
-              return Result.ok();
+              return Result.ok(this.tableMemberRepository.save(tableMemberEntity));
             })
         .orElseThrow(() -> new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER));
   }

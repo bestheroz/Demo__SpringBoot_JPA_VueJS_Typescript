@@ -43,8 +43,7 @@ public class AdminMemberController {
 
   @PostMapping
   public ResponseEntity<ApiResult> post(@RequestBody final TableMemberEntity payload) {
-    this.tableMemberRepository.save(payload);
-    return Result.created(payload);
+    return Result.created(this.tableMemberRepository.save(payload));
   }
 
   @PatchMapping(value = "{id}")
@@ -59,8 +58,7 @@ public class AdminMemberController {
                   item.setAuthority(payload.getAuthority());
                   item.setExpired(payload.getExpired());
                   item.setAvailable(payload.isAvailable());
-                  this.tableMemberRepository.save(item);
-                  return item;
+                  return this.tableMemberRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
@@ -86,8 +84,7 @@ public class AdminMemberController {
             .map(
                 (item) -> {
                   item.setPassword(null);
-                  this.tableMemberRepository.save(item);
-                  return item;
+                  return this.tableMemberRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }

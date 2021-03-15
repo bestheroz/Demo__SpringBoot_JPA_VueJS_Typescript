@@ -35,8 +35,7 @@ public class AdminCodeController {
       @PathVariable(value = "codeGroup") final String codeGroup,
       @RequestBody final TableCodeEntity payload) {
     payload.setCodeGroup(codeGroup);
-    this.tableCodeRepository.save(payload);
-    return Result.created(payload);
+    return Result.created(this.tableCodeRepository.save(payload));
   }
 
   @PutMapping(value = "{codeGroup}/{code}")
@@ -50,8 +49,7 @@ public class AdminCodeController {
             .map(
                 (item) -> {
                   BeanUtils.copyProperties(payload, item);
-                  this.tableCodeRepository.save(item);
-                  return item;
+                  return this.tableCodeRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }

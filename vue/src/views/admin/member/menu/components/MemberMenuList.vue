@@ -148,7 +148,7 @@ export default class extends Vue {
     this.saving = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initDrawers");
-      this.getList().then();
+      this.items = response.data || [];
     }
   }
 }

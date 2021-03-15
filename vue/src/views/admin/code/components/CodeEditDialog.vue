@@ -158,7 +158,7 @@ export default class extends Vue {
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       this.syncedDialog = false;
-      this.$emit("finished");
+      this.$emit("created", response.data);
     }
   }
 
@@ -172,7 +172,7 @@ export default class extends Vue {
     if (response?.code?.startsWith("S")) {
       this.syncedDialog = false;
       window.localStorage.removeItem(`code__${this.item.codeGroup}`);
-      this.$emit("finished");
+      this.$emit("modified", response.data);
     }
   }
 }

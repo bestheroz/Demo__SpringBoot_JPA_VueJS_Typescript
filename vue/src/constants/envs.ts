@@ -5,15 +5,15 @@ export default Object.freeze({
   LOCALE: process.env.VUE_APP_LOCALE || "ko-KR",
   DATE_FORMAT_STRING: process.env.VUE_APP_DATE_FORMAT_STRING || "YYYY-MM-DD",
   DATETIME_FORMAT_STRING:
-      process.env.VUE_APP_DATETIME_FORMAT_STRING || "YYYY-MM-DD HH:mm:ss",
+    process.env.VUE_APP_DATETIME_FORMAT_STRING || "YYYY-MM-DD HH:mm:ss",
   TIME_FORMAT_STRING: process.env.VUE_APP_TIME_FORMAT_STRING || "HH:mm:ss",
   DATETIME_MINUTE_FORMAT_STRING:
-      process.env.VUE_APP_DATETIME_MINUTE_FORMAT_STRING || "YYYY-MM-DD HH:mm",
+    process.env.VUE_APP_DATETIME_MINUTE_FORMAT_STRING || "YYYY-MM-DD HH:mm",
   TIME_MINUTE_FORMAT_STRING:
-      process.env.VUE_APP_TIME_MINUTE_FORMAT_STRING || "HH:mm",
+    process.env.VUE_APP_TIME_MINUTE_FORMAT_STRING || "HH:mm",
   // DataTables
-  FOOTER_PROPS_MAX_1000: {
+  FOOTER_PROPS_MAX_100: {
     showFirstLastPage: true,
-    itemsPerPageOptions: [20, 50, 100, 300, 500, 1000],
+    itemsPerPageOptions: [10, 20, 50, 100],
   },
 });

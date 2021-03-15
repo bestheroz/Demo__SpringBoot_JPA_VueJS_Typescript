@@ -8,7 +8,7 @@
         reload-button
         :delete-disabled="!selected || selected.length === 0"
         @click:add="dialog = true"
-        @click:delete="deleteItem"
+        @click:delete="remove"
         @click:reload="getList"
       />
       <v-system-bar class="secondary">
@@ -30,7 +30,7 @@
           show-select
           dense
           :height="height"
-          :footer-props="envs.FOOTER_PROPS_MAX_1000"
+          :footer-props="envs.FOOTER_PROPS_MAX_100"
         >
           <template #header>
             <data-table-client-side-filter
@@ -40,7 +40,7 @@
             />
           </template>
           <template #[`item.code`]="{ item }">
-            <a class="text--anchor" @click="editItem(item)">
+            <a class="text--anchor" @click="showEditDialog(item)">
               {{ item.code }}
             </a>
           </template>
@@ -69,9 +69,10 @@
       </v-card-text>
     </v-card>
     <code-edit-dialog
-      v-model="item"
+      v-model="editItem"
       :dialog.sync="dialog"
-      @finished="getList"
+      @created="onCreated"
+      @modified="onUpdated"
       v-if="dialog"
     />
   </div>
@@ -115,7 +116,7 @@ export default class extends Vue {
   selected: TableCodeEntity[] = [];
 
   dialog = false;
-  item: TableCodeEntity = defaultTableCodeEntity();
+  editItem: TableCodeEntity = defaultTableCodeEntity();
 
   get headers(): DataTableHeader[] {
     return [
@@ -186,12 +187,27 @@ export default class extends Vue {
     this.items = response?.data || [];
   }
 
-  protected editItem(value: TableCodeEntity): void {
-    this.item = _.cloneDeep(value);
+  protected onCreated(value: TableCodeEntity): void {
+    this.items = [value, ...this.items];
+  }
+
+  protected onUpdated(value: TableCodeEntity): void {
+    const findIndex = this.items.findIndex(
+      (item) => item.code === this.editItem.code,
+    );
+    this.items = [
+      ...this.items.slice(0, findIndex),
+      value,
+      ...this.items.slice(findIndex + 1),
+    ];
+  }
+
+  protected showEditDialog(value: TableCodeEntity): void {
+    this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
 
-  protected async deleteItem(): Promise<void> {
+  protected async remove(): Promise<void> {
     const result = await confirmDelete();
     if (result.value) {
       this.loading = true;

@@ -197,7 +197,7 @@ export default class extends Vue {
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initMemberCodes");
       this.syncedDialog = false;
-      this.$emit("finished");
+      this.$emit("created", response.data);
     }
   }
 
@@ -220,7 +220,7 @@ export default class extends Vue {
       }
       await this.$store.dispatch("initMemberCodes");
       this.syncedDialog = false;
-      this.$emit("finished");
+      this.$emit("modified", response.data);
     }
   }
 
