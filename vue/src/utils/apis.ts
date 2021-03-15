@@ -125,22 +125,19 @@ export async function deleteApi<T>(
 }
 
 export async function getCodesApi<SelectItem>(
-  groupName: string,
+  type: string,
 ): Promise<SelectItem[]> {
-  const item = window.localStorage.getItem(`code__${groupName}`);
+  const item = window.localStorage.getItem(`code__${type}`);
   if (item) {
     return JSON.parse(item);
   } else {
     try {
       const response = await axiosInstance.get<ApiDataResult<SelectItem[]>>(
-        `api/codes/${groupName}`,
+        `api/codes/?type=${type}`,
       );
       const result = response?.data?.data || [];
       if (result.length > 0) {
-        window.localStorage.setItem(
-          `code__${groupName}`,
-          JSON.stringify(result),
-        );
+        window.localStorage.setItem(`code__${type}`, JSON.stringify(result));
       }
       return result;
     } catch (error) {

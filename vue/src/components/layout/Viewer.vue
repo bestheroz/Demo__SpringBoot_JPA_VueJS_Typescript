@@ -20,7 +20,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import type { DrawerItem } from "@/common/types";
 import { errorPage } from "@/utils/errors";
 import { getVariableApi } from "@/utils/apis";
-import { defaultTableMenuEntity } from "@/common/values";
+import { defaultMenuEntity } from "@/common/values";
 
 @Component({ name: "Viewer" })
 export default class extends Vue {
@@ -44,7 +44,7 @@ export default class extends Vue {
   protected findThisPage(): DrawerItem {
     let result: DrawerItem | undefined;
     if (this.$route.name) {
-      return defaultTableMenuEntity();
+      return defaultMenuEntity();
     }
     this.$store.getters.drawers?.forEach((drawer: DrawerItem) => {
       if (!result) {
@@ -56,9 +56,9 @@ export default class extends Vue {
     });
     if (!result) {
       errorPage(403);
-      return defaultTableMenuEntity();
+      return defaultMenuEntity();
     }
-    return result || defaultTableMenuEntity();
+    return result || defaultMenuEntity();
   }
 }
 </script>

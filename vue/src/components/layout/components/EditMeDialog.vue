@@ -98,8 +98,8 @@ import pbkdf2 from "pbkdf2";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
-import { defaultTableMemberEntity } from "@/common/values";
-import type { TableMemberEntity } from "@/common/entities";
+import { defaultMemberEntity } from "@/common/values";
+import type { MemberEntity } from "@/common/entities";
 
 @Component({
   name: "EditMeDialog",
@@ -115,14 +115,14 @@ export default class extends Vue {
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
-  item: TableMemberEntity = defaultTableMemberEntity();
+  item: MemberEntity = defaultMemberEntity();
   loading = false;
   show1 = false;
   newPasswordDialog = false;
 
   protected async created(): Promise<void> {
-    const response = await getApi<TableMemberEntity>("members/mine");
-    this.item = response?.data || defaultTableMemberEntity();
+    const response = await getApi<MemberEntity>("members/mine");
+    this.item = response?.data || defaultMemberEntity();
   }
 
   protected async save(): Promise<void> {
@@ -136,7 +136,7 @@ export default class extends Vue {
     payload.password = pbkdf2
       .pbkdf2Sync(this.item.password || "", "salt", 1, 32, "sha512")
       .toString();
-    const response = await patchApi<TableMemberEntity>("members/mine", payload);
+    const response = await patchApi<MemberEntity>("members/mine", payload);
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("reissueAccessToken");

@@ -54,7 +54,7 @@
       v-model="editItem"
       :dialog.sync="dialog"
       @created="onCreated"
-      @modified="onUpdated"
+      @updated="onUpdated"
       v-if="dialog"
     />
   </div>
@@ -67,12 +67,12 @@ import { confirmDelete } from "@/utils/alerts";
 import MenuEditDialog from "@/views/admin/menu/components/MenuEditDialog.vue";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultTableMenuEntity } from "@/common/values";
+import { defaultMenuEntity } from "@/common/values";
 import _ from "lodash";
-import type { TableMenuEntity } from "@/common/entities";
+import type { MenuEntity } from "@/common/entities";
 
-interface MenuVO extends TableMenuEntity {
-  children: TableMenuEntity[];
+interface MenuVO extends MenuEntity {
+  children: MenuEntity[];
 }
 
 @Component({
@@ -81,12 +81,12 @@ interface MenuVO extends TableMenuEntity {
 })
 export default class extends Vue {
   @Prop() readonly height!: number | string;
-  items: TableMenuEntity[] = [];
+  items: MenuEntity[] = [];
   loading = false;
   saving = false;
   drag = false;
 
-  editItem: TableMenuEntity = defaultTableMenuEntity();
+  editItem: MenuEntity = defaultMenuEntity();
   dialog = false;
 
   get dragOptions(): { animation: number } {
@@ -107,11 +107,11 @@ export default class extends Vue {
     this.items = response?.data || [];
   }
 
-  protected onCreated(value: TableMenuEntity): void {
+  protected onCreated(value: MenuEntity): void {
     this.items = [value, ...this.items];
   }
 
-  protected onUpdated(value: TableMenuEntity): void {
+  protected onUpdated(value: MenuEntity): void {
     const findIndex = this.items.findIndex(
       (item) => item.id === this.editItem.id,
     );
@@ -123,21 +123,19 @@ export default class extends Vue {
   }
 
   protected showAddDialog(): void {
-    this.editItem = defaultTableMenuEntity();
+    this.editItem = defaultMenuEntity();
     this.dialog = true;
   }
-  protected showEditDialog(value: TableMenuEntity): void {
+  protected showEditDialog(value: MenuEntity): void {
     this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
 
-  protected async onDelete(value: TableMenuEntity): Promise<void> {
+  protected async onDelete(value: MenuEntity): Promise<void> {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
-      const response = await deleteApi<TableMenuEntity>(
-        `admin/menus/${value.id}/`,
-      );
+      const response = await deleteApi<MenuEntity>(`admin/menus/${value.id}/`);
       this.saving = false;
       if (response?.code?.startsWith("S")) {
         await this.$store.dispatch("initDrawers");
@@ -151,7 +149,7 @@ export default class extends Vue {
   protected async saveItems(): Promise<void> {
     let parentId = 0;
     this.saving = true;
-    const response = await postApi<TableMenuEntity[]>(
+    const response = await postApi<MenuEntity[]>(
       "admin/menus/save",
       this.items.map((item, index) => {
         if (item.type === "G") {

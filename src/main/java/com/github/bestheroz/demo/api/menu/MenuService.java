@@ -1,8 +1,8 @@
 package com.github.bestheroz.demo.api.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuEntity;
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuRepository;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuEntity;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MenuService {
-  @Resource private TableMenuRepository tableMenuRepository;
-  @Resource private TableMemberMenuRepository tableMemberMenuRepository;
+  @Resource private MenuRepository tableMenuRepository;
+  @Resource private MemberMenuRepository tableMemberMenuRepository;
 
   public List<MenuVO> getDrawerList(final Integer authority) {
     final List<MenuVO> parents;
-    final List<TableMemberMenuEntity> items;
+    final List<MemberMenuEntity> items;
     if (authority.equals(999)) {
       items =
           this.tableMenuRepository
@@ -25,7 +25,7 @@ public class MenuService {
               .stream()
               .map(
                   entity -> {
-                    final TableMemberMenuEntity tableMenuEntity = new TableMemberMenuEntity();
+                    final MemberMenuEntity tableMenuEntity = new MemberMenuEntity();
                     BeanUtils.copyProperties(entity, tableMenuEntity);
                     return tableMenuEntity;
                   })

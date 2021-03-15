@@ -1,6 +1,6 @@
 package com.github.bestheroz.demo.api.auth;
 
-import com.github.bestheroz.demo.api.entity.member.TableMemberRepository;
+import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.authenticate.UserVO;
 import com.github.bestheroz.standard.common.exception.BusinessException;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional
 public class AuthService implements UserDetailsService {
-  @Resource private TableMemberRepository tableMemberRepository;
+  @Resource private MemberRepository tableMemberRepository;
 
   @Override
   public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {

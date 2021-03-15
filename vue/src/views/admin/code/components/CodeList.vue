@@ -1,21 +1,19 @@
 <template>
   <div>
-    <v-card>
-      <button-set
-        :disabled="!groupName"
-        add-button
-        delete-button
-        reload-button
-        :delete-disabled="!selected || selected.length === 0"
-        @click:add="showAddDialog"
-        @click:delete="remove"
-        @click:reload="getList"
-      />
-      <v-system-bar class="secondary">
-        <v-icon> mdi-format-list-checkbox </v-icon>
-        코드 관리 - Detail
-      </v-system-bar>
-      <v-card-text>
+    <button-set
+      :loading="saving"
+      add-button
+      @click:add="showAddDialog"
+      delete-button
+      :delete-disabled="!selected || selected.length === 0"
+      @click:delete="remove"
+      reload-button
+      @click:reload="getList"
+      excel-button
+      @click:excel="excel"
+    />
+    <v-card flat>
+      <v-card-text class="py-0">
         <v-data-table
           v-model="selected"
           must-sort
@@ -29,7 +27,6 @@
           single-select
           show-select
           dense
-          :height="height"
           :footer-props="envs.FOOTER_PROPS_MAX_100"
         >
           <template #header>
@@ -40,9 +37,9 @@
             />
           </template>
           <template #[`item.value`]="{ item }">
-            <a class="text--anchor" @click="showEditDialog(item)">
+            <span class="text--anchor" @click="showEditDialog(item)">
               {{ item.value }}
-            </a>
+            </span>
           </template>
           <template #[`item.available`]="{ item }">
             <span style="display: inline-flex">
@@ -67,66 +64,64 @@
           </template>
         </v-data-table>
       </v-card-text>
+      <code-edit-dialog
+        v-model="editItem"
+        :dialog.sync="dialog"
+        @created="onCreated"
+        @updated="onUpdated"
+        v-if="dialog"
+      />
     </v-card>
-    <code-edit-dialog
-      v-model="editItem"
-      :dialog.sync="dialog"
-      @created="onCreated"
-      @modified="onUpdated"
-      v-if="dialog"
-    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import type { DataTableHeader, SelectItem } from "@/common/types";
-import { deleteApi, getApi, getCodesApi } from "@/utils/apis";
+import { deleteApi, getApi, getCodesApi, getExcelApi } from "@/utils/apis";
 import envs from "@/constants/envs";
-import DataTableFilter from "@/components/datatable/DataTableFilter.vue";
-import ButtonSet from "@/components/speeddial/ButtonSet.vue";
-import { confirmDelete } from "@/utils/alerts";
-import CodeEditDialog from "@/views/admin/code/components/CodeEditDialog.vue";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
-import { defaultTableCodeEntity } from "@/common/values";
+import qs from "querystring";
+import ButtonSet from "@/components/speeddial/ButtonSet.vue";
+import CodeEditDialog from "@/views/admin/code/components/CodeEditDialog.vue";
+import { confirmDelete } from "@/utils/alerts";
+import { defaultCodeEntity } from "@/common/values";
+import type { CodeEntity } from "@/common/entities";
 import _ from "lodash";
-import type { TableCodeEntity } from "@/common/entities";
 
 @Component({
   name: "CodeList",
   components: {
-    DataTableClientSideFilter,
     CodeEditDialog,
     ButtonSet,
-    DataTableFilter,
+    DataTableClientSideFilter,
   },
 })
 export default class extends Vue {
-  @Prop() readonly height!: number | string;
-  @Prop({ required: true }) readonly groupName!: string;
+  @Prop({ required: true }) readonly type!: string;
 
   readonly envs: typeof envs = envs;
-  AUTHORITY: SelectItem[] = [];
 
+  selected: CodeEntity[] = [];
+  AUTHORITY: SelectItem[] = [];
+  saving = false;
   loading = false;
   sortBy: string[] = ["displayOrder"];
   sortDesc: boolean[] = [false];
-  items: TableCodeEntity[] = [];
-  filteredItems: TableCodeEntity[] = [];
-  selected: TableCodeEntity[] = [];
-
+  items: CodeEntity[] = [];
+  filteredItems: CodeEntity[] = [];
   dialog = false;
-  editItem: TableCodeEntity = defaultTableCodeEntity();
+  editItem: CodeEntity = defaultCodeEntity();
 
   get headers(): DataTableHeader[] {
     return [
       {
-        text: "상세 코드",
+        text: "코드",
         align: "start",
         value: "value",
       },
       {
-        text: "상세 코드명",
+        text: "코드명",
         align: "start",
         value: "name",
       },
@@ -168,32 +163,31 @@ export default class extends Vue {
     ];
   }
 
-  protected async beforeMount(): Promise<void> {
+  protected async created(): Promise<void> {
     this.AUTHORITY = await getCodesApi("AUTHORITY");
   }
 
-  @Watch("groupName")
-  protected async getList(): Promise<void> {
+  @Watch("type")
+  public async getList(): Promise<void> {
     this.selected = [];
     this.items = [];
-    if (!this.groupName) {
-      return;
+    if (this.type) {
+      this.loading = true;
+      const response = await getApi<CodeEntity[]>(
+        `admin/codes/?${qs.stringify({ type: this.type })}`,
+      );
+      this.loading = false;
+      this.items = response?.data || [];
     }
-    this.loading = true;
-    const response = await getApi<TableCodeEntity[]>(
-      `admin/code-groups/${this.groupName}/codes/`,
-    );
-    this.loading = false;
-    this.items = response?.data || [];
   }
 
-  protected onCreated(value: TableCodeEntity): void {
+  protected onCreated(value: CodeEntity): void {
     this.items = [value, ...this.items];
   }
 
-  protected onUpdated(value: TableCodeEntity): void {
+  protected onUpdated(value: CodeEntity): void {
     const findIndex = this.items.findIndex(
-      (item) => item.value === this.editItem.value,
+      (item) => item.id === this.editItem.id,
     );
     this.items = [
       ...this.items.slice(0, findIndex),
@@ -201,13 +195,12 @@ export default class extends Vue {
       ...this.items.slice(findIndex + 1),
     ];
   }
-
   protected showAddDialog(): void {
-    this.editItem = { ...defaultTableCodeEntity(), groupName: this.groupName };
+    this.editItem = defaultCodeEntity();
     this.dialog = true;
   }
 
-  protected showEditDialog(value: TableCodeEntity): void {
+  protected showEditDialog(value: CodeEntity): void {
     this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
@@ -215,16 +208,24 @@ export default class extends Vue {
   protected async remove(): Promise<void> {
     const result = await confirmDelete();
     if (result.value) {
-      this.loading = true;
-      const response = await deleteApi<TableCodeEntity>(
-        `admin/code-groups/${this.groupName}/codes/${this.selected[0].id}`,
+      this.saving = true;
+      const response = await deleteApi<CodeEntity>(
+        `admin/codes/${this.selected[0].id}/`,
       );
-      this.loading = false;
+      this.saving = false;
       if (response?.code?.startsWith("S")) {
-        window.localStorage.removeItem(`code__${this.groupName}`);
-        this.getList().then();
+        window.localStorage.removeItem(`code__${this.selected[0].id}`);
+        this.items = this.items.filter(
+          (item) => item.id !== (response.data?.id || 0),
+        );
       }
     }
+  }
+
+  protected async excel(): Promise<void> {
+    this.saving = true;
+    await getExcelApi("admin/codes/download/excel");
+    this.saving = false;
   }
 }
 </script>

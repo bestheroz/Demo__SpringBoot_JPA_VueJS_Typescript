@@ -1,8 +1,8 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuRepository;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuEntity;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
+import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import javax.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminMenuService {
-  @Resource private TableMenuRepository tableMenuRepository;
-  @Resource private TableMemberMenuRepository tableMemberMenuRepository;
+  @Resource private MenuRepository tableMenuRepository;
+  @Resource private MemberMenuRepository tableMemberMenuRepository;
 
   @Transactional
-  public TableMenuEntity put(final TableMenuEntity payload, final Long id) {
+  public MenuEntity put(final MenuEntity payload, final Long id) {
     return this.tableMenuRepository
         .findById(id)
         .map(
@@ -34,7 +34,7 @@ public class AdminMenuService {
   }
 
   @Transactional
-  public TableMenuEntity delete(final Long id) {
+  public MenuEntity delete(final Long id) {
     return this.tableMenuRepository
         .findById(id)
         .map(

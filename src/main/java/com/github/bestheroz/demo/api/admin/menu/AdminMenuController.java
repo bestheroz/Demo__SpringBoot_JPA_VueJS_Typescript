@@ -1,8 +1,8 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuRepository;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuEntity;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
+import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "api/admin/menus")
 public class AdminMenuController {
   @Resource private AdminMenuService adminMenuService;
-  @Resource private TableMenuRepository tableMenuRepository;
-  @Resource private TableMemberMenuRepository tableMemberMenuRepository;
+  @Resource private MenuRepository tableMenuRepository;
+  @Resource private MemberMenuRepository tableMemberMenuRepository;
 
   @GetMapping
   ResponseEntity<ApiResult> getItems() {
@@ -42,14 +42,13 @@ public class AdminMenuController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResult> post(@RequestBody final TableMenuEntity payload) {
+  public ResponseEntity<ApiResult> post(@RequestBody final MenuEntity payload) {
     return Result.created(this.tableMenuRepository.save(payload));
   }
 
   @PutMapping(value = "{id}")
   public ResponseEntity<ApiResult> put(
-      @PathVariable(value = "id") final Long id,
-      @RequestBody final TableMenuEntity tableMenuEntity) {
+      @PathVariable(value = "id") final Long id, @RequestBody final MenuEntity tableMenuEntity) {
     return Result.ok(this.adminMenuService.put(tableMenuEntity, id));
   }
 
@@ -59,7 +58,7 @@ public class AdminMenuController {
   }
 
   @PostMapping(value = "save")
-  public ResponseEntity<ApiResult> save(@RequestBody final List<TableMenuEntity> payload) {
+  public ResponseEntity<ApiResult> save(@RequestBody final List<MenuEntity> payload) {
     return Result.created(
         payload.stream()
             .map(menu -> this.tableMenuRepository.save(menu))

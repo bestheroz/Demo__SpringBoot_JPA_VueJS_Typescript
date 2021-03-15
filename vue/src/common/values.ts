@@ -1,9 +1,9 @@
 import {
-  TableCodeEntity,
-  TableCodeGroupEntity,
-  TableMemberEntity,
-  TableMemberMenuEntity,
-  TableMenuEntity,
+  CodeEntity,
+  CodeGroupEntity,
+  MemberEntity,
+  MemberMenuEntity,
+  MenuEntity,
 } from "@/common/entities";
 import dayjs from "dayjs";
 export function defaultUser(): {
@@ -22,7 +22,7 @@ export function defaultUser(): {
   };
 }
 
-export function defaultTableMemberEntity(): TableMemberEntity {
+export function defaultMemberEntity(): MemberEntity {
   return {
     userId: null,
     name: null,
@@ -35,7 +35,7 @@ export function defaultTableMemberEntity(): TableMemberEntity {
   };
 }
 
-export function defaultTableMenuEntity(): TableMenuEntity {
+export function defaultMenuEntity(): MenuEntity {
   return {
     name: null,
     type: "G",
@@ -46,15 +46,15 @@ export function defaultTableMenuEntity(): TableMenuEntity {
     url: null,
   };
 }
-export function defaultTableCodeGroupEntity(): TableCodeGroupEntity {
+export function defaultCodeGroupEntity(): CodeGroupEntity {
   return {
     name: null,
     description: null,
   };
 }
-export function defaultTableCodeEntity(): TableCodeEntity {
+export function defaultCodeEntity(): CodeEntity {
   return {
-    groupName: null,
+    type: null,
     value: null,
     name: null,
     available: null,
@@ -62,7 +62,7 @@ export function defaultTableCodeEntity(): TableCodeEntity {
     authority: null,
   };
 }
-export function defaultTableMemberMenuEntity(): TableMemberMenuEntity {
+export function defaultMemberMenuEntity(): MemberMenuEntity {
   return {
     authority: null,
     menuId: null,

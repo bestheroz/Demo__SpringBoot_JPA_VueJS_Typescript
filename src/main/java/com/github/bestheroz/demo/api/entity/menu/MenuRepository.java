@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TableMenuRepository extends CrudRepository<TableMenuEntity, Long> {
-  List<TableMenuEntity> findAll(Sort sort);
+public interface MenuRepository extends CrudRepository<MenuEntity, Long> {
+  List<MenuEntity> findAll(Sort sort);
 }

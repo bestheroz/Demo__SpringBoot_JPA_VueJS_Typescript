@@ -1,37 +1,39 @@
-package com.github.bestheroz.demo.api.entity.code;
+package com.github.bestheroz.demo.api.entity.member;
 
 import com.github.bestheroz.demo.api.entity.AbstractCreatedUpdateEntity;
 import java.io.Serializable;
+import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "CODE")
-@Data
-public class TableCodeEntity extends AbstractCreatedUpdateEntity implements Serializable {
-  private static final long serialVersionUID = -6076508411557466173L;
+@Entity(name = "MEMBER")
+public class MemberEntity extends AbstractCreatedUpdateEntity implements Serializable {
+  private static final long serialVersionUID = 7280716056600887400L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "group_name")
-  private String groupName;
+  @Column(unique = true)
+  private String userId;
 
-  private String value;
+  private String password;
   private String name;
-  private boolean available;
-  private Integer displayOrder;
   private Integer authority;
+  private Integer loginFailCnt;
+  private boolean available;
+  private String theme;
+  private String token;
+  private Instant expired;
 }

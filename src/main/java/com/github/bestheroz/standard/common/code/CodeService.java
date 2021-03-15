@@ -1,32 +1,27 @@
 package com.github.bestheroz.standard.common.code;
 
-import com.github.bestheroz.demo.api.entity.code.TableCodeRepository;
+import com.github.bestheroz.demo.api.entity.code.CodeRepository;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CodeService {
-  @Resource private TableCodeRepository tableCodeRepository;
+  @Resource private CodeRepository codeRepository;
 
-  public List<CodeVO> getCodeVOListByAuthority(final String groupName) {
+  public List<CodeVO> getCodesByTypeByAuthority(final String type) {
     final Integer authority = AuthenticationUtils.getLoginVO().getAuthority();
-    return this.tableCodeRepository
-        .findAllByGroupName(groupName, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder"))
-        .stream()
+    return this.codeRepository.findAllByTypeOrderByDisplayOrderAsc(type).stream()
         .filter(item -> item.isAvailable() && item.getAuthority() <= authority)
         .map(item -> new CodeVO(item.getValue(), item.getName()))
         .collect(Collectors.toList());
   }
 
-  public List<CodeVO> getCodeVOList(final String groupName) {
-    return this.tableCodeRepository
-        .findAllByGroupName(groupName, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder"))
-        .stream()
-        .map(item -> new CodeVO(item.getValue(), item.getName()))
+  public List<CodeVO> getCodesByType(final String type) {
+    return this.codeRepository.getCodes(type).stream()
+        .map(code -> new CodeVO((String) code[0], (String) code[1]))
         .collect(Collectors.toList());
   }
 }

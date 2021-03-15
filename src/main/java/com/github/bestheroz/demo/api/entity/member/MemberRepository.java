@@ -9,12 +9,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TableMemberRepository extends CrudRepository<TableMemberEntity, Long> {
-  Page<TableMemberEntity> findAll(Pageable pageable);
+public interface MemberRepository extends CrudRepository<MemberEntity, Long> {
+  Page<MemberEntity> findAll(Pageable pageable);
 
-  Optional<TableMemberEntity> findByUserIdAndToken(String userId, String token);
+  Optional<MemberEntity> findByUserIdAndToken(String userId, String token);
 
-  Optional<TableMemberEntity> findByUserId(String userId);
+  Optional<MemberEntity> findByUserId(String userId);
 
-  List<TableMemberEntity> findAll(Sort sort);
+  List<MemberEntity> findAll(Sort sort);
 }

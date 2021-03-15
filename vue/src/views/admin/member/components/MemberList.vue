@@ -74,7 +74,7 @@
       v-model="editItem"
       :dialog.sync="dialog"
       @created="onCreated"
-      @modified="onUpdated"
+      @updated="onUpdated"
       v-if="dialog"
     />
   </div>
@@ -95,8 +95,9 @@ import MemberEditDialog from "@/views/admin/member/components/MemberEditDialog.v
 import { confirmDelete } from "@/utils/alerts";
 import DataTableFilter from "@/components/datatable/DataTableFilter.vue";
 import qs from "qs";
-import { defaultTableMemberEntity } from "@/common/values";
-import type { TableMemberEntity } from "@/common/entities";
+import { defaultMemberEntity } from "@/common/values";
+import type { MemberEntity } from "@/common/entities";
+import _ from "lodash";
 
 @Component({
   name: "MemberList",
@@ -109,7 +110,7 @@ import type { TableMemberEntity } from "@/common/entities";
 export default class extends Vue {
   @Prop() readonly height!: number | string;
   readonly envs: typeof envs = envs;
-  selected: TableMemberEntity[] = [];
+  selected: MemberEntity[] = [];
   pagination: Pagination = {
     page: 1,
     sortBy: ["authority"],
@@ -117,10 +118,10 @@ export default class extends Vue {
     itemsPerPage: 20,
   };
 
-  items: TableMemberEntity[] = [];
+  items: MemberEntity[] = [];
   loading = false;
   saving = false;
-  editItem: TableMemberEntity = defaultTableMemberEntity();
+  editItem: MemberEntity = defaultMemberEntity();
   AUTHORITY: SelectItem[] = [];
   dialog = false;
   datatableFilter: { [p: string]: string | number } = {};
@@ -191,18 +192,18 @@ export default class extends Vue {
     this.selected = [];
     this.items = [];
     this.loading = true;
-    const response = await getApi<PageResult<TableMemberEntity>>(
+    const response = await getApi<PageResult<MemberEntity>>(
       `admin/members/?${this.queryString}`,
     );
     this.loading = false;
     this.items = response?.data?.content || [];
   }
 
-  protected onCreated(value: TableMemberEntity): void {
+  protected onCreated(value: MemberEntity): void {
     this.items = [value, ...this.items];
   }
 
-  protected onUpdated(value: TableMemberEntity): void {
+  protected onUpdated(value: MemberEntity): void {
     const findIndex = this.items.findIndex(
       (item) => item.id === this.editItem.id,
     );
@@ -213,12 +214,12 @@ export default class extends Vue {
     ];
   }
   protected showAddDialog(): void {
-    this.editItem = defaultTableMemberEntity();
+    this.editItem = defaultMemberEntity();
     this.dialog = true;
   }
 
-  protected showEditDialog(value: TableMemberEntity): void {
-    this.editItem = value;
+  protected showEditDialog(value: MemberEntity): void {
+    this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
 
@@ -226,7 +227,7 @@ export default class extends Vue {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
-      const response = await deleteApi<TableMemberEntity>(
+      const response = await deleteApi<MemberEntity>(
         `admin/members/${this.selected[0].id}/`,
       );
       this.saving = false;

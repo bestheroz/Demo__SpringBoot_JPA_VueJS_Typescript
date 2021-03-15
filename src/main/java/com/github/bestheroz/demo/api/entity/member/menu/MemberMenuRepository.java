@@ -6,11 +6,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TableMemberMenuRepository
-    extends CrudRepository<TableMemberMenuEntity, TableMemberMenuEntityId> {
-  List<TableMemberMenuEntity> findAllByAuthority(Integer authority, Sort sort);
+public interface MemberMenuRepository extends CrudRepository<MemberMenuEntity, MemberMenuEntityId> {
+  List<MemberMenuEntity> findAllByAuthority(Integer authority, Sort sort);
 
-  List<TableMemberMenuEntity> findAllById(Long id);
+  List<MemberMenuEntity> findAllById(Long id);
 
   void deleteByAuthorityAndIdNotIn(Integer authority, List<Long> ids);
 

@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.auth;
 
-import com.github.bestheroz.demo.api.entity.member.TableMemberEntity;
-import com.github.bestheroz.demo.api.entity.member.TableMemberRepository;
+import com.github.bestheroz.demo.api.entity.member.MemberEntity;
+import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.response.ApiResult;
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/auth")
 public class AuthController {
   @Resource private AuthService authService;
-  @Resource private TableMemberRepository tableMemberRepository;
+  @Resource private MemberRepository tableMemberRepository;
 
   @PostMapping(value = "/login")
   @ResponseBody
-  ResponseEntity<ApiResult> login(@RequestBody final TableMemberEntity payload) {
+  ResponseEntity<ApiResult> login(@RequestBody final MemberEntity payload) {
     return Result.ok(this.authService.login(payload.getUserId(), payload.getPassword()));
   }
 
@@ -46,7 +46,7 @@ public class AuthController {
   }
 
   @PostMapping(value = "/initPassword")
-  ResponseEntity<ApiResult> initPassword(@RequestBody final TableMemberEntity payload) {
+  ResponseEntity<ApiResult> initPassword(@RequestBody final MemberEntity payload) {
     return Result.ok(this.authService.initPassword(payload.getId(), payload.getPassword()));
   }
 

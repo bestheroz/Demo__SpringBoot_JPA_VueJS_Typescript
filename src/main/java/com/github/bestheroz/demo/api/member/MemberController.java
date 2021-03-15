@@ -1,8 +1,8 @@
 package com.github.bestheroz.demo.api.member;
 
-import com.github.bestheroz.demo.api.entity.member.TableMemberEntity;
-import com.github.bestheroz.demo.api.entity.member.TableMemberRepository;
-import com.github.bestheroz.standard.common.code.CodeRepository;
+import com.github.bestheroz.demo.api.entity.code.CodeRepository;
+import com.github.bestheroz.demo.api.entity.member.MemberEntity;
+import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.github.bestheroz.standard.common.response.ApiResult;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/members")
 @Slf4j
 public class MemberController {
-  @Resource private TableMemberRepository tableMemberRepository;
+  @Resource private MemberRepository tableMemberRepository;
   @Resource private CodeRepository codeRepository;
 
   @GetMapping(value = "codes")
@@ -46,7 +46,7 @@ public class MemberController {
   }
 
   @PatchMapping("mine")
-  public ResponseEntity<ApiResult> editMe(@RequestBody final TableMemberEntity payload) {
+  public ResponseEntity<ApiResult> editMe(@RequestBody final MemberEntity payload) {
     return this.tableMemberRepository
         .findByUserId(AuthenticationUtils.getUserId())
         .map(

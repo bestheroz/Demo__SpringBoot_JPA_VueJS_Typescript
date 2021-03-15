@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="syncedDialog" max-width="100%" width="60vw">
+    <v-dialog v-model="syncedDialog" persistent max-width="100%" width="60vw">
       <v-card>
         <dialog-title :is-new="isNew" prefix="코드">
           <template #buttons>
@@ -14,7 +14,7 @@
         </dialog-title>
         <v-card-text>
           <ValidationObserver ref="observer">
-            <v-row dense>
+            <v-row>
               <v-col cols="12" md="4">
                 <ValidationProvider
                   v-slot="{ errors }"
@@ -22,9 +22,9 @@
                   rules="required"
                 >
                   <v-text-field
-                    v-model="item.groupName"
+                    v-model="item.type"
                     label="*그룹 코드"
-                    disabled
+                    :disabled="!isNew"
                     :error-messages="errors"
                   />
                 </ValidationProvider>
@@ -101,6 +101,7 @@
             </v-row>
           </ValidationObserver>
         </v-card-text>
+        <v-divider />
         <dialog-action-button
           :loading="loading"
           @click:save="save"
@@ -116,45 +117,42 @@ import { Component, PropSync, Ref, VModel, Vue } from "vue-property-decorator";
 import type { SelectItem } from "@/common/types";
 import { getCodesApi, postApi, putApi } from "@/utils/apis";
 import { ValidationObserver } from "vee-validate";
-import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
+import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
-import type { TableCodeEntity } from "@/common/entities";
+import type { CodeEntity } from "@/common/entities";
 
 @Component({
   name: "CodeEditDialog",
-  components: { DialogActionButton, DialogTitle, ButtonIconTooltip },
+  components: { DialogActionButton, ButtonIconTooltip, DialogTitle },
 })
 export default class extends Vue {
-  @VModel({ required: true }) item!: TableCodeEntity;
+  @VModel({ required: true }) item!: CodeEntity;
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
   AUTHORITY: SelectItem[] = [];
   loading = false;
 
-  async created(): Promise<void> {
-    this.AUTHORITY = await getCodesApi("AUTHORITY");
-  }
-
   get isNew(): boolean {
     return !this.item.id;
   }
 
-  async save(): Promise<void> {
-    const isValid = this.observer.validate();
+  protected async created(): Promise<void> {
+    this.AUTHORITY = await getCodesApi("AUTHORITY");
+  }
+
+  protected async save(): Promise<void> {
+    const isValid = await this.observer.validate();
     if (!isValid) {
       return;
     }
     this.isNew ? await this.create() : await this.put();
   }
 
-  async create(): Promise<void> {
+  protected async create(): Promise<void> {
     this.loading = true;
-    const response = await postApi<TableCodeEntity>(
-      `admin/code-groups/${this.item.groupName}/codes`,
-      this.item,
-    );
+    const response = await postApi<CodeEntity>("admin/codes/", this.item);
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       this.syncedDialog = false;
@@ -162,17 +160,17 @@ export default class extends Vue {
     }
   }
 
-  async put(): Promise<void> {
+  protected async put(): Promise<void> {
     this.loading = true;
-    const response = await putApi<TableCodeEntity>(
-      `admin/code-groups/${this.item.groupName}/codes/${this.item.id}/`,
+    const response = await putApi<CodeEntity>(
+      `admin/codes/${this.item.id}/`,
       this.item,
     );
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       this.syncedDialog = false;
-      window.localStorage.removeItem(`code__${this.item.groupName}`);
-      this.$emit("modified", response.data);
+      window.localStorage.removeItem(`code__${this.item.id}`);
+      this.$emit("updated", response.data);
     }
   }
 }

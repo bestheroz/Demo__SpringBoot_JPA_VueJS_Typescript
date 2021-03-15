@@ -76,8 +76,8 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { getApi, postApi } from "@/utils/apis";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultTableMemberMenuEntity } from "@/common/values";
-import type { TableMemberMenuEntity, TableMenuEntity } from "@/common/entities";
+import { defaultMemberMenuEntity } from "@/common/values";
+import type { MemberMenuEntity, MenuEntity } from "@/common/entities";
 
 @Component({
   name: "MemberMenuList",
@@ -86,8 +86,8 @@ import type { TableMemberMenuEntity, TableMenuEntity } from "@/common/entities";
 export default class extends Vue {
   @Prop() readonly height!: number | string;
   @Prop({ required: true }) readonly authority!: number;
-  menus: TableMenuEntity[] = [];
-  items: TableMemberMenuEntity[] = [];
+  menus: MenuEntity[] = [];
+  items: MemberMenuEntity[] = [];
   selected: number[] = [];
   loading = false;
   saving = false;
@@ -100,7 +100,7 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    const response = await getApi<TableMenuEntity[]>("admin/menus/");
+    const response = await getApi<MenuEntity[]>("admin/menus/");
     this.menus = response?.data || [];
     this.getList().then();
   }
@@ -110,7 +110,7 @@ export default class extends Vue {
     this.items = val.map((item) => {
       return {
         ...(this.menus.find((menu) => menu.id === item) ||
-          defaultTableMemberMenuEntity()),
+          defaultMemberMenuEntity()),
         authority: this.authority,
       };
     });
@@ -120,7 +120,7 @@ export default class extends Vue {
   public async getList(): Promise<void> {
     this.items = [];
     this.loading = true;
-    const response = await getApi<TableMemberMenuEntity[]>(
+    const response = await getApi<MemberMenuEntity[]>(
       `admin/member/menus/${this.authority}`,
     );
     this.items = response?.data || [];
@@ -131,7 +131,7 @@ export default class extends Vue {
   protected async saveItems(): Promise<void> {
     let parentId = 0;
     this.saving = true;
-    const response = await postApi<TableMemberMenuEntity[]>(
+    const response = await postApi<MemberMenuEntity[]>(
       `admin/member/menus/${this.authority}/save`,
       this.items.map((item, index) => {
         if (item.type === "G") {
