@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "MEMBER_MENU")
+@Entity
+@Table(name = "MEMBER_MENU")
 @IdClass(TableMemberMenuEntityId.class)
 public class TableMemberMenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 6518292219807880047L;

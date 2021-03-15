@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +18,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "MEMBER")
+@Entity
+@Table(name = "MEMBER")
 public class TableMemberEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 7280716056600887400L;
 

@@ -48,14 +48,14 @@ export function defaultTableMenuEntity(): TableMenuEntity {
 }
 export function defaultTableCodeGroupEntity(): TableCodeGroupEntity {
   return {
-    codeGroup: null,
     name: null,
+    description: null,
   };
 }
 export function defaultTableCodeEntity(): TableCodeEntity {
   return {
-    codeGroup: null,
-    code: null,
+    groupName: null,
+    value: null,
     name: null,
     available: null,
     displayOrder: null,

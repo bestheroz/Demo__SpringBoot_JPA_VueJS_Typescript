@@ -3,7 +3,7 @@
     <v-row no-gutters>
       <v-col cols="12">
         <code-group-list
-          ref="codeGroupList"
+          ref="groupNameList"
           height="25vh"
           @select-row="onSelectRow"
         />
@@ -12,7 +12,7 @@
         <v-divider />
       </v-col>
       <v-col cols="12">
-        <code-list :code-group="codeGroup" />
+        <code-list :group-name="groupName" />
       </v-col>
     </v-row>
   </div>
@@ -33,15 +33,15 @@ import type { TableCodeGroupEntity } from "@/common/entities";
   },
 })
 export default class extends Vue {
-  @Ref() readonly codeGroupList!: CodeGroupList;
+  @Ref() readonly groupNameList!: CodeGroupList;
   selected: TableCodeGroupEntity = defaultTableCodeGroupEntity();
 
-  get codeGroup(): string {
-    return this.selected?.codeGroup || "";
+  get groupName(): string {
+    return this.selected?.name || "";
   }
 
   protected mounted(): void {
-    this.codeGroupList.getList();
+    this.groupNameList.getList();
   }
 
   onSelectRow(val: TableCodeGroupEntity): void {

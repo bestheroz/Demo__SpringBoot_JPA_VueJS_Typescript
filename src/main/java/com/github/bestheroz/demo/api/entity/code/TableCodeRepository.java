@@ -8,11 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TableCodeRepository extends CrudRepository<TableCodeEntity, Long> {
-  List<TableCodeEntity> findAllByCodeGroup(String codeGroup);
+  List<TableCodeEntity> findAllByGroupName(String groupName);
 
-  List<TableCodeEntity> findAllByCodeGroup(String codeGroup, Sort sort);
+  List<TableCodeEntity> findAllByGroupName(String groupName, Sort sort);
 
-  Optional<TableCodeEntity> findByCodeGroupAndId(String codeGroup, Long id);
-
-  void deleteByCodeGroup(String id);
+  Optional<TableCodeEntity> findByGroupNameAndId(String groupName, Long id);
 }

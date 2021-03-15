@@ -12,21 +12,21 @@ import org.springframework.stereotype.Service;
 public class CodeService {
   @Resource private TableCodeRepository tableCodeRepository;
 
-  public List<CodeVO> getCodeVOListByAuthority(final String codeGroup) {
+  public List<CodeVO> getCodeVOListByAuthority(final String groupName) {
     final Integer authority = AuthenticationUtils.getLoginVO().getAuthority();
     return this.tableCodeRepository
-        .findAllByCodeGroup(codeGroup, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder"))
+        .findAllByGroupName(groupName, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder"))
         .stream()
         .filter(item -> item.isAvailable() && item.getAuthority() <= authority)
-        .map(item -> new CodeVO(item.getCode(), item.getName()))
+        .map(item -> new CodeVO(item.getValue(), item.getName()))
         .collect(Collectors.toList());
   }
 
-  public List<CodeVO> getCodeVOList(final String codeGroup) {
+  public List<CodeVO> getCodeVOList(final String groupName) {
     return this.tableCodeRepository
-        .findAllByCodeGroup(codeGroup, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder"))
+        .findAllByGroupName(groupName, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder"))
         .stream()
-        .map(item -> new CodeVO(item.getCode(), item.getName()))
+        .map(item -> new CodeVO(item.getValue(), item.getName()))
         .collect(Collectors.toList());
   }
 }

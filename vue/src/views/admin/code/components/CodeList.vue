@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <button-set
-        :disabled="!codeGroup"
+        :disabled="!groupName"
         add-button
         delete-button
         reload-button
@@ -25,7 +25,7 @@
           :items="filteredItems"
           :sort-by="sortBy"
           :sort-desc="sortDesc"
-          item-key="code"
+          item-key="value"
           single-select
           show-select
           dense
@@ -39,9 +39,9 @@
               :input="items"
             />
           </template>
-          <template #[`item.code`]="{ item }">
+          <template #[`item.value`]="{ item }">
             <a class="text--anchor" @click="showEditDialog(item)">
-              {{ item.code }}
+              {{ item.value }}
             </a>
           </template>
           <template #[`item.available`]="{ item }">
@@ -103,7 +103,7 @@ import type { TableCodeEntity } from "@/common/entities";
 })
 export default class extends Vue {
   @Prop() readonly height!: number | string;
-  @Prop({ required: true }) readonly codeGroup!: string;
+  @Prop({ required: true }) readonly groupName!: string;
 
   readonly envs: typeof envs = envs;
   AUTHORITY: SelectItem[] = [];
@@ -123,7 +123,7 @@ export default class extends Vue {
       {
         text: "상세 코드",
         align: "start",
-        value: "code",
+        value: "value",
       },
       {
         text: "상세 코드명",
@@ -172,16 +172,16 @@ export default class extends Vue {
     this.AUTHORITY = await getCodesApi("AUTHORITY");
   }
 
-  @Watch("codeGroup")
+  @Watch("groupName")
   protected async getList(): Promise<void> {
     this.selected = [];
     this.items = [];
-    if (!this.codeGroup) {
+    if (!this.groupName) {
       return;
     }
     this.loading = true;
     const response = await getApi<TableCodeEntity[]>(
-      `admin/code-groups/${this.codeGroup}/codes/`,
+      `admin/code-groups/${this.groupName}/codes/`,
     );
     this.loading = false;
     this.items = response?.data || [];
@@ -193,7 +193,7 @@ export default class extends Vue {
 
   protected onUpdated(value: TableCodeEntity): void {
     const findIndex = this.items.findIndex(
-      (item) => item.code === this.editItem.code,
+      (item) => item.value === this.editItem.value,
     );
     this.items = [
       ...this.items.slice(0, findIndex),
@@ -203,7 +203,7 @@ export default class extends Vue {
   }
 
   protected showAddDialog(): void {
-    this.editItem = { ...defaultTableCodeEntity(), codeGroup: this.codeGroup };
+    this.editItem = { ...defaultTableCodeEntity(), groupName: this.groupName };
     this.dialog = true;
   }
 
@@ -217,11 +217,11 @@ export default class extends Vue {
     if (result.value) {
       this.loading = true;
       const response = await deleteApi<TableCodeEntity>(
-        `admin/code-groups/${this.codeGroup}/codes/${this.selected[0].id}`,
+        `admin/code-groups/${this.groupName}/codes/${this.selected[0].id}`,
       );
       this.loading = false;
       if (response?.code?.startsWith("S")) {
-        window.localStorage.removeItem(`code__${this.codeGroup}`);
+        window.localStorage.removeItem(`code__${this.groupName}`);
         this.getList().then();
       }
     }

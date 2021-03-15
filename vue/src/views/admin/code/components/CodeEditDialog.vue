@@ -22,7 +22,7 @@
                   rules="required"
                 >
                   <v-text-field
-                    v-model="item.codeGroup"
+                    v-model="item.groupName"
                     label="*그룹 코드"
                     disabled
                     :error-messages="errors"
@@ -43,7 +43,7 @@
                   rules="max:50|required"
                 >
                   <v-text-field
-                    v-model="item.code"
+                    v-model="item.value"
                     label="*상세 코드"
                     :counter="50"
                     :error-messages="errors"
@@ -152,7 +152,7 @@ export default class extends Vue {
   async create(): Promise<void> {
     this.loading = true;
     const response = await postApi<TableCodeEntity>(
-      `admin/code-groups/${this.item.codeGroup}/codes`,
+      `admin/code-groups/${this.item.groupName}/codes`,
       this.item,
     );
     this.loading = false;
@@ -165,13 +165,13 @@ export default class extends Vue {
   async put(): Promise<void> {
     this.loading = true;
     const response = await putApi<TableCodeEntity>(
-      `admin/code-groups/${this.item.codeGroup}/codes/${this.item.id}/`,
+      `admin/code-groups/${this.item.groupName}/codes/${this.item.id}/`,
       this.item,
     );
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       this.syncedDialog = false;
-      window.localStorage.removeItem(`code__${this.item.codeGroup}`);
+      window.localStorage.removeItem(`code__${this.item.groupName}`);
       this.$emit("modified", response.data);
     }
   }

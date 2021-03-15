@@ -20,7 +20,7 @@
           :headers="headers"
           :items="items"
           :options.sync="pagination"
-          item-key="codeGroup"
+          item-key="name"
           single-select
           show-select
           dense
@@ -33,9 +33,9 @@
               :filter.sync="datatableFilter"
             />
           </template>
-          <template #[`item.codeGroup`]="{ item }">
+          <template #[`item.name`]="{ item }">
             <a class="text--anchor" @click="showEditDialog(item)">
-              {{ item.codeGroup }}
+              {{ item.name }}
             </a>
           </template>
           <template #[`item.updated`]="{ item }">
@@ -86,7 +86,7 @@ export default class extends Vue {
   selected: TableCodeGroupEntity[] = [];
   pagination: Pagination = {
     page: 1,
-    sortBy: ["codeGroup"],
+    sortBy: ["name"],
     sortDesc: [true],
     itemsPerPage: 20,
   };
@@ -102,12 +102,12 @@ export default class extends Vue {
       {
         text: "그룹코드",
         align: "start",
-        value: "codeGroup",
+        value: "name",
       },
       {
         text: "그룹코드명",
         align: "start",
-        value: "name",
+        value: "description",
       },
       {
         text: "작업 일시",
@@ -155,7 +155,7 @@ export default class extends Vue {
 
   protected onUpdated(value: TableCodeGroupEntity): void {
     const findIndex = this.items.findIndex(
-      (item) => item.codeGroup === this.editItem.codeGroup,
+      (item) => item.name === this.editItem.name,
     );
     this.items = [
       ...this.items.slice(0, findIndex),
@@ -178,7 +178,7 @@ export default class extends Vue {
     if (result.value) {
       this.saving = true;
       const response = await deleteApi<TableCodeGroupEntity>(
-        `admin/code-groups/${this.selected[0].id}/`,
+        `admin/code-groups/${this.selected[0].name}/`,
       );
       this.saving = false;
       if (response?.code?.startsWith("S")) {

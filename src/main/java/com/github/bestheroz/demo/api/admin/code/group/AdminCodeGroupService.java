@@ -16,12 +16,12 @@ public class AdminCodeGroupService {
   @Resource private TableCodeRepository tableCodeRepository;
 
   @Transactional
-  public TableCodeGroupEntity delete(final Long id) {
+  public TableCodeGroupEntity delete(final String name) {
     return this.tableCodeGroupRepository
-        .findById(id)
+        .findById(name)
         .map(
             (item) -> {
-              this.tableCodeRepository.deleteByCodeGroup(item.getCodeGroup());
+              //              this.tableCodeRepository.deleteByCodeGroup(item.getCodeGroup());
               this.tableCodeGroupRepository.delete(item);
               return item;
             })

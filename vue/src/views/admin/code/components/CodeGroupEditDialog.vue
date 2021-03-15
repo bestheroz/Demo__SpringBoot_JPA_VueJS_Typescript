@@ -22,7 +22,7 @@
                   rules="required|max:32"
                 >
                   <v-text-field
-                    v-model="item.codeGroup"
+                    v-model="item.name"
                     label="*그룹코드"
                     :counter="32"
                     :error-messages="errors"
@@ -37,7 +37,7 @@
                   rules="required|max:100"
                 >
                   <v-text-field
-                    v-model="item.name"
+                    v-model="item.description"
                     label="그룹코드명"
                     :counter="100"
                     :error-messages="errors"
@@ -76,9 +76,10 @@ export default class extends Vue {
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
   loading = false;
+  isNew = true;
 
-  get isNew(): boolean {
-    return !this.item.id;
+  protected created(): void {
+    this.isNew = !this.item.name;
   }
 
   protected async save(): Promise<void> {
@@ -105,7 +106,7 @@ export default class extends Vue {
   protected async put(): Promise<void> {
     this.loading = true;
     const response = await putApi<TableCodeGroupEntity>(
-      `admin/code-groups/${this.item.id}/`,
+      `admin/code-groups/${this.item.name}/`,
       this.item,
     );
     this.loading = false;

@@ -35,12 +35,13 @@ public class AdminCodeGroupController {
     return Result.created(this.tableCodeGroupRepository.save(payload));
   }
 
-  @PutMapping(value = "{id}")
+  @PutMapping(value = "{name}")
   ResponseEntity<ApiResult> put(
-      @PathVariable(value = "id") final Long id, @RequestBody final TableCodeGroupEntity payload) {
+      @PathVariable(value = "name") final String name,
+      @RequestBody final TableCodeGroupEntity payload) {
     return Result.ok(
         this.tableCodeGroupRepository
-            .findById(id)
+            .findById(name)
             .map(
                 (item) -> {
                   BeanUtils.copyProperties(payload, item);
@@ -49,8 +50,8 @@ public class AdminCodeGroupController {
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
-  @DeleteMapping(value = "{id}")
-  ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Long id) {
-    return Result.ok(this.adminCodeGroupService.delete(id));
+  @DeleteMapping(value = "{name}")
+  ResponseEntity<ApiResult> delete(@PathVariable(value = "name") final String name) {
+    return Result.ok(this.adminCodeGroupService.delete(name));
   }
 }

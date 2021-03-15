@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class CodeController {
   @Resource private CodeService codeService;
 
-  @GetMapping(value = "{codeGroup}")
+  @GetMapping(value = "{groupName}")
   public ResponseEntity<ApiResult> getCodeVOList(
-      @PathVariable(value = "codeGroup") final String codeGroup) {
-    return Result.ok(this.codeService.getCodeVOListByAuthority(codeGroup));
+      @PathVariable(value = "groupName") final String groupName) {
+    return Result.ok(this.codeService.getCodeVOListByAuthority(groupName));
   }
 }

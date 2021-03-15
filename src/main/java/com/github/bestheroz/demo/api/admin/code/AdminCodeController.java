@@ -20,31 +20,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "api/admin/code-groups/{codeGroup}/codes")
+@RequestMapping(value = "api/admin/code-groups/{groupName}/codes")
 public class AdminCodeController {
   @Resource private TableCodeRepository tableCodeRepository;
 
   @GetMapping()
-  ResponseEntity<ApiResult> getItems(@PathVariable(value = "codeGroup") final String codeGroup) {
-    return Result.ok(this.tableCodeRepository.findAllByCodeGroup(codeGroup));
+  ResponseEntity<ApiResult> getItems(@PathVariable(value = "groupName") final String groupName) {
+    return Result.ok(this.tableCodeRepository.findAllByGroupName(groupName));
   }
 
   @PostMapping()
   public ResponseEntity<ApiResult> post(
-      @PathVariable(value = "codeGroup") final String codeGroup,
+      @PathVariable(value = "groupName") final String groupName,
       @RequestBody final TableCodeEntity payload) {
-    payload.setCodeGroup(codeGroup);
+    payload.setGroupName(groupName);
     return Result.created(this.tableCodeRepository.save(payload));
   }
 
   @PutMapping(value = "{id}")
   public ResponseEntity<ApiResult> put(
-      @PathVariable(value = "codeGroup") final String codeGroup,
+      @PathVariable(value = "groupName") final String groupName,
       @PathVariable(value = "id") final Long id,
       @RequestBody final TableCodeEntity payload) {
     return Result.ok(
         this.tableCodeRepository
-            .findByCodeGroupAndId(codeGroup, id)
+            .findByGroupNameAndId(groupName, id)
             .map(
                 (item) -> {
                   BeanUtils.copyProperties(payload, item);
@@ -55,11 +55,11 @@ public class AdminCodeController {
 
   @DeleteMapping(value = "{id}")
   public ResponseEntity<ApiResult> delete(
-      @PathVariable(value = "codeGroup") final String codeGroup,
+      @PathVariable(value = "groupName") final String groupName,
       @PathVariable(value = "id") final Long id) {
     return Result.ok(
         this.tableCodeRepository
-            .findByCodeGroupAndId(codeGroup, id)
+            .findByGroupNameAndId(groupName, id)
             .map(
                 (item) -> {
                   this.tableCodeRepository.delete(item);
