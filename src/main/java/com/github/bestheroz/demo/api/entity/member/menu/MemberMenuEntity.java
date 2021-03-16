@@ -7,14 +7,12 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "MEMBER_MENU")
 @IdClass(MemberMenuEntityId.class)

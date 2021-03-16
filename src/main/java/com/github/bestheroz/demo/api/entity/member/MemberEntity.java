@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -18,7 +17,6 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity(name = "MEMBER")
 public class MemberEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 7280716056600887400L;
