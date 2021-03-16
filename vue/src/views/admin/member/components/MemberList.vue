@@ -156,6 +156,7 @@ export default class extends Vue {
         align: "center",
         value: "expired",
         width: "10rem",
+        filterable: false,
       },
       {
         text: "사용 가능",

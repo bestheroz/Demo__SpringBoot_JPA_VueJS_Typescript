@@ -14,7 +14,6 @@
         dense
         clearable
         hide-details
-        multiple
         small-chips
         single-line
         style="width: 95%"
@@ -146,7 +145,7 @@ export default class extends Vue {
         ),
       ).map(([, v]) => [
         `${v.key}:${v.condition || "contains"}`,
-        v.condition === "set" ? JSON.stringify(v.value || "") : v.value || "",
+        v.value || "",
       ]),
     );
   }

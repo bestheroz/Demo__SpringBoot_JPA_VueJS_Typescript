@@ -6,15 +6,8 @@ import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.filter.DataTableFilterDTO;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
-import java.lang.reflect.Method;
-import java.util.Optional;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
-import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,43 +26,10 @@ public class AdminMemberController {
 
   @GetMapping
   ResponseEntity<ApiResult> getItems(final DataTableFilterDTO dataTableFilterDTO) {
-    log.debug("{}", dataTableFilterDTO.getFilter());
-
-    final MemberEntity filterEntity = new MemberEntity();
-    final ExampleMatcher matcher = ExampleMatcher.matching();
-    Optional.ofNullable(dataTableFilterDTO.getFilter())
-        .ifPresent(
-            filter ->
-                filter.forEach(
-                    (key, value) -> {
-                      final String columnName = StringUtils.substringBefore(key, ":");
-                      final String methodString =
-                          "set"
-                              + columnName.substring(0, 1).toUpperCase()
-                              + columnName.substring(1);
-                      final Method[] methods = filterEntity.getClass().getDeclaredMethods();
-                      for (final Method method : methods) {
-                        if (methodString.equals(method.getName())) {
-                          try {
-                            method.invoke(filterEntity, value);
-                          } catch (final Exception e) {
-                            e.printStackTrace();
-                          }
-                        }
-                      }
-                      final GenericPropertyMatcher genericPropertyMatcher;
-                      if ("equals"
-                          .equals(
-                              StringUtils.defaultString(
-                                  StringUtils.substringAfter(key, ":"), "equals"))) {
-                        genericPropertyMatcher = GenericPropertyMatchers.exact();
-                      } else {
-                        genericPropertyMatcher = GenericPropertyMatchers.contains().ignoreCase();
-                      }
-
-                      matcher.withMatcher(columnName, genericPropertyMatcher);
-                    }));
-    return Result.ok(this.memberRepository.findAll(Example.of(filterEntity, matcher)));
+    return Result.ok(
+        this.memberRepository.findAll(
+            dataTableFilterDTO.getExample(new MemberEntity()),
+            dataTableFilterDTO.getPageRequest()));
   }
 
   @GetMapping(value = "{id}")
@@ -100,7 +60,7 @@ public class AdminMemberController {
                   item.setName(payload.getName());
                   item.setAuthority(payload.getAuthority());
                   item.setExpired(payload.getExpired());
-                  item.setAvailable(payload.isAvailable());
+                  item.setAvailable(payload.getAvailable());
                   return this.memberRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));

@@ -32,7 +32,7 @@ public class MemberEntity extends AbstractCreatedUpdateEntity implements Seriali
   private String name;
   private Integer authority;
   private Integer loginFailCnt;
-  private boolean available;
+  private Boolean available;
   private String theme;
   private String token;
   private Instant expired;

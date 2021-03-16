@@ -14,7 +14,7 @@ public class CodeService {
   public List<CodeVO> getCodesByTypeByAuthority(final String type) {
     final Integer authority = AuthenticationUtils.getLoginVO().getAuthority();
     return this.codeRepository.findAllByTypeOrderByDisplayOrderAsc(type).stream()
-        .filter(item -> item.isAvailable() && item.getAuthority() <= authority)
+        .filter(item -> item.getAvailable() && item.getAuthority() <= authority)
         .map(item -> new CodeVO(item.getValue(), item.getName()))
         .collect(Collectors.toList());
   }

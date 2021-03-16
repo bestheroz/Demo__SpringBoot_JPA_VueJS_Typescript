@@ -8,7 +8,7 @@
       <v-icon size="16" style="vertical-align: initial">
         mdi-clock-check-outline
       </v-icon>
-      데이타 {{ text }} 지남
+      로딩 후 {{ text }} 지남
       <button-icon-tooltip
         text="새로고침"
         icon="mdi-reload"

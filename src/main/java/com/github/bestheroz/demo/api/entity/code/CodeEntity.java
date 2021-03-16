@@ -30,7 +30,7 @@ public class CodeEntity extends AbstractCreatedUpdateEntity implements Serializa
   private String value;
 
   private String name;
-  private boolean available;
+  private Boolean available;
   private Integer displayOrder;
   private Integer authority;
 }

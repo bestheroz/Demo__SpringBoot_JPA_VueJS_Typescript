@@ -70,7 +70,7 @@ public class AuthService implements UserDetailsService {
               }
 
               // 5. 계정 차단된 상태인가
-              if (!memberEntity.isAvailable()
+              if (!memberEntity.getAvailable()
                   || memberEntity.getExpired().toEpochMilli() < Instant.now().toEpochMilli()) {
                 throw new BusinessException(ExceptionCode.FAIL_LOGIN_CLOSED);
               }
