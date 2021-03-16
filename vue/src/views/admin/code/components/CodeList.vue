@@ -9,8 +9,6 @@
       @click:delete="remove"
       reload-button
       @click:reload="getList"
-      excel-button
-      @click:excel="excel"
     />
     <v-card flat>
       <v-card-text class="py-0">

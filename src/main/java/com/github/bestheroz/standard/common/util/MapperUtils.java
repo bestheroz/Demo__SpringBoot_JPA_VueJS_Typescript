@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.HashMap;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -29,5 +30,9 @@ public class MapperUtils {
       log.warn(ExceptionUtils.getStackTrace(e));
       throw new RuntimeException(e);
     }
+  }
+
+  public HashMap toHashMap(final Object source) {
+    return OBJECT_MAPPER.convertValue(source, HashMap.class);
   }
 }
