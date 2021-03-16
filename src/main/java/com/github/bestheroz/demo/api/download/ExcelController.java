@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class ExcelController {
   @Resource private CodeService codeService;
-  @Resource private MemberRepository tableMemberRepository;
+  @Resource private MemberRepository memberRepository;
   @Resource private CodeRepository codeRepository;
 
   @GetMapping(value = "admin/members/download/excel")
@@ -53,7 +53,7 @@ public class ExcelController {
     model.addAttribute(AbstractExcelXView.EXCEL_VOS, excelVOList);
     model.addAttribute(
         AbstractExcelXView.LIST_DATA,
-        this.tableMemberRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "created")));
+        this.memberRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "created")));
     return ExcelService.VIEW_NAME;
   }
 }

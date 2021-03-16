@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "api/admin/member/menus/{authority}")
 public class AdminMemberMenuController {
-  @Resource private MemberMenuRepository tableMemberMenuRepository;
+  @Resource private MemberMenuRepository memberMenuRepository;
   @Resource private AdminMemberMenuService adminMemberMenuService;
 
   @GetMapping
   ResponseEntity<ApiResult> getItems(@PathVariable(value = "authority") final Integer authority) {
     return Result.ok(
-        this.tableMemberMenuRepository.findAllByAuthority(
+        this.memberMenuRepository.findAllByAuthority(
             authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
   }
 

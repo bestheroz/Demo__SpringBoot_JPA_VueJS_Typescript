@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/auth")
 public class AuthController {
   @Resource private AuthService authService;
-  @Resource private MemberRepository tableMemberRepository;
+  @Resource private MemberRepository memberRepository;
 
   @PostMapping(value = "/login")
   @ResponseBody
@@ -34,7 +34,7 @@ public class AuthController {
   public ResponseEntity<ApiResult> getMine(
       @RequestHeader(value = "Authorization") final String token) {
     return Result.ok(
-        this.tableMemberRepository
+        this.memberRepository
             .findByUserId(JwtTokenProvider.getUserId(token))
             .orElseThrow(() -> BusinessException.FAIL_TRY_LOGIN_FIRST));
   }

@@ -11,36 +11,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminMenuService {
-  @Resource private MenuRepository tableMenuRepository;
-  @Resource private MemberMenuRepository tableMemberMenuRepository;
+  @Resource private MenuRepository menuRepository;
+  @Resource private MemberMenuRepository memberMenuRepository;
 
   @Transactional
   public MenuEntity put(final MenuEntity payload, final Long id) {
-    return this.tableMenuRepository
+    return this.menuRepository
         .findById(id)
         .map(
             (item) -> {
               BeanUtils.copyProperties(payload, item);
-              this.tableMemberMenuRepository
+              this.memberMenuRepository
                   .findAllById(id)
                   .forEach(
                       memberMenu -> {
                         BeanUtils.copyProperties(payload, memberMenu);
-                        this.tableMemberMenuRepository.save(memberMenu);
+                        this.memberMenuRepository.save(memberMenu);
                       });
-              return this.tableMenuRepository.save(item);
+              return this.menuRepository.save(item);
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
   }
 
   @Transactional
   public MenuEntity delete(final Long id) {
-    return this.tableMenuRepository
+    return this.menuRepository
         .findById(id)
         .map(
             (item) -> {
-              this.tableMenuRepository.delete(item);
-              this.tableMemberMenuRepository.deleteAllById(id);
+              this.menuRepository.delete(item);
+              this.memberMenuRepository.deleteAllById(id);
               return item;
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);

@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminMemberMenuService {
-  @Resource private MemberMenuRepository tableMemberMenuRepository;
+  @Resource private MemberMenuRepository memberMenuRepository;
 
   @Transactional
   public List<MemberMenuEntity> save(
       final Integer authority, final List<MemberMenuEntity> payload) {
-    this.tableMemberMenuRepository.deleteByAuthorityAndIdNotIn(
+    this.memberMenuRepository.deleteByAuthorityAndIdNotIn(
         authority, payload.stream().map(MemberMenuEntity::getId).collect(Collectors.toList()));
     return payload.stream()
-        .map(menu -> this.tableMemberMenuRepository.save(menu))
+        .map(menu -> this.memberMenuRepository.save(menu))
         .collect(Collectors.toList());
   }
 }

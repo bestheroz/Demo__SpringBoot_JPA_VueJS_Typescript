@@ -12,22 +12,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MenuService {
-  @Resource private MenuRepository tableMenuRepository;
-  @Resource private MemberMenuRepository tableMemberMenuRepository;
+  @Resource private MenuRepository menuRepository;
+  @Resource private MemberMenuRepository memberMenuRepository;
 
   public List<MenuVO> getDrawerList(final Integer authority) {
     final List<MenuVO> parents;
     final List<MemberMenuEntity> items;
     if (authority.equals(999)) {
       items =
-          this.tableMenuRepository
+          this.menuRepository
               .findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name"))
               .stream()
               .map(
                   entity -> {
-                    final MemberMenuEntity tableMenuEntity = new MemberMenuEntity();
-                    BeanUtils.copyProperties(entity, tableMenuEntity);
-                    return tableMenuEntity;
+                    final MemberMenuEntity menuEntity = new MemberMenuEntity();
+                    BeanUtils.copyProperties(entity, menuEntity);
+                    return menuEntity;
                   })
               .collect(Collectors.toList());
 
@@ -43,7 +43,7 @@ public class MenuService {
               .collect(Collectors.toList());
     } else {
       items =
-          this.tableMemberMenuRepository.findAllByAuthority(
+          this.memberMenuRepository.findAllByAuthority(
               authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name"));
       parents =
           items.stream()
