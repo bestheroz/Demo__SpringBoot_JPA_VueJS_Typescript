@@ -37,10 +37,10 @@ public class MapperUtils {
   public Map<String, Object> toMap(final Object source) {
     final Map<String, Object> map = new HashMap<>();
     final Field[] fields = source.getClass().getDeclaredFields();
-    for (int i = 0; i < fields.length; i++) {
-      fields[i].setAccessible(true);
+    for (final Field field : fields) {
+      field.setAccessible(true);
       try {
-        map.put(fields[i].getName(), fields[i].get(source));
+        map.put(field.getName(), field.get(source));
       } catch (final Exception e) {
         e.printStackTrace();
       }
