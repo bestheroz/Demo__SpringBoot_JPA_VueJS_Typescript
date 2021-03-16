@@ -22,7 +22,7 @@
                   rules="required|max:50"
                 >
                   <v-text-field
-                    v-model="item.id"
+                    v-model="item.userId"
                     label="*사용자아이디"
                     :counter="50"
                     :error-messages="errors"

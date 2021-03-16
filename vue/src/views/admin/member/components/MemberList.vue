@@ -36,12 +36,12 @@
               :filter.sync="datatableFilter"
             />
           </template>
-          <template #[`item.id`]="{ item }">
+          <template #[`item.userId`]="{ item }">
             <a
               class="text--anchor"
               @click="showEditDialog({ ...item, password: undefined })"
             >
-              {{ item.id }}
+              {{ item.userId }}
             </a>
           </template>
           <template #[`item.available`]="{ item }">
@@ -136,7 +136,7 @@ export default class extends Vue {
       {
         text: "사용자아이디",
         align: "start",
-        value: "id",
+        value: "userId",
       },
       {
         text: "사용자명",
