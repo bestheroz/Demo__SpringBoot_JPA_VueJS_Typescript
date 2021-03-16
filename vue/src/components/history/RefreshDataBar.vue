@@ -9,7 +9,6 @@
         text="새로고침"
         icon="mdi-reload"
         class="pl-1"
-        color="primary"
         x-small
         @click="$emit('reload')"
       />
