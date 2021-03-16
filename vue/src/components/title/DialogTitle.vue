@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-system-bar color="secondary" window class="mb-4 text-h6">
+    <v-system-bar window class="mb-4 text-h6" color="secondary">
       <v-icon
         v-text="
           isNew ? 'mdi-database-plus-outline' : 'mdi-database-edit-outline'

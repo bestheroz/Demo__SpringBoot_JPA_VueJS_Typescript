@@ -66,7 +66,7 @@ export default class extends Vue {
 
   get color(): string | null {
     if (this.diff < 300) {
-      return null;
+      return "secondary";
     } else if (this.diff < 600) {
       return "info";
     } else if (this.diff < 1200) {
