@@ -9,7 +9,7 @@ import axios from "axios";
 import envs from "@/constants/envs";
 import router from "@/router";
 import { defaultUser } from "@/common/values";
-import type { TableMemberEntity } from "@/common/entities";
+import type { MemberEntity } from "@/common/entities";
 
 Vue.use(Vuex);
 
@@ -44,7 +44,7 @@ const user = {
     },
   },
   mutations: {
-    setUser(state: any, user: TableMemberEntity): void {
+    setUser(state: any, user: MemberEntity): void {
       state.user = user;
     },
     setTheme(state: any, theme: string): void {

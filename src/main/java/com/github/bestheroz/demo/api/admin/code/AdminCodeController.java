@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.admin.code;
 
-import com.github.bestheroz.demo.api.entity.code.TableCodeEntity;
-import com.github.bestheroz.demo.api.entity.code.TableCodeRepository;
+import com.github.bestheroz.demo.api.entity.code.CodeEntity;
+import com.github.bestheroz.demo.api.entity.code.CodeRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
@@ -16,53 +16,52 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "api/admin/code-groups/{codeGroup}/codes")
+@RequestMapping(value = "api/admin/codes/")
 public class AdminCodeController {
-  @Resource private TableCodeRepository tableCodeRepository;
+  @Resource private CodeRepository codeRepository;
+
+  @GetMapping("types/")
+  ResponseEntity<ApiResult> getTypes() {
+    return Result.ok(this.codeRepository.getTypes());
+  }
 
   @GetMapping()
-  ResponseEntity<ApiResult> getItems(@PathVariable(value = "codeGroup") final String codeGroup) {
-    return Result.ok(this.tableCodeRepository.findAllByCodeGroup(codeGroup));
+  ResponseEntity<ApiResult> getItems(@RequestParam(value = "type") final String type) {
+    return Result.ok(this.codeRepository.findAllByTypeOrderByDisplayOrderAsc(type));
   }
 
   @PostMapping()
-  public ResponseEntity<ApiResult> post(
-      @PathVariable(value = "codeGroup") final String codeGroup,
-      @RequestBody final TableCodeEntity payload) {
-    payload.setCodeGroup(codeGroup);
-    return Result.created(this.tableCodeRepository.save(payload));
+  public ResponseEntity<ApiResult> post(@RequestBody final CodeEntity payload) {
+    return Result.created(this.codeRepository.save(payload));
   }
 
   @PutMapping(value = "{id}")
   public ResponseEntity<ApiResult> put(
-      @PathVariable(value = "codeGroup") final String codeGroup,
-      @PathVariable(value = "id") final Long id,
-      @RequestBody final TableCodeEntity payload) {
+      @PathVariable(value = "id") final Long id, @RequestBody final CodeEntity payload) {
     return Result.ok(
-        this.tableCodeRepository
-            .findByCodeGroupAndId(codeGroup, id)
+        this.codeRepository
+            .findById(id)
             .map(
                 (item) -> {
                   BeanUtils.copyProperties(payload, item);
-                  return this.tableCodeRepository.save(item);
+                  return this.codeRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
 
   @DeleteMapping(value = "{id}")
-  public ResponseEntity<ApiResult> delete(
-      @PathVariable(value = "codeGroup") final String codeGroup,
-      @PathVariable(value = "id") final Long id) {
+  public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Long id) {
     return Result.ok(
-        this.tableCodeRepository
-            .findByCodeGroupAndId(codeGroup, id)
+        this.codeRepository
+            .findById(id)
             .map(
                 (item) -> {
-                  this.tableCodeRepository.delete(item);
+                  this.codeRepository.delete(item);
                   return item;
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));

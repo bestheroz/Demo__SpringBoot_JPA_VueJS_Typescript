@@ -1,8 +1,8 @@
 package com.github.bestheroz.demo.api.member;
 
-import com.github.bestheroz.demo.api.entity.member.TableMemberEntity;
-import com.github.bestheroz.demo.api.entity.member.TableMemberRepository;
-import com.github.bestheroz.standard.common.code.CodeRepository;
+import com.github.bestheroz.demo.api.entity.code.CodeRepository;
+import com.github.bestheroz.demo.api.entity.member.MemberEntity;
+import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.github.bestheroz.standard.common.response.ApiResult;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/members")
 @Slf4j
 public class MemberController {
-  @Resource private TableMemberRepository tableMemberRepository;
+  @Resource private MemberRepository memberRepository;
   @Resource private CodeRepository codeRepository;
 
   @GetMapping(value = "codes")
@@ -35,7 +35,7 @@ public class MemberController {
   @GetMapping(value = "mine")
   ResponseEntity<ApiResult> getMyInfo() {
     return Result.ok(
-        this.tableMemberRepository
+        this.memberRepository
             .findByUserId(AuthenticationUtils.getUserId())
             .map(
                 item -> {
@@ -46,20 +46,20 @@ public class MemberController {
   }
 
   @PatchMapping("mine")
-  public ResponseEntity<ApiResult> editMe(@RequestBody final TableMemberEntity payload) {
-    return this.tableMemberRepository
+  public ResponseEntity<ApiResult> editMe(@RequestBody final MemberEntity payload) {
+    return this.memberRepository
         .findByUserId(AuthenticationUtils.getUserId())
         .map(
-            tableMemberEntity -> {
+            memberEntity -> {
               final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
               // 패스워드가 틀리면
               if (!pbkdf2PasswordEncoder.matches(
-                  tableMemberEntity.getPassword(),
+                  memberEntity.getPassword(),
                   pbkdf2PasswordEncoder.encode(payload.getPassword()))) {
                 throw new BusinessException(ExceptionCode.FAIL_MATCH_PASSWORD);
               }
-              tableMemberEntity.setName(payload.getName());
-              this.tableMemberRepository.save(tableMemberEntity);
+              memberEntity.setName(payload.getName());
+              this.memberRepository.save(memberEntity);
               return Result.ok();
             })
         .orElseThrow(() -> new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER));
@@ -67,19 +67,19 @@ public class MemberController {
 
   @PostMapping(value = "mine/changePassword")
   public ResponseEntity<ApiResult> changePassword(@RequestBody final Map<String, String> payload) {
-    return this.tableMemberRepository
+    return this.memberRepository
         .findByUserId(AuthenticationUtils.getUserId())
         .map(
-            tableMemberEntity -> {
+            memberEntity -> {
               final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
               // 패스워드가 틀리면
               if (!pbkdf2PasswordEncoder.matches(
-                  tableMemberEntity.getPassword(),
+                  memberEntity.getPassword(),
                   pbkdf2PasswordEncoder.encode(payload.get("oldPassword")))) {
                 throw new BusinessException(ExceptionCode.FAIL_MATCH_OLD_PASSWORD);
               }
-              tableMemberEntity.setPassword(payload.get("newPassword"));
-              this.tableMemberRepository.save(tableMemberEntity);
+              memberEntity.setPassword(payload.get("newPassword"));
+              this.memberRepository.save(memberEntity);
               return Result.ok();
             })
         .orElseThrow(
@@ -91,12 +91,12 @@ public class MemberController {
 
   @PostMapping(value = "mine/changeTheme")
   public ResponseEntity<ApiResult> changeTheme(@RequestBody final Map<String, String> payload) {
-    return this.tableMemberRepository
+    return this.memberRepository
         .findByUserId(AuthenticationUtils.getUserId())
         .map(
-            tableMemberEntity -> {
-              tableMemberEntity.setTheme(payload.get("theme"));
-              this.tableMemberRepository.save(tableMemberEntity);
+            memberEntity -> {
+              memberEntity.setTheme(payload.get("theme"));
+              this.memberRepository.save(memberEntity);
               return Result.ok();
             })
         .orElseThrow(() -> new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER));

@@ -72,6 +72,11 @@
             </v-row>
           </ValidationObserver>
         </v-card-text>
+        <created-updated-bar
+          :created-date-time="item.created"
+          :updated-date-time="item.updated"
+          v-if="!isNew"
+        />
         <dialog-action-button
           :loading="saving"
           @click:save="save"
@@ -90,14 +95,20 @@ import { ValidationObserver } from "vee-validate";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
-import type { TableMenuEntity } from "@/common/entities";
+import type { MenuEntity } from "@/common/entities";
+import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 
 @Component({
   name: "MenuEditDialog",
-  components: { DialogActionButton, DialogTitle, ButtonIconTooltip },
+  components: {
+    CreatedUpdatedBar,
+    DialogActionButton,
+    DialogTitle,
+    ButtonIconTooltip,
+  },
 })
 export default class extends Vue {
-  @VModel({ required: true }) item!: TableMenuEntity;
+  @VModel({ required: true }) item!: MenuEntity;
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
@@ -123,10 +134,7 @@ export default class extends Vue {
 
   protected async create(): Promise<void> {
     this.saving = true;
-    const response = await postApi<TableMenuEntity>(
-      this.ENDPOINT_URL,
-      this.item,
-    );
+    const response = await postApi<MenuEntity>(this.ENDPOINT_URL, this.item);
     this.saving = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initDrawers");
@@ -137,7 +145,7 @@ export default class extends Vue {
 
   protected async update(): Promise<void> {
     this.saving = true;
-    const response = await putApi<TableMenuEntity>(
+    const response = await putApi<MenuEntity>(
       `${this.ENDPOINT_URL}${this.item.id}/`,
       this.item,
     );
@@ -145,7 +153,7 @@ export default class extends Vue {
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initDrawers");
       this.syncedDialog = false;
-      this.$emit("modified", response.data);
+      this.$emit("updated", response.data);
     }
   }
 

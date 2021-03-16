@@ -1,8 +1,8 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuRepository;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuEntity;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
+import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import javax.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -11,36 +11,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminMenuService {
-  @Resource private TableMenuRepository tableMenuRepository;
-  @Resource private TableMemberMenuRepository tableMemberMenuRepository;
+  @Resource private MenuRepository menuRepository;
+  @Resource private MemberMenuRepository memberMenuRepository;
 
   @Transactional
-  public TableMenuEntity put(final TableMenuEntity payload, final Long id) {
-    return this.tableMenuRepository
+  public MenuEntity put(final MenuEntity payload, final Long id) {
+    return this.menuRepository
         .findById(id)
         .map(
             (item) -> {
               BeanUtils.copyProperties(payload, item);
-              this.tableMemberMenuRepository
+              this.memberMenuRepository
                   .findAllById(id)
                   .forEach(
                       memberMenu -> {
                         BeanUtils.copyProperties(payload, memberMenu);
-                        this.tableMemberMenuRepository.save(memberMenu);
+                        this.memberMenuRepository.save(memberMenu);
                       });
-              return this.tableMenuRepository.save(item);
+              return this.menuRepository.save(item);
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
   }
 
   @Transactional
-  public TableMenuEntity delete(final Long id) {
-    return this.tableMenuRepository
+  public MenuEntity delete(final Long id) {
+    return this.menuRepository
         .findById(id)
         .map(
             (item) -> {
-              this.tableMenuRepository.delete(item);
-              this.tableMemberMenuRepository.deleteAllById(id);
+              this.menuRepository.delete(item);
+              this.memberMenuRepository.deleteAllById(id);
               return item;
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);

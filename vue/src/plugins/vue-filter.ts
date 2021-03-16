@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { SelectItem } from "@/common/types";
+import { DateTime, SelectItem } from "@/common/types";
 import { getText } from "@/utils/codes";
 import {
   formatDate,
@@ -11,16 +11,13 @@ import {
 
 Vue.filter(
   "formatDatetime",
-  function (value: string | number | Date | undefined | null): string {
+  function (value: DateTime | undefined | null): string {
     return formatDatetime(value);
   },
 );
-Vue.filter(
-  "formatDate",
-  function (value: string | number | Date | undefined | null): string {
-    return formatDate(value);
-  },
-);
+Vue.filter("formatDate", function (value: DateTime | undefined | null): string {
+  return formatDate(value);
+});
 Vue.filter(
   "formatMemberNm",
   function (value: string | undefined | null): string {

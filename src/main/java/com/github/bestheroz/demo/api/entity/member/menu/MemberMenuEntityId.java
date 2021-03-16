@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TableMemberMenuEntityId implements Serializable {
+public class MemberMenuEntityId implements Serializable {
   private static final long serialVersionUID = -4897596840013190393L;
   @Id private Integer authority;
   @Id private Long id;

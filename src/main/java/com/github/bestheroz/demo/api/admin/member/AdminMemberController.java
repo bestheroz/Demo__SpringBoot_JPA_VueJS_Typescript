@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.admin.member;
 
-import com.github.bestheroz.demo.api.entity.member.TableMemberEntity;
-import com.github.bestheroz.demo.api.entity.member.TableMemberRepository;
+import com.github.bestheroz.demo.api.entity.member.MemberEntity;
+import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.filter.DataTableFilterDTO;
 import com.github.bestheroz.standard.common.response.ApiResult;
@@ -22,17 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "api/admin/members")
 public class AdminMemberController {
-  @Resource private TableMemberRepository tableMemberRepository;
+  @Resource private MemberRepository memberRepository;
 
   @GetMapping
   ResponseEntity<ApiResult> getItems(final DataTableFilterDTO dataTableFilterDTO) {
-    return Result.ok(this.tableMemberRepository.findAll(dataTableFilterDTO.getPageRequest()));
+    return Result.ok(
+        this.memberRepository.findAll(
+            dataTableFilterDTO.getExample(new MemberEntity()),
+            dataTableFilterDTO.getPageRequest()));
   }
 
   @GetMapping(value = "{id}")
   ResponseEntity<ApiResult> getItem(@PathVariable(value = "id") final Long id) {
     return Result.ok(
-        this.tableMemberRepository
+        this.memberRepository
             .findById(id)
             .map(
                 item -> {
@@ -42,23 +45,23 @@ public class AdminMemberController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResult> post(@RequestBody final TableMemberEntity payload) {
-    return Result.created(this.tableMemberRepository.save(payload));
+  public ResponseEntity<ApiResult> post(@RequestBody final MemberEntity payload) {
+    return Result.created(this.memberRepository.save(payload));
   }
 
   @PatchMapping(value = "{id}")
   public ResponseEntity<ApiResult> patch(
-      @PathVariable(value = "id") final Long id, @RequestBody final TableMemberEntity payload) {
+      @PathVariable(value = "id") final Long id, @RequestBody final MemberEntity payload) {
     return Result.ok(
-        this.tableMemberRepository
+        this.memberRepository
             .findById(id)
             .map(
                 (item) -> {
                   item.setName(payload.getName());
                   item.setAuthority(payload.getAuthority());
                   item.setExpired(payload.getExpired());
-                  item.setAvailable(payload.isAvailable());
-                  return this.tableMemberRepository.save(item);
+                  item.setAvailable(payload.getAvailable());
+                  return this.memberRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }
@@ -66,11 +69,11 @@ public class AdminMemberController {
   @DeleteMapping(value = "{id}")
   public ResponseEntity<ApiResult> delete(@PathVariable(value = "id") final Long id) {
     return Result.ok(
-        this.tableMemberRepository
+        this.memberRepository
             .findById(id)
             .map(
                 (item) -> {
-                  this.tableMemberRepository.delete(item);
+                  this.memberRepository.delete(item);
                   return item;
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
@@ -79,12 +82,12 @@ public class AdminMemberController {
   @PostMapping(value = "{id}/resetPassword")
   public ResponseEntity<ApiResult> resetPassword(@PathVariable(value = "id") final Long id) {
     return Result.ok(
-        this.tableMemberRepository
+        this.memberRepository
             .findById(id)
             .map(
                 (item) -> {
                   item.setPassword(null);
-                  return this.tableMemberRepository.save(item);
+                  return this.memberRepository.save(item);
                 })
             .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS));
   }

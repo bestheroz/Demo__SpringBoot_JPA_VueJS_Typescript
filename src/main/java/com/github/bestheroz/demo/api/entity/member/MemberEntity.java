@@ -9,16 +9,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity(name = "MEMBER")
-public class TableMemberEntity extends AbstractCreatedUpdateEntity implements Serializable {
+public class MemberEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 7280716056600887400L;
 
   @Id
@@ -32,7 +32,7 @@ public class TableMemberEntity extends AbstractCreatedUpdateEntity implements Se
   private String name;
   private Integer authority;
   private Integer loginFailCnt;
-  private boolean available;
+  private Boolean available;
   private String theme;
   private String token;
   private Instant expired;

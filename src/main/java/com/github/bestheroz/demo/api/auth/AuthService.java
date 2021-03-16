@@ -1,6 +1,6 @@
 package com.github.bestheroz.demo.api.auth;
 
-import com.github.bestheroz.demo.api.entity.member.TableMemberRepository;
+import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.authenticate.UserVO;
 import com.github.bestheroz.standard.common.exception.BusinessException;
@@ -24,33 +24,33 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional
 public class AuthService implements UserDetailsService {
-  @Resource private TableMemberRepository tableMemberRepository;
+  @Resource private MemberRepository memberRepository;
 
   @Override
   public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
     if (StringUtils.isEmpty(username)) {
       throw new UsernameNotFoundException("No user found");
     }
-    return this.tableMemberRepository
+    return this.memberRepository
         .findByUserId(username)
         .map(
-            tableMemberEntity ->
+            memberEntity ->
                 new UserVO(
-                    tableMemberEntity.getId(),
-                    tableMemberEntity.getUserId(),
-                    tableMemberEntity.getName(),
-                    tableMemberEntity.getAuthority(),
-                    tableMemberEntity.getTheme()))
+                    memberEntity.getId(),
+                    memberEntity.getUserId(),
+                    memberEntity.getName(),
+                    memberEntity.getAuthority(),
+                    memberEntity.getTheme()))
         .orElseThrow(() -> new UsernameNotFoundException("No user found by `" + username + "`"));
   }
 
   Map<String, String> login(final String userId, final String password) {
-    return this.tableMemberRepository
+    return this.memberRepository
         .findByUserId(userId)
         .map(
-            tableMemberEntity -> {
+            memberEntity -> {
               // 2. 패스워드를 생성한 적이 없으면
-              if (StringUtils.isEmpty(tableMemberEntity.getPassword())) {
+              if (StringUtils.isEmpty(memberEntity.getPassword())) {
                 log.info(ExceptionCode.SUCCESS_TRY_NEW_PASSWORD.toString());
                 throw new BusinessException(ExceptionCode.SUCCESS_TRY_NEW_PASSWORD);
               }
@@ -58,54 +58,54 @@ public class AuthService implements UserDetailsService {
               final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
               // 3. 패스워드가 틀리면
               if (!pbkdf2PasswordEncoder.matches(
-                  tableMemberEntity.getPassword(), pbkdf2PasswordEncoder.encode(password))) {
-                tableMemberEntity.setLoginFailCnt(tableMemberEntity.getLoginFailCnt() + 1);
-                this.tableMemberRepository.save(tableMemberEntity);
+                  memberEntity.getPassword(), pbkdf2PasswordEncoder.encode(password))) {
+                memberEntity.setLoginFailCnt(memberEntity.getLoginFailCnt() + 1);
+                this.memberRepository.save(memberEntity);
                 throw new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER);
               }
 
               // 4. LOGIN_FAIL_CNT가 5회 이상 인가
-              if (tableMemberEntity.getLoginFailCnt() >= 5) {
+              if (memberEntity.getLoginFailCnt() >= 5) {
                 throw new BusinessException(ExceptionCode.FAIL_LOGIN_FAIL_CNT);
               }
 
               // 5. 계정 차단된 상태인가
-              if (!tableMemberEntity.isAvailable()
-                  || tableMemberEntity.getExpired().toEpochMilli() < Instant.now().toEpochMilli()) {
+              if (!memberEntity.getAvailable()
+                  || memberEntity.getExpired().toEpochMilli() < Instant.now().toEpochMilli()) {
                 throw new BusinessException(ExceptionCode.FAIL_LOGIN_CLOSED);
               }
 
-              tableMemberEntity.setLoginFailCnt(0);
+              memberEntity.setLoginFailCnt(0);
               final UserVO userVO = new UserVO();
-              BeanUtils.copyProperties(tableMemberEntity, userVO);
+              BeanUtils.copyProperties(memberEntity, userVO);
               final String accessToken = JwtTokenProvider.createAccessToken(userVO);
               final String refreshToken = JwtTokenProvider.createRefreshToken(userVO);
               SecurityContextHolder.getContext()
                   .setAuthentication(JwtTokenProvider.getAuthentication(accessToken));
-              tableMemberEntity.setToken(refreshToken);
-              this.tableMemberRepository.save(tableMemberEntity);
+              memberEntity.setToken(refreshToken);
+              this.memberRepository.save(memberEntity);
               return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
             })
         .orElseThrow(() -> new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER));
   }
 
   void logout() {
-    this.tableMemberRepository
+    this.memberRepository
         .findByUserId(AuthenticationUtils.getUserId())
         .ifPresent(
             item -> {
               item.setToken(null);
-              this.tableMemberRepository.save(item);
+              this.memberRepository.save(item);
             });
   }
 
   String getNewAccessToken(final String refreshToken) {
-    return this.tableMemberRepository
+    return this.memberRepository
         .findByUserIdAndToken(JwtTokenProvider.getUserId(refreshToken), refreshToken)
         .map(
-            tableMemberEntity -> {
+            memberEntity -> {
               final UserVO userVO = new UserVO();
-              BeanUtils.copyProperties(tableMemberEntity, userVO);
+              BeanUtils.copyProperties(memberEntity, userVO);
               final String newAccessToken = JwtTokenProvider.createAccessToken(userVO);
               SecurityContextHolder.getContext()
                   .setAuthentication(JwtTokenProvider.getAuthentication(newAccessToken));
@@ -119,18 +119,18 @@ public class AuthService implements UserDetailsService {
   }
 
   UserVO initPassword(final Long id, final String password) {
-    return this.tableMemberRepository
+    return this.memberRepository
         .findById(id)
         .map(
-            tableMemberEntity -> {
-              if (StringUtils.isNotEmpty(tableMemberEntity.getPassword())) {
+            memberEntity -> {
+              if (StringUtils.isNotEmpty(memberEntity.getPassword())) {
                 log.warn(ExceptionCode.FAIL_INVALID_REQUEST.toString());
                 throw new BusinessException(ExceptionCode.FAIL_INVALID_REQUEST);
               }
 
-              tableMemberEntity.setPassword(password);
+              memberEntity.setPassword(password);
               final UserVO userVO = new UserVO();
-              BeanUtils.copyProperties(this.tableMemberRepository.save(tableMemberEntity), userVO);
+              BeanUtils.copyProperties(this.memberRepository.save(memberEntity), userVO);
               return userVO;
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);

@@ -1,6 +1,6 @@
 import { DateTime } from "@/common/types";
 
-export interface TableMemberEntity {
+export interface MemberEntity {
   id?: number | null;
   created?: DateTime | null;
   createdBy?: string | null;
@@ -17,7 +17,7 @@ export interface TableMemberEntity {
   token: string | null;
 }
 
-export interface TableMenuEntity {
+export interface MenuEntity {
   id?: number | null;
   created?: DateTime | null;
   createdBy?: string | null;
@@ -32,30 +32,7 @@ export interface TableMenuEntity {
   url: string | null;
 }
 
-export interface TableCodeGroupEntity {
-  id?: number | null;
-  created?: DateTime | null;
-  createdBy?: string | null;
-  updated?: DateTime | null;
-  updatedBy?: string | null;
-  codeGroup: string | null;
-  name: string | null;
-}
-
-export interface TableCodeEntity {
-  id?: number | null;
-  created?: DateTime | null;
-  createdBy?: string | null;
-  updated?: DateTime | null;
-  updatedBy?: string | null;
-  codeGroup: string | null;
-  code: string | null;
-  name: string | null;
-  available: boolean | null;
-  displayOrder: number | null;
-  authority: number | null;
-}
-export interface TableMemberMenuEntity {
+export interface MemberMenuEntity {
   id?: number | null;
   createdBy?: string | null;
   created?: DateTime | null;
@@ -69,4 +46,18 @@ export interface TableMemberMenuEntity {
   displayOrder: number | null;
   icon: string | null;
   url: string | null;
+}
+
+export interface CodeEntity {
+  id?: number | null;
+  created?: DateTime | null;
+  createdBy?: string | null;
+  updated?: DateTime | null;
+  updatedBy?: string | null;
+  type: string | null;
+  value: string | null;
+  name: string | null;
+  available: boolean | null;
+  displayOrder: number | null;
+  authority: number | null;
 }

@@ -13,6 +13,7 @@
     <v-card flat>
       <v-card-text>
         <v-list dense>
+          <refresh-data-bar ref="refRefreshDataBar" @reload="getList" />
           <draggable
             tag="div"
             v-model="items"
@@ -54,39 +55,42 @@
       v-model="editItem"
       :dialog.sync="dialog"
       @created="onCreated"
-      @modified="onUpdated"
+      @updated="onUpdated"
       v-if="dialog"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Ref, Vue } from "vue-property-decorator";
 import { deleteApi, getApi, postApi } from "@/utils/apis";
 import { confirmDelete } from "@/utils/alerts";
 import MenuEditDialog from "@/views/admin/menu/components/MenuEditDialog.vue";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultTableMenuEntity } from "@/common/values";
+import { defaultMenuEntity } from "@/common/values";
 import _ from "lodash";
-import type { TableMenuEntity } from "@/common/entities";
+import type { MenuEntity } from "@/common/entities";
+import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 
-interface MenuVO extends TableMenuEntity {
-  children: TableMenuEntity[];
+interface MenuVO extends MenuEntity {
+  children: MenuEntity[];
 }
 
 @Component({
   name: "MenuList",
-  components: { ButtonSet, MenuEditDialog, draggable },
+  components: { RefreshDataBar, ButtonSet, MenuEditDialog, draggable },
 })
 export default class extends Vue {
   @Prop() readonly height!: number | string;
-  items: TableMenuEntity[] = [];
+  @Ref() readonly refRefreshDataBar!: RefreshDataBar;
+
+  items: MenuEntity[] = [];
   loading = false;
   saving = false;
   drag = false;
 
-  editItem: TableMenuEntity = defaultTableMenuEntity();
+  editItem: MenuEntity = defaultMenuEntity();
   dialog = false;
 
   get dragOptions(): { animation: number } {
@@ -105,13 +109,14 @@ export default class extends Vue {
     const response = await getApi<MenuVO[]>("admin/menus/");
     this.loading = false;
     this.items = response?.data || [];
+    this.refRefreshDataBar.triggerRefreshed();
   }
 
-  protected onCreated(value: TableMenuEntity): void {
+  protected onCreated(value: MenuEntity): void {
     this.items = [value, ...this.items];
   }
 
-  protected onUpdated(value: TableMenuEntity): void {
+  protected onUpdated(value: MenuEntity): void {
     const findIndex = this.items.findIndex(
       (item) => item.id === this.editItem.id,
     );
@@ -123,21 +128,19 @@ export default class extends Vue {
   }
 
   protected showAddDialog(): void {
-    this.editItem = defaultTableMenuEntity();
+    this.editItem = defaultMenuEntity();
     this.dialog = true;
   }
-  protected showEditDialog(value: TableMenuEntity): void {
+  protected showEditDialog(value: MenuEntity): void {
     this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
 
-  protected async onDelete(value: TableMenuEntity): Promise<void> {
+  protected async onDelete(value: MenuEntity): Promise<void> {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
-      const response = await deleteApi<TableMenuEntity>(
-        `admin/menus/${value.id}/`,
-      );
+      const response = await deleteApi<MenuEntity>(`admin/menus/${value.id}/`);
       this.saving = false;
       if (response?.code?.startsWith("S")) {
         await this.$store.dispatch("initDrawers");
@@ -151,7 +154,7 @@ export default class extends Vue {
   protected async saveItems(): Promise<void> {
     let parentId = 0;
     this.saving = true;
-    const response = await postApi<TableMenuEntity[]>(
+    const response = await postApi<MenuEntity[]>(
       "admin/menus/save",
       this.items.map((item, index) => {
         if (item.type === "G") {

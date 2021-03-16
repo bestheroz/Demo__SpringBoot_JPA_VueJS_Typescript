@@ -7,16 +7,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity(name = "MENU")
-public class TableMenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
+public class MenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 2658557582464222508L;
 
   @Id

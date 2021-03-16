@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.download;
 
-import com.github.bestheroz.demo.api.entity.member.TableMemberRepository;
-import com.github.bestheroz.standard.common.code.CodeRepository;
+import com.github.bestheroz.demo.api.entity.code.CodeRepository;
+import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.code.CodeService;
 import com.github.bestheroz.standard.common.file.excel.ExcelService;
 import com.github.bestheroz.standard.common.file.excel.ExcelVO;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class ExcelController {
   @Resource private CodeService codeService;
-  @Resource private TableMemberRepository tableMemberRepository;
+  @Resource private MemberRepository memberRepository;
   @Resource private CodeRepository codeRepository;
 
   @GetMapping(value = "admin/members/download/excel")
@@ -40,7 +40,7 @@ public class ExcelController {
         "권한",
         "authority",
         ExcelService.CellType.STRING_CENTER,
-        this.codeService.getCodeVOList("AUTHORITY"));
+        this.codeService.getCodesByType("AUTHORITY"));
     AbstractExcelXView.addHeader(excelVOList, "만료일", "expired", ExcelService.CellType.DATE);
     AbstractExcelXView.addHeader(excelVOList, "사용 가능", "available", ExcelService.CellType.STRING);
     AbstractExcelXView.addHeader(excelVOList, "작업 일시", "updated", ExcelService.CellType.DATE);
@@ -53,7 +53,7 @@ public class ExcelController {
     model.addAttribute(AbstractExcelXView.EXCEL_VOS, excelVOList);
     model.addAttribute(
         AbstractExcelXView.LIST_DATA,
-        this.tableMemberRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "created")));
+        this.memberRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "created")));
     return ExcelService.VIEW_NAME;
   }
 }

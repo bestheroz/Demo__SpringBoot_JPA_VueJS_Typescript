@@ -6,17 +6,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity(name = "MEMBER_MENU")
-@IdClass(TableMemberMenuEntityId.class)
-public class TableMemberMenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
+@IdClass(MemberMenuEntityId.class)
+public class MemberMenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 6518292219807880047L;
   @Id private Integer authority;
   @Id private Long id;

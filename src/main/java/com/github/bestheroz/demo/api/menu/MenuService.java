@@ -1,8 +1,8 @@
 package com.github.bestheroz.demo.api.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuEntity;
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuRepository;
-import com.github.bestheroz.demo.api.entity.menu.TableMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuEntity;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -12,22 +12,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MenuService {
-  @Resource private TableMenuRepository tableMenuRepository;
-  @Resource private TableMemberMenuRepository tableMemberMenuRepository;
+  @Resource private MenuRepository menuRepository;
+  @Resource private MemberMenuRepository memberMenuRepository;
 
   public List<MenuVO> getDrawerList(final Integer authority) {
     final List<MenuVO> parents;
-    final List<TableMemberMenuEntity> items;
+    final List<MemberMenuEntity> items;
     if (authority.equals(999)) {
       items =
-          this.tableMenuRepository
+          this.menuRepository
               .findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name"))
               .stream()
               .map(
                   entity -> {
-                    final TableMemberMenuEntity tableMenuEntity = new TableMemberMenuEntity();
-                    BeanUtils.copyProperties(entity, tableMenuEntity);
-                    return tableMenuEntity;
+                    final MemberMenuEntity menuEntity = new MemberMenuEntity();
+                    BeanUtils.copyProperties(entity, menuEntity);
+                    return menuEntity;
                   })
               .collect(Collectors.toList());
 
@@ -43,7 +43,7 @@ public class MenuService {
               .collect(Collectors.toList());
     } else {
       items =
-          this.tableMemberMenuRepository.findAllByAuthority(
+          this.memberMenuRepository.findAllByAuthority(
               authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name"));
       parents =
           items.stream()

@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.admin.member.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuEntity;
-import com.github.bestheroz.demo.api.entity.member.menu.TableMemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuEntity;
+import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
 import java.util.List;
@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "api/admin/member/menus/{authority}")
 public class AdminMemberMenuController {
-  @Resource private TableMemberMenuRepository tableMemberMenuRepository;
+  @Resource private MemberMenuRepository memberMenuRepository;
   @Resource private AdminMemberMenuService adminMemberMenuService;
 
   @GetMapping
   ResponseEntity<ApiResult> getItems(@PathVariable(value = "authority") final Integer authority) {
     return Result.ok(
-        this.tableMemberMenuRepository.findAllByAuthority(
+        this.memberMenuRepository.findAllByAuthority(
             authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
   }
 
   @PostMapping(value = "save")
   public ResponseEntity<ApiResult> save(
       @PathVariable(value = "authority") final Integer authority,
-      @RequestBody final List<TableMemberMenuEntity> payload) {
+      @RequestBody final List<MemberMenuEntity> payload) {
     return Result.created(this.adminMemberMenuService.save(authority, payload));
   }
 }
