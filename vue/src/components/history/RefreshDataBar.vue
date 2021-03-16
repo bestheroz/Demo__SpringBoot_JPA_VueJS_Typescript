@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-system-bar v-if="diff > 60" class="pl-4" :color="color">
+    <v-system-bar
+      v-if="isProduction ? diff > 60 : true"
+      class="pl-4"
+      :color="color"
+    >
       <v-icon size="16" style="vertical-align: initial">
         mdi-clock-check-outline
       </v-icon>
@@ -41,14 +45,6 @@ export default class extends Vue {
     });
   }
 
-  protected async created(): Promise<void> {
-    setTimeout(() => {
-      this.interval = window.setInterval(() => {
-        this.now = new Date();
-      }, 1000);
-    }, 59_000);
-  }
-
   get diff(): number {
     if (!this.datetime) {
       return 0;
@@ -78,6 +74,21 @@ export default class extends Vue {
     } else {
       return "error";
     }
+  }
+
+  get isProduction(): boolean {
+    return process.env.NODE_ENV === "production";
+  }
+
+  protected async created(): Promise<void> {
+    setTimeout(
+      () => {
+        this.interval = window.setInterval(() => {
+          this.now = new Date();
+        }, 1000);
+      },
+      this.isProduction ? 59_000 : 0,
+    );
   }
 
   public triggerRefreshed(): void {
