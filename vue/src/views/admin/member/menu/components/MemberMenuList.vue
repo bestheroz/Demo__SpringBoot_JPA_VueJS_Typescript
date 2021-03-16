@@ -10,7 +10,7 @@
     />
     <v-card flat :loading="loading">
       <v-card-text>
-        <refresh-data-bar ref="refRefreshDataBar" />
+        <refresh-data-bar ref="refRefreshDataBar" @reload="getList" />
         <v-row dense>
           <v-col cols="3">
             <v-list dense>

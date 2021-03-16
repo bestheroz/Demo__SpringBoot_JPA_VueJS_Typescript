@@ -14,7 +14,7 @@
     />
     <v-card flat>
       <v-card-text class="pb-0">
-        <refresh-data-bar ref="refRefreshDataBar" />
+        <refresh-data-bar ref="refRefreshDataBar" @reload="getList" />
         <v-data-table
           v-model="selected"
           must-sort
