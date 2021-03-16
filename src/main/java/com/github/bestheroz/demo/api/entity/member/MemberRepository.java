@@ -6,10 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MemberRepository extends CrudRepository<MemberEntity, Long> {
+public interface MemberRepository
+    extends CrudRepository<MemberEntity, Long>, QueryByExampleExecutor<MemberEntity> {
   Page<MemberEntity> findAll(Pageable pageable);
 
   Optional<MemberEntity> findByUserIdAndToken(String userId, String token);
