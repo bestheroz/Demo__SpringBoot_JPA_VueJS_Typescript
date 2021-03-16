@@ -5,7 +5,6 @@ import com.github.bestheroz.standard.common.util.MapperUtils;
 import com.github.bestheroz.standard.context.abstractview.AbstractExcelXView;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -87,13 +86,14 @@ public class ExcelService extends AbstractExcelXView {
         log.debug("[Excel]{} write {} rows", sheet.getSheetName(), i + 1);
       }
       final SXSSFRow row = sheet.createRow(3 + i);
-      final HashMap data = MapperUtils.toHashMap(listData.get(i));
-      log.debug("{}", data);
+      final Map<String, Object> data = MapperUtils.toMap(listData.get(i));
       for (int j = 0; j < excelVOs.size(); j++) {
         final String dbColName = excelVOs.get(j).getDbColName();
-        final String value = String.valueOf(data.get(dbColName));
-        if (StringUtils.isNotEmpty(value)) {
-          this.writeColumnData(excelVOs, j, row.createCell(j), value);
+        if (data.get(dbColName) != null) {
+          final String value = String.valueOf(data.get(dbColName));
+          if (StringUtils.isNotEmpty(value)) {
+            this.writeColumnData(excelVOs, j, row.createCell(j), value);
+          }
         }
       }
     }
