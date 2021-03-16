@@ -8,8 +8,8 @@
     >
       <template #activator="{ on, attrs }">
         <v-btn
-          :color="color"
           icon
+          :color="color"
           @click="onClick"
           v-bind="attrs"
           v-on="on"
@@ -20,7 +20,7 @@
           :large="large"
           :x-large="xLarge"
         >
-          <v-icon :size="size" v-text="icon" />
+          <v-icon :size="size" v-text="icon" :color="color" />
         </v-btn>
       </template>
       <span v-text="text" />

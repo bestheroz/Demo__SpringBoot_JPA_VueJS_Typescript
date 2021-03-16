@@ -48,16 +48,6 @@ export interface MemberMenuEntity {
   url: string | null;
 }
 
-export interface CodeGroupEntity {
-  id?: number | null;
-  created?: DateTime | null;
-  createdBy?: string | null;
-  updated?: DateTime | null;
-  updatedBy?: string | null;
-  name: string | null;
-  description: string | null;
-}
-
 export interface CodeEntity {
   id?: number | null;
   created?: DateTime | null;

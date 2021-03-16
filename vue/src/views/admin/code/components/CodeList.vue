@@ -14,6 +14,7 @@
     />
     <v-card flat>
       <v-card-text class="py-0">
+        <refresh-data-bar ref="refRefreshDataBar" @reload="getList" />
         <v-data-table
           v-model="selected"
           must-sort
@@ -76,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Emit, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 import type { DataTableHeader, SelectItem } from "@/common/types";
 import { deleteApi, getApi, getCodesApi, getExcelApi } from "@/utils/apis";
 import envs from "@/constants/envs";
@@ -88,10 +89,12 @@ import { confirmDelete } from "@/utils/alerts";
 import { defaultCodeEntity } from "@/common/values";
 import type { CodeEntity } from "@/common/entities";
 import _ from "lodash";
+import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 
 @Component({
   name: "CodeList",
   components: {
+    RefreshDataBar,
     CodeEditDialog,
     ButtonSet,
     DataTableClientSideFilter,
@@ -99,6 +102,7 @@ import _ from "lodash";
 })
 export default class extends Vue {
   @Prop({ required: true }) readonly type!: string;
+  @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
   readonly envs: typeof envs = envs;
 
@@ -179,10 +183,13 @@ export default class extends Vue {
       this.loading = false;
       this.items = response?.data || [];
     }
+    this.refRefreshDataBar.triggerRefreshed();
   }
 
-  protected onCreated(value: CodeEntity): void {
+  @Emit("created")
+  protected onCreated(value: CodeEntity): CodeEntity {
     this.items = [value, ...this.items];
+    return value;
   }
 
   protected onUpdated(value: CodeEntity): void {
@@ -196,7 +203,7 @@ export default class extends Vue {
     ];
   }
   protected showAddDialog(): void {
-    this.editItem = defaultCodeEntity();
+    this.editItem = { ...defaultCodeEntity(), type: this.type };
     this.dialog = true;
   }
 

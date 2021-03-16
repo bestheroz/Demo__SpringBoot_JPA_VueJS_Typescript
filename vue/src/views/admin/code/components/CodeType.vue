@@ -22,9 +22,10 @@
 import { Component, Emit, Vue, Watch } from "vue-property-decorator";
 import { getApi } from "@/utils/apis";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
+import { CodeEntity } from "@/common/entities";
 
 @Component({
-  name: "CodeGroup",
+  name: "CodeType",
   components: {
     DataTableClientSideFilter,
   },
@@ -49,6 +50,13 @@ export default class extends Vue {
   @Emit("selected")
   protected watchSelected(val: string): string {
     return val;
+  }
+
+  public onCreate(value: CodeEntity): void {
+    if (value.type && !this.items.includes(value.type)) {
+      this.items = [value.type, ...this.items];
+      this.selected = this.items[0];
+    }
   }
 }
 </script>

@@ -14,6 +14,7 @@
     />
     <v-card flat>
       <v-card-text class="pb-0">
+        <refresh-data-bar ref="refRefreshDataBar" />
         <v-data-table
           v-model="selected"
           must-sort
@@ -81,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 import type {
   DataTableHeader,
   PageResult,
@@ -98,10 +99,12 @@ import qs from "qs";
 import { defaultMemberEntity } from "@/common/values";
 import type { MemberEntity } from "@/common/entities";
 import _ from "lodash";
+import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 
 @Component({
   name: "MemberList",
   components: {
+    RefreshDataBar,
     DataTableFilter,
     MemberEditDialog,
     ButtonSet,
@@ -109,6 +112,8 @@ import _ from "lodash";
 })
 export default class extends Vue {
   @Prop() readonly height!: number | string;
+  @Ref() readonly refRefreshDataBar!: RefreshDataBar;
+
   readonly envs: typeof envs = envs;
   selected: MemberEntity[] = [];
   pagination: Pagination = {
@@ -197,6 +202,7 @@ export default class extends Vue {
     );
     this.loading = false;
     this.items = response?.data?.content || [];
+    this.refRefreshDataBar.triggerRefreshed();
   }
 
   protected onCreated(value: MemberEntity): void {

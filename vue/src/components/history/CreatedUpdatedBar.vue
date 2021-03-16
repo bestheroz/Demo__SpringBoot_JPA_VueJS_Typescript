@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { DateTime } from "@/common/types";
+import type { DateTime } from "@/common/types";
 import { formatDatetime } from "@/utils/formatter";
 
 @Component({

@@ -2,10 +2,10 @@
   <div>
     <v-row no-gutters>
       <v-col cols="12">
-        <code-group @selected="onCodeGroupSelected" />
+        <code-type ref="refCodeType" @selected="onCodeTypeSelected" />
       </v-col>
       <v-col cols="12">
-        <code-list ref="codeList" :type="type" />
+        <code-list ref="refCodeList" :type="type" @created="onCreated" />
       </v-col>
     </v-row>
   </div>
@@ -14,25 +14,31 @@
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
 import CodeList from "@/views/admin/code/components/CodeList.vue";
-import CodeGroup from "@/views/admin/code/components/CodeGroup.vue";
+import CodeType from "@/views/admin/code/components/CodeType.vue";
+import { CodeEntity } from "@/common/entities";
 
 @Component({
   name: "CodeWrapper",
   components: {
-    CodeGroup,
+    CodeType,
     CodeList,
   },
 })
 export default class extends Vue {
-  @Ref() readonly codeList!: CodeList;
+  @Ref() readonly refCodeList!: CodeList;
+  @Ref() readonly refCodeType!: CodeType;
 
   type: string | null = null;
 
   protected mounted(): void {
-    this.codeList.getList();
+    this.refCodeList.getList();
   }
 
-  protected onCodeGroupSelected(val: string): void {
+  protected onCreated(value: CodeEntity): void {
+    this.refCodeType.onCreate(value);
+  }
+
+  protected onCodeTypeSelected(val: string): void {
     this.type = val;
   }
 }

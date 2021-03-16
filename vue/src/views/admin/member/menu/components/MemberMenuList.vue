@@ -10,6 +10,7 @@
     />
     <v-card flat :loading="loading">
       <v-card-text>
+        <refresh-data-bar ref="refRefreshDataBar" />
         <v-row dense>
           <v-col cols="3">
             <v-list dense>
@@ -72,20 +73,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 import { getApi, postApi } from "@/utils/apis";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
 import { defaultMemberMenuEntity } from "@/common/values";
 import type { MemberMenuEntity, MenuEntity } from "@/common/entities";
+import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 
 @Component({
   name: "MemberMenuList",
-  components: { ButtonSet, draggable },
+  components: { RefreshDataBar, ButtonSet, draggable },
 })
 export default class extends Vue {
   @Prop() readonly height!: number | string;
   @Prop({ required: true }) readonly authority!: number;
+  @Ref() readonly refRefreshDataBar!: RefreshDataBar;
+
   menus: MenuEntity[] = [];
   items: MemberMenuEntity[] = [];
   selected: number[] = [];
@@ -126,6 +130,7 @@ export default class extends Vue {
     this.items = response?.data || [];
     this.selected = this.items.map((item) => item.id || 0);
     this.loading = false;
+    this.refRefreshDataBar.triggerRefreshed();
   }
 
   protected async saveItems(): Promise<void> {

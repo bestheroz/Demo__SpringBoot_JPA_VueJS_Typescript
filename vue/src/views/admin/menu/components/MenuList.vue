@@ -13,6 +13,7 @@
     <v-card flat>
       <v-card-text>
         <v-list dense>
+          <refresh-data-bar ref="refRefreshDataBar" @reload="getList" />
           <draggable
             tag="div"
             v-model="items"
@@ -61,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Ref, Vue } from "vue-property-decorator";
 import { deleteApi, getApi, postApi } from "@/utils/apis";
 import { confirmDelete } from "@/utils/alerts";
 import MenuEditDialog from "@/views/admin/menu/components/MenuEditDialog.vue";
@@ -70,6 +71,7 @@ import draggable from "vuedraggable";
 import { defaultMenuEntity } from "@/common/values";
 import _ from "lodash";
 import type { MenuEntity } from "@/common/entities";
+import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 
 interface MenuVO extends MenuEntity {
   children: MenuEntity[];
@@ -77,10 +79,12 @@ interface MenuVO extends MenuEntity {
 
 @Component({
   name: "MenuList",
-  components: { ButtonSet, MenuEditDialog, draggable },
+  components: { RefreshDataBar, ButtonSet, MenuEditDialog, draggable },
 })
 export default class extends Vue {
   @Prop() readonly height!: number | string;
+  @Ref() readonly refRefreshDataBar!: RefreshDataBar;
+
   items: MenuEntity[] = [];
   loading = false;
   saving = false;
@@ -105,6 +109,7 @@ export default class extends Vue {
     const response = await getApi<MenuVO[]>("admin/menus/");
     this.loading = false;
     this.items = response?.data || [];
+    this.refRefreshDataBar.triggerRefreshed();
   }
 
   protected onCreated(value: MenuEntity): void {

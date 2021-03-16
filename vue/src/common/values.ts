@@ -1,6 +1,5 @@
 import {
   CodeEntity,
-  CodeGroupEntity,
   MemberEntity,
   MemberMenuEntity,
   MenuEntity,
@@ -44,12 +43,6 @@ export function defaultMenuEntity(): MenuEntity {
     displayOrder: null,
     icon: null,
     url: null,
-  };
-}
-export function defaultCodeGroupEntity(): CodeGroupEntity {
-  return {
-    name: null,
-    description: null,
   };
 }
 export function defaultCodeEntity(): CodeEntity {

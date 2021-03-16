@@ -5,9 +5,13 @@ import java.time.Instant;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @MappedSuperclass
 public abstract class AbstractCreatedUpdateEntity {
   protected String createdBy;
