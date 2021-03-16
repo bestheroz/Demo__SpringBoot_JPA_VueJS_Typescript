@@ -99,14 +99,13 @@
                 </ValidationProvider>
               </v-col>
             </v-row>
-            <created-updated-bar
-              :created-date-time="item.created"
-              :updated-date-time="item.updated"
-              v-if="!isNew"
-            />
           </ValidationObserver>
         </v-card-text>
-        <v-divider />
+        <created-updated-bar
+          :created-date-time="item.created"
+          :updated-date-time="item.updated"
+          v-if="!isNew"
+        />
         <dialog-action-button
           :loading="loading"
           @click:save="save"

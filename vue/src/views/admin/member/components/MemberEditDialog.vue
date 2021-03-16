@@ -124,13 +124,13 @@
                 </v-btn>
               </v-col>
             </v-row>
-            <created-updated-bar
-              :created-date-time="item.created"
-              :updated-date-time="item.updated"
-              v-if="!isNew"
-            />
           </ValidationObserver>
         </v-card-text>
+        <created-updated-bar
+          :created-date-time="item.created"
+          :updated-date-time="item.updated"
+          v-if="!isNew"
+        />
         <dialog-action-button
           :loading="loading"
           @click:save="save"

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="row">
-      <v-system-bar lights-out v-if="createdDateTimeString">
+      <v-system-bar v-if="createdDateTimeString">
         <v-spacer />
         <span v-if="createdDateTimeString">
           Created
@@ -12,7 +12,7 @@
         </span>
         <v-spacer />
       </v-system-bar>
-      <v-system-bar dark lights-out v-if="updatedDateTimeString">
+      <v-system-bar v-if="updatedDateTimeString">
         <v-spacer />
         <span v-if="updatedDateTimeString">
           Updated
@@ -25,10 +25,7 @@
       </v-system-bar>
     </div>
     <div v-else>
-      <v-system-bar
-        lights-out
-        v-if="createdDateTimeString || updatedDateTimeString"
-      >
+      <v-system-bar v-if="createdDateTimeString || updatedDateTimeString">
         <v-spacer />
         <span v-if="createdDateTimeString">
           Created
