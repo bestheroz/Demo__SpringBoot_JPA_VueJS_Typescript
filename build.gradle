@@ -38,6 +38,7 @@ dependencies {
     implementation "com.h2database:h2:$h2Version"
     compileOnly "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion"
     testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
