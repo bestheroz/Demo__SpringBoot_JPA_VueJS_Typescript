@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "api/admin/menus")
+@RequestMapping(value = "api/admin/menus/")
 public class AdminMenuController {
   @Resource private AdminMenuService adminMenuService;
   @Resource private MenuRepository menuRepository;

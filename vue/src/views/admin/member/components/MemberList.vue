@@ -249,7 +249,7 @@ export default class extends Vue {
 
   protected async excel(): Promise<void> {
     this.saving = true;
-    await getExcelApi("admin/members/download/excel");
+    await getExcelApi("admin/members/download/excel/");
     this.saving = false;
   }
 }

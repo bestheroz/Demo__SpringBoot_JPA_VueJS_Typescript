@@ -125,7 +125,7 @@ export default class extends Vue {
     this.items = [];
     this.loading = true;
     const response = await getApi<MemberMenuEntity[]>(
-      `admin/member/menus/${this.authority}`,
+      `admin/member/menus/?authority=${this.authority}`,
     );
     this.items = response?.data || [];
     this.selected = this.items.map((item) => item.id || 0);
@@ -137,7 +137,7 @@ export default class extends Vue {
     let parentId = 0;
     this.saving = true;
     const response = await postApi<MemberMenuEntity[]>(
-      `admin/member/menus/${this.authority}/save`,
+      `admin/member/menus/?authority=${this.authority}`,
       this.items.map((item, index) => {
         if (item.type === "G") {
           parentId = item.id || 0;

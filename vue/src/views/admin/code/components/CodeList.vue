@@ -77,7 +77,7 @@
 <script lang="ts">
 import { Component, Emit, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 import type { DataTableHeader, SelectItem } from "@/common/types";
-import { deleteApi, getApi, getCodesApi, getExcelApi } from "@/utils/apis";
+import { deleteApi, getApi, getCodesApi } from "@/utils/apis";
 import envs from "@/constants/envs";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
 import qs from "querystring";
@@ -225,12 +225,6 @@ export default class extends Vue {
         );
       }
     }
-  }
-
-  protected async excel(): Promise<void> {
-    this.saving = true;
-    await getExcelApi("admin/codes/download/excel");
-    this.saving = false;
   }
 }
 </script>

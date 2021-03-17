@@ -28,7 +28,7 @@ public class ExcelController {
   @Resource private MemberRepository memberRepository;
   @Resource private CodeRepository codeRepository;
 
-  @GetMapping(value = "admin/members/download/excel")
+  @GetMapping(value = "admin/members/download/excel/")
   public String excelAdminMembers(final Model model) {
     model.addAttribute(AbstractExcelXView.FILE_NAME, "Member_List");
 

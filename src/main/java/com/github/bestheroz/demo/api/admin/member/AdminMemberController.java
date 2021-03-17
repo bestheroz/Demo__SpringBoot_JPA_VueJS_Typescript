@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "api/admin/members")
+@RequestMapping(value = "api/admin/members/")
 public class AdminMemberController {
   @Resource private MemberRepository memberRepository;
 

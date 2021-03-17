@@ -9,28 +9,28 @@ import javax.annotation.Resource;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "api/admin/member/menus/{authority}")
+@RequestMapping(value = "api/admin/member/menus/")
 public class AdminMemberMenuController {
   @Resource private MemberMenuRepository memberMenuRepository;
   @Resource private AdminMemberMenuService adminMemberMenuService;
 
   @GetMapping
-  ResponseEntity<ApiResult> getItems(@PathVariable(value = "authority") final Integer authority) {
+  ResponseEntity<ApiResult> getItems(@RequestParam(value = "authority") final Integer authority) {
     return Result.ok(
         this.memberMenuRepository.findAllByAuthority(
             authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
   }
 
-  @PostMapping(value = "save")
+  @PostMapping
   public ResponseEntity<ApiResult> save(
-      @PathVariable(value = "authority") final Integer authority,
+      @RequestParam(value = "authority") final Integer authority,
       @RequestBody final List<MemberMenuEntity> payload) {
     return Result.created(this.adminMemberMenuService.save(authority, payload));
   }
