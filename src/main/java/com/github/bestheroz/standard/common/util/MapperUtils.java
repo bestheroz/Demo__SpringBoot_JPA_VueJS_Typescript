@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @Slf4j
@@ -36,13 +37,16 @@ public class MapperUtils {
 
   public Map<String, Object> toMap(final Object source) {
     final Map<String, Object> map = new HashMap<>();
-    final Field[] fields = source.getClass().getDeclaredFields();
+    final Field[] fields =
+        ArrayUtils.addAll(
+            source.getClass().getDeclaredFields(),
+            source.getClass().getSuperclass().getDeclaredFields());
     for (final Field field : fields) {
       field.setAccessible(true);
       try {
         map.put(field.getName(), field.get(source));
       } catch (final Exception e) {
-        e.printStackTrace();
+        log.warn(ExceptionUtils.getStackTrace(e));
       }
     }
     return map;
