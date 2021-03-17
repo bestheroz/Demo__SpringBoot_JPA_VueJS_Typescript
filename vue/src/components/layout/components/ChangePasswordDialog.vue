@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import { Component, PropSync, Ref, Vue, Watch } from "vue-property-decorator";
+import { Component, PropSync, Ref, Vue } from "vue-property-decorator";
 import { postApi } from "@/utils/apis";
 import { ValidationObserver } from "vee-validate";
 import pbkdf2 from "pbkdf2";
@@ -106,21 +106,6 @@ export default class extends Vue {
   show1 = false;
   show2 = false;
   show3 = false;
-
-  @Watch("syncedDialog", { immediate: true })
-  protected watchDialog(val: boolean): void {
-    if (val) {
-      // pass
-    } else {
-      this.observer.reset();
-      this.oldPassword = "";
-      this.password = "";
-      this.password2 = "";
-      this.show1 = false;
-      this.show2 = false;
-      this.show3 = false;
-    }
-  }
 
   protected async save(): Promise<void> {
     const isValid = await this.observer.validate();
