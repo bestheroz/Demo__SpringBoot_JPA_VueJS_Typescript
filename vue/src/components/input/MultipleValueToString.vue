@@ -51,7 +51,7 @@ import { ValidationObserver } from "vee-validate";
   components: {},
 })
 export default class extends Vue {
-  @VModel({ required: true }) output!: string;
+  @VModel({ required: true }) output!: string | null;
   @Prop() readonly label!: string;
   @Prop({ default: "," }) readonly separator!: string;
   @Prop({ type: Boolean }) readonly required!: boolean;
@@ -79,7 +79,7 @@ export default class extends Vue {
 
   protected onChange() {
     this.output =
-      this.values.length > 0 ? this.values.join(this.separator) : undefined;
+      this.values.length > 0 ? this.values.join(this.separator) : null;
   }
 
   public async validateForm(): Promise<boolean> {
