@@ -75,7 +75,7 @@
         <created-updated-bar
           :created-date-time="item.created"
           :updated-date-time="item.updated"
-          v-if="!isNew"
+          v-if="item.created || item.updated"
         />
         <dialog-action-button
           :loading="saving"
