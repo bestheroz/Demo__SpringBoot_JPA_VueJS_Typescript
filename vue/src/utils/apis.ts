@@ -261,14 +261,7 @@ export async function getExcelApi(url: string): Promise<void> {
 }
 
 async function apiRefreshToken(error: AxiosError) {
-  try {
-    await store.dispatch("reissueAccessToken");
-  } catch (e) {
-    if (e.response?.status === 401) {
-      await store.dispatch("needLogin");
-      return;
-    }
-  }
+  await store.dispatch("reissueAccessToken");
   error.config.headers.Authorization = store.getters.accessToken;
   error.config.headers.AuthorizationR = store.getters.refreshToken;
   return error;

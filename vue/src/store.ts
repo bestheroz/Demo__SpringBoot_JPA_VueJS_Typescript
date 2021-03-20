@@ -10,6 +10,7 @@ import envs from "@/constants/envs";
 import router from "@/router";
 import { defaultUser } from "@/common/values";
 import type { MemberEntity } from "@/common/entities";
+import { errorPage } from "@/utils/errors";
 
 Vue.use(Vuex);
 
@@ -98,18 +99,32 @@ const user = {
     async reissueAccessToken({
       commit,
       getters,
+      dispatch,
     }: ActionContext<any, any>): Promise<void> {
-      const response = await axios
-        .create({
-          baseURL: envs.API_HOST,
-          headers: {
-            contentType: "application/json",
-            Authorization: getters.accessToken,
-            AuthorizationR: getters.refreshToken,
-          },
-        })
-        .get("api/auth/refreshToken");
-      await commit("setAccessToken", response?.data?.data);
+      try {
+        const response = await axios
+          .create({
+            baseURL: envs.API_HOST,
+            headers: {
+              contentType: "application/json",
+              Authorization: getters.accessToken,
+              AuthorizationR: getters.refreshToken,
+            },
+          })
+          .get("api/auth/refreshToken");
+        await commit("setAccessToken", response?.data?.data);
+      } catch (e) {
+        if (
+          e.response?.status === 401 ||
+          e.message === "Invalid token specified"
+        ) {
+          await dispatch("needLogin");
+        } else if ([403, 404, 500].includes(e.response?.status)) {
+          await errorPage(e.response?.status);
+        } else {
+          await errorPage(500);
+        }
+      }
     },
   },
 };
