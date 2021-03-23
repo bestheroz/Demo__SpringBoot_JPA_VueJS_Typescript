@@ -25,9 +25,9 @@ export function defaultMemberEntity(): MemberEntity {
   return {
     userId: null,
     name: null,
-    loginFailCnt: null,
+    loginFailCnt: 0,
     expired: dayjs().add(1, "years").endOf("day"),
-    available: null,
+    available: false,
     theme: null,
     authority: null,
     token: null,
@@ -38,9 +38,9 @@ export function defaultMenuEntity(): MenuEntity {
   return {
     name: null,
     type: "G",
-    parentId: null,
+    parentId: 99999,
     authority: null,
-    displayOrder: null,
+    displayOrder: 99999,
     icon: null,
     url: null,
   };
@@ -50,7 +50,7 @@ export function defaultCodeEntity(): CodeEntity {
     type: null,
     value: null,
     name: null,
-    available: null,
+    available: false,
     displayOrder: null,
     authority: null,
   };

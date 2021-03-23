@@ -9,9 +9,9 @@ export interface MemberEntity {
   userId: string | null;
   password?: string | null;
   name: string | null;
-  loginFailCnt: number | null;
+  loginFailCnt: number;
   expired: DateTime | null;
-  available: boolean | null;
+  available: boolean;
   theme: string | null;
   authority: number | null;
   token: string | null;
@@ -57,7 +57,7 @@ export interface CodeEntity {
   type: string | null;
   value: string | null;
   name: string | null;
-  available: boolean | null;
+  available: boolean;
   displayOrder: number | null;
   authority: number | null;
 }
