@@ -38,6 +38,18 @@
                         mdi-sort
                       </v-icon>
                       {{ item.name }}
+                      <br />
+                      <v-btn-toggle multiple dense background-color="warning">
+                        <v-btn>
+                          <v-icon>mdi-eye</v-icon>
+                        </v-btn>
+                        <v-btn>
+                          <v-icon>mdi-content-save-outline</v-icon>
+                        </v-btn>
+                        <v-btn>
+                          <v-icon>mdi-delete-outline</v-icon>
+                        </v-btn>
+                      </v-btn-toggle>
                     </v-list-item-content>
                   </v-list-item>
                 </transition-group>
@@ -80,10 +92,11 @@ import draggable from "vuedraggable";
 import { defaultMemberMenuEntity } from "@/common/values";
 import type { MemberMenuEntity, MenuEntity } from "@/common/entities";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
+import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 
 @Component({
   name: "MemberMenuList",
-  components: { RefreshDataBar, ButtonSet, draggable },
+  components: { ButtonIconTooltip, RefreshDataBar, ButtonSet, draggable },
 })
 export default class extends Vue {
   @Prop() readonly height!: number | string;
