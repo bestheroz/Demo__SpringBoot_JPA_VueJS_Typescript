@@ -32,5 +32,5 @@ public class CodeEntity extends AbstractCreatedUpdateEntity implements Serializa
   private String name;
   private Boolean available;
   private Integer displayOrder;
-  private Integer authority;
+  private Integer authorityId;
 }

@@ -31,14 +31,21 @@ export interface MenuEntity {
   url: string | null;
 }
 
+export interface AuthorityItemEntity {
+  id?: number | null;
+  displayOrder: number | null;
+  menu: MenuEntity | null;
+  typesJson: string[];
+}
 export interface AuthorityEntity {
   id?: number | null;
   createdBy?: string | null;
   created?: DateTime | null;
   updatedBy?: string | null;
   updated?: DateTime | null;
+  code: string | null;
   name: string | null;
-  data: string[];
+  items: AuthorityItemEntity[];
 }
 
 export interface CodeEntity {

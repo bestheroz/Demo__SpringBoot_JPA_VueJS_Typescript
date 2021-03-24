@@ -1,11 +1,10 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.AuthorityRepository;
+import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
-import com.github.bestheroz.standard.common.util.AuthenticationUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -29,15 +28,15 @@ public class AdminMenuController {
 
   @GetMapping
   ResponseEntity<ApiResult> getItems() {
-    if (List.of(900, 999).contains(AuthenticationUtils.getLoginVO().getAuthority())) {
-      return Result.ok(
-          this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
-    } else {
-      return Result.ok(
-          this.authorityRepository.findAllByAuthority(
-              AuthenticationUtils.getLoginVO().getAuthority(),
-              Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
-    }
+    //    if (List.of(900, 999).contains(AuthenticationUtils.getLoginVO().getAuthority())) {
+    return Result.ok(
+        this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
+    //    } else {
+    //      return Result.ok(
+    //          this.authorityRepository.findAllByAuthority(
+    //              AuthenticationUtils.getLoginVO().getAuthority(),
+    //              Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
+    //    }
   }
 
   @PostMapping

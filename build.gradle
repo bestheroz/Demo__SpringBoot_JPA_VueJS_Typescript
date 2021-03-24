@@ -38,6 +38,7 @@ dependencies {
     implementation "io.sentry:sentry-logback:$sentryVersion"
     implementation "com.h2database:h2:$h2Version"
     implementation "org.flywaydb:flyway-core:$flyway"
+    implementation "com.vladmihalcea:hibernate-types-52:2.10.3"
     compileOnly "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion"

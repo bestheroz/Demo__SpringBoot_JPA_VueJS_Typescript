@@ -22,14 +22,14 @@ import org.springframework.util.Assert;
 @UtilityClass
 public class JwtTokenProvider {
   private final Algorithm ALGORITHM = Algorithm.HMAC512("secret");
-  private final Long expiresAtAccessToken = 60L;
+  private final Long expiresAtAccessToken = 60000L;
   private final Long expiresAtRefreshToken = 2592000L; // 3600 * 24 * 30 == 1month
 
   public String createAccessToken(final UserVO userVO) {
     Assert.notNull(userVO, "userVO parameter must not be empty or null");
     Assert.hasText(userVO.getUserId(), "userId parameter must not be empty or null");
     Assert.hasText(userVO.getName(), "userName parameter must not be empty or null");
-    Assert.notNull(userVO.getAuthority(), "authority parameter must not be empty or null");
+    Assert.notNull(userVO.getAuthorityId(), "authorityId parameter must not be empty or null");
     return JWT.create()
         .withClaim("userId", userVO.getUserId())
         .withClaim("userVO", MapperUtils.toString(userVO))
@@ -58,7 +58,7 @@ public class JwtTokenProvider {
             userVO.getId(),
             userVO.getUserId(),
             userVO.getName(),
-            userVO.getAuthority(),
+            userVO.getAuthorityId(),
             userVO.getTheme());
     return new UsernamePasswordAuthenticationToken(
         userDetails, StringUtils.EMPTY, userDetails.getAuthorities());

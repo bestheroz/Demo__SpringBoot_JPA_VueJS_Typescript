@@ -1,6 +1,6 @@
 package com.github.bestheroz.demo.api.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.AuthorityEntity;
+import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;

@@ -3,6 +3,7 @@ import {
   MemberEntity,
   AuthorityEntity,
   MenuEntity,
+  AuthorityItemEntity,
 } from "@/common/entities";
 import dayjs from "dayjs";
 export function defaultUser(): {
@@ -54,9 +55,17 @@ export function defaultCodeEntity(): CodeEntity {
     authority: null,
   };
 }
+export function defaultAuthorityItemEntity(): AuthorityItemEntity {
+  return {
+    menu: null,
+    displayOrder: 0,
+    typesJson: ["VIEW", "WRITE", "DELETE"],
+  };
+}
 export function defaultAuthorityEntity(): AuthorityEntity {
   return {
+    code: null,
     name: null,
-    data: [],
+    items: [],
   };
 }

@@ -3,32 +3,34 @@
     <button-set
       :loading="saving"
       reload-button
-      @click:reload="getList"
+      @click:reload="$emit('click:reload')"
       save-button
-      :save-disabled="!items || items.length === 0"
       @click:save="saveItems"
     />
     <v-card flat :loading="loading">
       <v-card-text>
-        <refresh-data-bar ref="refRefreshDataBar" @reload="getList" />
+        <refresh-data-bar
+          ref="refRefreshDataBar"
+          @reload="$emit('click:reload')"
+        />
         <v-row dense>
           <v-col cols="3">
             <v-list dense>
               <draggable
                 tag="div"
-                v-model="items"
+                v-model="item.items"
                 v-bind="dragOptions"
                 handle=".drag-handle"
               >
                 <transition-group type="transition" name="flip-list">
                   <v-list-item
-                    :key="item.id"
-                    v-for="item in items"
+                    :key="item.displayOrder"
+                    v-for="item in item.items"
                     class="elevation-1"
                     dense
                   >
                     <v-list-item-icon>
-                      <v-icon v-text="item.icon" />
+                      <v-icon v-text="item.menu.icon" />
                     </v-list-item-icon>
                     <v-list-item-content
                       style="display: inline-block"
@@ -37,16 +39,21 @@
                       <v-icon color="primary" class="drag-handle">
                         mdi-sort
                       </v-icon>
-                      {{ item.name }}
+                      {{ item.menu.name }}
                       <br />
-                      <v-btn-toggle multiple dense background-color="warning">
-                        <v-btn>
+                      <v-btn-toggle
+                        multiple
+                        dense
+                        background-color="warning"
+                        v-model="item.typesJson"
+                      >
+                        <v-btn input-value="VIEW" disabled>
                           <v-icon>mdi-eye</v-icon>
                         </v-btn>
-                        <v-btn>
+                        <v-btn input-value="WRITE">
                           <v-icon>mdi-content-save-outline</v-icon>
                         </v-btn>
-                        <v-btn>
+                        <v-btn input-value="DELETE">
                           <v-icon>mdi-delete-outline</v-icon>
                         </v-btn>
                       </v-btn-toggle>
@@ -67,7 +74,7 @@
               >
                 <v-chip
                   v-for="item in menus"
-                  :value="item.id"
+                  :value="item"
                   :key="item.id"
                   filter
                   outlined
@@ -85,11 +92,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
+import { Component, Ref, VModel, Vue, Watch } from "vue-property-decorator";
 import { getApi, postApi } from "@/utils/apis";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultAuthorityEntity } from "@/common/values";
+import { defaultAuthorityItemEntity } from "@/common/values";
 import type { AuthorityEntity, MenuEntity } from "@/common/entities";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
@@ -99,13 +106,11 @@ import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
   components: { ButtonIconTooltip, RefreshDataBar, ButtonSet, draggable },
 })
 export default class extends Vue {
-  @Prop() readonly height!: number | string;
-  @Prop({ required: true }) readonly authority!: number;
+  @VModel({ required: true }) item!: AuthorityEntity;
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
   menus: MenuEntity[] = [];
-  items: AuthorityEntity[] = [];
-  selected: number[] = [];
+  selected: MenuEntity[] = [];
   loading = false;
   saving = false;
   drag = false;
@@ -119,54 +124,36 @@ export default class extends Vue {
   protected async created(): Promise<void> {
     const response = await getApi<MenuEntity[]>("admin/menus/");
     this.menus = response?.data || [];
-    this.getList().then();
   }
 
   @Watch("selected")
-  watchSelected(val: number[]): void {
-    this.items = val.map((item) => {
-      return {
-        ...(this.menus.find((menu) => menu.id === item) ||
-          defaultAuthorityEntity()),
-        authority: this.authority,
-      };
+  watchSelected(selected: MenuEntity[]): void {
+    this.item.items = selected.map((select, index) => {
+      const find = this.item.items.find((item) => item.id === select.id);
+      if (find) {
+        return { ...find, displayOrder: index + 1 };
+      } else {
+        return {
+          ...defaultAuthorityItemEntity(),
+          menu: select,
+          displayOrder: index + 1,
+        };
+      }
     });
-  }
-
-  @Watch("authority")
-  public async getList(): Promise<void> {
-    this.items = [];
-    this.loading = true;
-    const response = await getApi<AuthorityEntity[]>(
-      `admin/authorities/?authority=${this.authority}`,
-    );
-    this.items = response?.data || [];
-    this.selected = this.items.map((item) => item.id || 0);
-    this.loading = false;
-    this.refRefreshDataBar.triggerRefreshed();
+    console.log(this.item.items);
   }
 
   protected async saveItems(): Promise<void> {
-    let parentId = 0;
     this.saving = true;
-    const response = await postApi<AuthorityEntity[]>(
-      `admin/authorities/?authority=${this.authority}`,
-      this.items.map((item, index) => {
-        if (item.type === "G") {
-          parentId = item.id || 0;
-        }
-        return {
-          ...item,
-          authority: this.authority,
-          displayOrder: index + 1,
-          parentId: item.type === "G" ? 0 : parentId,
-        };
-      }),
+    console.log(this.item);
+    const response = await postApi<AuthorityEntity>(
+      `admin/authorities/${this.item.code}`,
+      this.item,
     );
     this.saving = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initDrawers");
-      this.items = response.data || [];
+      this.item = response.data;
     }
   }
 }

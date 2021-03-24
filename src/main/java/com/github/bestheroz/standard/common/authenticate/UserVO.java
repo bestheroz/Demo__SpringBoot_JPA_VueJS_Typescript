@@ -19,7 +19,7 @@ public class UserVO implements UserDetails, Serializable {
   private Long id;
   private String userId;
   private String name;
-  private Integer authority;
+  private Integer authorityId;
   private String theme;
 
   @Override

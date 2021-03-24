@@ -25,10 +25,10 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <member-menu-list
-          :authority="authority"
-          height="70vh"
-          v-if="authority"
+        <authority-list
+          v-model="selectedItem"
+          v-if="selectedItem"
+          @click:reload="getList"
         />
       </v-col>
     </v-row>
@@ -39,7 +39,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import { SelectItem } from "@/common/types";
 import AuthorityList from "@/views/admin/member/menu/components/AuthorityList.vue";
-import { getCodesApi } from "@/utils/apis";
+import { getApi } from "@/utils/apis";
+import { AuthorityEntity } from "@/common/entities";
 
 @Component({
   name: "Authority",
@@ -48,18 +49,35 @@ import { getCodesApi } from "@/utils/apis";
   },
 })
 export default class extends Vue {
+  items: AuthorityEntity[] = [];
   authority: string | null = null;
   AUTHORITY: SelectItem[] = [];
 
+  get selectedItem(): AuthorityEntity | null {
+    return this.items.find((item) => item.code === this.authority) || null;
+  }
+
+  set selectedItem(value: AuthorityEntity): void {
+    const findIndex = this.items.findIndex((item) => item.id === value.id);
+    this.items = [
+      ...this.items.slice(0, findIndex),
+      value,
+      ...this.items.slice(findIndex + 1),
+    ];
+  }
+
   protected async created(): Promise<void> {
-    const data: SelectItem[] = await getCodesApi("AUTHORITY");
-    this.AUTHORITY =
-      data.filter(
-        (value) =>
-          ![this.$store.getters.user.authority, 999].includes(
-            parseInt(value.value),
-          ),
-      ) || [];
+    this.getList().then();
+  }
+
+  protected async getList(): Promise<void> {
+    this.loading = true;
+    const response = await getApi<AuthorityEntity[]>("admin/authorities/");
+    this.items = response.data || [];
+    this.loading = false;
+    this.AUTHORITY = (response?.data || []).map((item) => {
+      return { value: item.code, text: item.name };
+    });
   }
 }
 </script>

@@ -1,6 +1,6 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.AuthorityRepository;
+import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
