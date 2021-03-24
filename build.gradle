@@ -9,7 +9,7 @@ repositories {
     jcenter()
 }
 
-ext.springBootVersion = "2.4.3"
+ext.springBootVersion = "2.4.4"
 ext.javaJwtVersion = "3.14.0"
 ext.lombokVersion = "1.18.18"
 ext.lang3Version = "3.12.0"
