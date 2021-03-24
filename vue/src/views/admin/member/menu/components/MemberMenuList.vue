@@ -89,13 +89,13 @@ import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 import { getApi, postApi } from "@/utils/apis";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultMemberMenuEntity } from "@/common/values";
-import type { MemberMenuEntity, MenuEntity } from "@/common/entities";
+import { defaultAuthorityEntity } from "@/common/values";
+import type { AuthorityEntity, MenuEntity } from "@/common/entities";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 
 @Component({
-  name: "MemberMenuList",
+  name: "AuthorityList",
   components: { ButtonIconTooltip, RefreshDataBar, ButtonSet, draggable },
 })
 export default class extends Vue {
@@ -104,7 +104,7 @@ export default class extends Vue {
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
   menus: MenuEntity[] = [];
-  items: MemberMenuEntity[] = [];
+  items: AuthorityEntity[] = [];
   selected: number[] = [];
   loading = false;
   saving = false;
@@ -127,7 +127,7 @@ export default class extends Vue {
     this.items = val.map((item) => {
       return {
         ...(this.menus.find((menu) => menu.id === item) ||
-          defaultMemberMenuEntity()),
+          defaultAuthorityEntity()),
         authority: this.authority,
       };
     });
@@ -137,8 +137,8 @@ export default class extends Vue {
   public async getList(): Promise<void> {
     this.items = [];
     this.loading = true;
-    const response = await getApi<MemberMenuEntity[]>(
-      `admin/member/menus/?authority=${this.authority}`,
+    const response = await getApi<AuthorityEntity[]>(
+      `admin/authorities/?authority=${this.authority}`,
     );
     this.items = response?.data || [];
     this.selected = this.items.map((item) => item.id || 0);
@@ -149,8 +149,8 @@ export default class extends Vue {
   protected async saveItems(): Promise<void> {
     let parentId = 0;
     this.saving = true;
-    const response = await postApi<MemberMenuEntity[]>(
-      `admin/member/menus/?authority=${this.authority}`,
+    const response = await postApi<AuthorityEntity[]>(
+      `admin/authorities/?authority=${this.authority}`,
       this.items.map((item, index) => {
         if (item.type === "G") {
           parentId = item.id || 0;

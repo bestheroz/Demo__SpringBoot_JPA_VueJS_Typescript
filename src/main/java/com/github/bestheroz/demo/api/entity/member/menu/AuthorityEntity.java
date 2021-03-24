@@ -4,7 +4,6 @@ import com.github.bestheroz.demo.api.entity.AbstractCreatedUpdateEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +13,10 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Entity(name = "MEMBER_MENU")
-@IdClass(MemberMenuEntityId.class)
-public class MemberMenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
+@Entity(name = "AUTHORITY")
+class AuthorityEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 6518292219807880047L;
-  @Id private Integer authority;
   @Id private Long id;
   private String name;
-  private String type;
-  private Long parentId;
-  private Integer displayOrder;
-  private String icon;
-  private String url;
+  private String data;
 }

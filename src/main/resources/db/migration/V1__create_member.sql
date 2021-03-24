@@ -4,7 +4,7 @@ CREATE TABLE `member`
     `user_id`        VARCHAR(100)     NOT NULL,
     `password`       CHAR(128)        NULL,
     `name`           VARCHAR(100)     NOT NULL,
-    `authority`      INT(3)           NOT NULL,
+    `authority_id`      BIGINT(20)           NOT NULL,
     `login_fail_cnt` INT(1) DEFAULT 0 NOT NULL,
     `available`      BOOLEAN          NOT NULL,
     `theme`          VARCHAR(10)      NULL,

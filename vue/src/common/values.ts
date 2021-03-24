@@ -1,7 +1,7 @@
 import {
   CodeEntity,
   MemberEntity,
-  MemberMenuEntity,
+  AuthorityEntity,
   MenuEntity,
 } from "@/common/entities";
 import dayjs from "dayjs";
@@ -39,7 +39,6 @@ export function defaultMenuEntity(): MenuEntity {
     name: null,
     type: "G",
     parentId: 99999,
-    authority: null,
     displayOrder: 99999,
     icon: null,
     url: null,
@@ -55,15 +54,9 @@ export function defaultCodeEntity(): CodeEntity {
     authority: null,
   };
 }
-export function defaultMemberMenuEntity(): MemberMenuEntity {
+export function defaultAuthorityEntity(): AuthorityEntity {
   return {
-    authority: null,
-    menuId: null,
     name: null,
-    type: null,
-    parentId: null,
-    displayOrder: null,
-    icon: null,
-    url: null,
+    data: [],
   };
 }

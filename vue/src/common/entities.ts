@@ -26,26 +26,19 @@ export interface MenuEntity {
   name: string | null;
   type: string | null;
   parentId: number | null;
-  authority: number | null;
   displayOrder: number | null;
   icon: string | null;
   url: string | null;
 }
 
-export interface MemberMenuEntity {
+export interface AuthorityEntity {
   id?: number | null;
   createdBy?: string | null;
   created?: DateTime | null;
   updatedBy?: string | null;
   updated?: DateTime | null;
-  authority: number | null;
-  menuId?: number | null;
   name: string | null;
-  type: string | null;
-  parentId: number | null;
-  displayOrder: number | null;
-  icon: string | null;
-  url: string | null;
+  data: string[];
 }
 
 export interface CodeEntity {

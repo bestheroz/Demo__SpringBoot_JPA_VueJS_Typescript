@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuEntity;
-import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.AuthorityEntity;
+import com.github.bestheroz.demo.api.entity.member.menu.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class MenuService {
   @Resource private MenuRepository menuRepository;
-  @Resource private MemberMenuRepository memberMenuRepository;
+  @Resource private AuthorityRepository authorityRepository;
 
   public List<MenuVO> getDrawerList(final Integer authority) {
     final List<MenuVO> parents;
-    final List<MemberMenuEntity> items;
+    final List<AuthorityEntity> items;
     if (authority.equals(999)) {
       items =
           this.menuRepository
@@ -25,7 +25,7 @@ public class MenuService {
               .stream()
               .map(
                   entity -> {
-                    final MemberMenuEntity menuEntity = new MemberMenuEntity();
+                    final AuthorityEntity menuEntity = new AuthorityEntity();
                     BeanUtils.copyProperties(entity, menuEntity);
                     return menuEntity;
                   })
@@ -43,7 +43,7 @@ public class MenuService {
               .collect(Collectors.toList());
     } else {
       items =
-          this.memberMenuRepository.findAllByAuthority(
+          this.authorityRepository.findAllByAuthority(
               authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name"));
       parents =
           items.stream()

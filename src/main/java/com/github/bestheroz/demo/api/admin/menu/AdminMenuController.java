@@ -1,6 +1,6 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.member.menu.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.response.ApiResult;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminMenuController {
   @Resource private AdminMenuService adminMenuService;
   @Resource private MenuRepository menuRepository;
-  @Resource private MemberMenuRepository memberMenuRepository;
+  @Resource private AuthorityRepository authorityRepository;
 
   @GetMapping
   ResponseEntity<ApiResult> getItems() {
@@ -34,7 +34,7 @@ public class AdminMenuController {
           this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
     } else {
       return Result.ok(
-          this.memberMenuRepository.findAllByAuthority(
+          this.authorityRepository.findAllByAuthority(
               AuthenticationUtils.getLoginVO().getAuthority(),
               Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
     }

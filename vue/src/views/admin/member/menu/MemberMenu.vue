@@ -38,13 +38,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { SelectItem } from "@/common/types";
-import MemberMenuList from "@/views/admin/member/menu/components/MemberMenuList.vue";
+import AuthorityList from "@/views/admin/member/menu/components/AuthorityList.vue";
 import { getCodesApi } from "@/utils/apis";
 
 @Component({
-  name: "MemberMenu",
+  name: "Authority",
   components: {
-    MemberMenuList,
+    AuthorityList,
   },
 })
 export default class extends Vue {
