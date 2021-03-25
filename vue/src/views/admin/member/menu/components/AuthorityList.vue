@@ -41,22 +41,22 @@
                       </v-icon>
                       {{ item.menu.name }}
                       <br />
-                      <v-btn-toggle
+                      <v-chip-group
                         multiple
                         dense
-                        background-color="warning"
                         v-model="item.typesJson"
+                        active-class="primary"
                       >
-                        <v-btn input-value="VIEW" disabled>
+                        <v-chip value="VIEW" disabled>
                           <v-icon>mdi-eye</v-icon>
-                        </v-btn>
-                        <v-btn input-value="WRITE">
+                        </v-chip>
+                        <v-chip filter outlined value="WRITE">
                           <v-icon>mdi-content-save-outline</v-icon>
-                        </v-btn>
-                        <v-btn input-value="DELETE">
+                        </v-chip>
+                        <v-chip filter outlined value="DELETE">
                           <v-icon>mdi-delete-outline</v-icon>
-                        </v-btn>
-                      </v-btn-toggle>
+                        </v-chip>
+                      </v-chip-group>
                     </v-list-item-content>
                   </v-list-item>
                 </transition-group>

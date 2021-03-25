@@ -23,13 +23,6 @@ public class AdminAuthorityController {
     return Result.ok(this.adminAuthorityService.getItems());
   }
 
-  //  @GetMapping(value = "{id}")
-  //  ResponseEntity<ApiResult> getItems(@PathVariable(value = "id") final Long id) {
-  //    return Result.ok(
-  //        this.authorityRepository.findAllById(id)
-  //            authority, Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")))
-  //  }
-
   @PostMapping(value = "{id}")
   public ResponseEntity<ApiResult> save(@RequestBody final AuthorityEntity payload) {
     return Result.created(this.adminAuthorityService.save(payload));

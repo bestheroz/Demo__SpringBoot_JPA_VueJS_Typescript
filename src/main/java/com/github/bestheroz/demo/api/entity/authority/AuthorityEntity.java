@@ -1,5 +1,6 @@
 package com.github.bestheroz.demo.api.entity.authority;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.bestheroz.demo.api.entity.AbstractCreatedUpdateEntity;
 import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
 import java.io.Serializable;
@@ -10,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +32,11 @@ public class AuthorityEntity extends AbstractCreatedUpdateEntity implements Seri
   private String code;
   private String name;
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-  @JoinColumn(name = "authorityId")
+  @OneToMany(
+      mappedBy = "authority",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  @JsonManagedReference
   private List<AuthorityItemEntity> items;
 }

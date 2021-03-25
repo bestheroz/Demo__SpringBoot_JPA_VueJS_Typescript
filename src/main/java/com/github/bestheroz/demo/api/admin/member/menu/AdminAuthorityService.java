@@ -4,7 +4,6 @@ import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
 import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
 import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemRepository;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +23,9 @@ public class AdminAuthorityService {
 
   @Transactional
   public AuthorityEntity save(final AuthorityEntity payload) {
-    final List<AuthorityItemEntity> items = new ArrayList<>(payload.getItems());
-    payload.getItems().clear();
-    final AuthorityEntity authorityEntity = this.authorityRepository.save(payload);
-    log.debug("{}", items);
-    for (final AuthorityItemEntity entity : items) {
-      entity.setAuthorityId(authorityEntity.getId());
-      this.authorityItemRepository.save(entity);
+    for (final AuthorityItemEntity entity : payload.getItems()) {
+      entity.setAuthority(payload);
     }
-    return authorityEntity;
-    //    this.authorityRepository.deleteByAuthorityAndIdNotIn(
-    //        authority, payload.stream().map(AuthorityEntity::getId).collect(Collectors.toList()));
-    //    return payload.stream()
-    //        .map(menu -> this.authorityRepository.save(menu))
-    //        .collect(Collectors.toList());
+    return this.authorityRepository.save(payload);
   }
 }

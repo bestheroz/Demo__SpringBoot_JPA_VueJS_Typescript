@@ -59,7 +59,7 @@ export function defaultAuthorityItemEntity(): AuthorityItemEntity {
   return {
     menu: null,
     displayOrder: 0,
-    typesJson: ["VIEW", "WRITE", "DELETE"],
+    typesJson: ["VIEW"],
   };
 }
 export function defaultAuthorityEntity(): AuthorityEntity {
