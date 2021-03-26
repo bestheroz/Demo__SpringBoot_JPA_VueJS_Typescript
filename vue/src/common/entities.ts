@@ -13,7 +13,7 @@ export interface MemberEntity {
   expired: DateTime | null;
   available: boolean;
   theme: string | null;
-  authority: number | null;
+  authorityId: number | null;
   token: string | null;
 }
 

@@ -9,8 +9,6 @@ import { getVariableApi } from "@/utils/apis";
 
 @Component({ name: "App" })
 export default class extends Vue {
-  title: string | null = null;
-
   protected async mounted(): Promise<void> {
     document.title = (await getVariableApi("title")) || "";
   }

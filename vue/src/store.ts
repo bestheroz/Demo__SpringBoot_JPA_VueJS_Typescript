@@ -25,17 +25,17 @@ const user = {
     user: (state: any) => {
       return {
         id: state.user.id,
-        user: state.user.user,
+        userId: state.user.userId,
         name: state.user.name,
-        authority: state.user.authority,
-        theme: state.user.theme,
+        authorityId: state.user.authorityId,
+        theme: state.user.theme || "light",
       };
     },
     loggedIn: (state: any): boolean => {
       return !!state.user.id && !!state.accessToken && !!state.refreshToken;
     },
     theme: (state: any): string => {
-      return state.user.theme || "light";
+      return state.user.theme;
     },
     accessToken: (state: any): string | null => {
       return state.accessToken;
@@ -57,6 +57,7 @@ const user = {
         userId: string;
         userVO: string;
       }>(accessToken);
+      console.log(JSON.parse(jwt.userVO));
       state.user = JSON.parse(jwt.userVO);
       state.accessToken = accessToken;
     },

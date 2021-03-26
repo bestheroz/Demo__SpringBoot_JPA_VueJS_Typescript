@@ -91,7 +91,7 @@ public class AuthService implements UserDetailsService {
 
   void logout() {
     this.memberRepository
-        .findByUserId(AuthenticationUtils.getUserId())
+        .findById(AuthenticationUtils.getId())
         .ifPresent(
             item -> {
               item.setToken(null);

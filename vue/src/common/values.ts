@@ -6,18 +6,19 @@ import {
   AuthorityItemEntity,
 } from "@/common/entities";
 import dayjs from "dayjs";
+
 export function defaultUser(): {
   id: number | null;
   userId: string | null;
   name: string | null;
-  authority: string | null;
+  authorityId: number | null;
   theme: string;
 } {
   return {
     id: null,
     userId: null,
     name: null,
-    authority: null,
+    authorityId: null,
     theme: "light",
   };
 }
@@ -30,7 +31,7 @@ export function defaultMemberEntity(): MemberEntity {
     expired: dayjs().add(1, "years").endOf("day"),
     available: false,
     theme: null,
-    authority: null,
+    authorityId: null,
     token: null,
   };
 }

@@ -21,6 +21,7 @@
                 v-model="item.items"
                 v-bind="dragOptions"
                 handle=".drag-handle"
+                @end="onDraggableEnd"
               >
                 <transition-group type="transition" name="flip-list">
                   <v-list-item
@@ -45,7 +46,7 @@
                         multiple
                         dense
                         v-model="item.typesJson"
-                        active-class="primary"
+                        active-class="accent"
                       >
                         <v-chip value="VIEW" disabled>
                           <v-icon>mdi-eye</v-icon>
@@ -66,11 +67,12 @@
           <v-col cols="9">
             <v-card-text class="py-0 elevation-1">
               <v-chip-group
-                v-model="selected"
+                v-model="selectedChips"
                 column
                 multiple
                 active-class="accent"
                 dense
+                @change="onChangeSelected"
               >
                 <v-chip
                   v-for="item in menus"
@@ -99,18 +101,17 @@ import draggable from "vuedraggable";
 import { defaultAuthorityItemEntity } from "@/common/values";
 import type { AuthorityEntity, MenuEntity } from "@/common/entities";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
-import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 
 @Component({
   name: "AuthorityList",
-  components: { ButtonIconTooltip, RefreshDataBar, ButtonSet, draggable },
+  components: { RefreshDataBar, ButtonSet, draggable },
 })
 export default class extends Vue {
   @VModel({ required: true }) item!: AuthorityEntity;
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
   menus: MenuEntity[] = [];
-  selected: MenuEntity[] = [];
+  selectedChips: MenuEntity[] = [];
   loading = false;
   saving = false;
   drag = false;
@@ -124,10 +125,24 @@ export default class extends Vue {
   protected async created(): Promise<void> {
     const response = await getApi<MenuEntity[]>("admin/menus/");
     this.menus = response?.data || [];
+    this.watchItem(this.item);
   }
 
-  @Watch("selected")
-  watchSelected(selected: MenuEntity[]): void {
+  @Watch("item")
+  protected watchItem(val: AuthorityEntity): void {
+    this.selectedChips = val.items.map((item) =>
+      this.menus.find((menu) => menu.id === item.menu.id),
+    );
+  }
+
+  protected onDraggableEnd(): void {
+    console.log("onDraggableEnd");
+    this.item.items = this.item.items.map((item, index) => {
+      return { ...item, displayOrder: index + 1 };
+    });
+  }
+
+  protected onChangeSelected(selected: MenuEntity[]): void {
     this.item.items = selected.map((select, index) => {
       const find = this.item.items.find((item) => item.id === select.id);
       if (find) {
@@ -140,12 +155,10 @@ export default class extends Vue {
         };
       }
     });
-    console.log(this.item.items);
   }
 
   protected async saveItems(): Promise<void> {
     this.saving = true;
-    console.log(this.item);
     const response = await postApi<AuthorityEntity>(
       `admin/authorities/${this.item.code}`,
       this.item,

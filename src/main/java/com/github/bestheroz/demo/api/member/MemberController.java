@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class MemberController {
   @Resource private MemberRepository memberRepository;
+  @Resource private MemberService memberService;
   @Resource private CodeRepository codeRepository;
 
   @GetMapping(value = "codes")
@@ -36,7 +37,7 @@ public class MemberController {
   ResponseEntity<ApiResult> getMyInfo() {
     return Result.ok(
         this.memberRepository
-            .findByUserId(AuthenticationUtils.getUserId())
+            .findById(AuthenticationUtils.getId())
             .map(
                 item -> {
                   item.setPassword(null);
@@ -48,7 +49,7 @@ public class MemberController {
   @PatchMapping("mine")
   public ResponseEntity<ApiResult> editMe(@RequestBody final MemberEntity payload) {
     return this.memberRepository
-        .findByUserId(AuthenticationUtils.getUserId())
+        .findById(AuthenticationUtils.getId())
         .map(
             memberEntity -> {
               final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
@@ -68,7 +69,7 @@ public class MemberController {
   @PostMapping(value = "mine/changePassword")
   public ResponseEntity<ApiResult> changePassword(@RequestBody final Map<String, String> payload) {
     return this.memberRepository
-        .findByUserId(AuthenticationUtils.getUserId())
+        .findById(AuthenticationUtils.getId())
         .map(
             memberEntity -> {
               final Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
@@ -92,7 +93,7 @@ public class MemberController {
   @PostMapping(value = "mine/changeTheme")
   public ResponseEntity<ApiResult> changeTheme(@RequestBody final Map<String, String> payload) {
     return this.memberRepository
-        .findByUserId(AuthenticationUtils.getUserId())
+        .findById(AuthenticationUtils.getId())
         .map(
             memberEntity -> {
               memberEntity.setTheme(payload.get("theme"));
@@ -100,5 +101,10 @@ public class MemberController {
               return Result.ok();
             })
         .orElseThrow(() -> new BusinessException(ExceptionCode.FAIL_NOT_ALLOWED_MEMBER));
+  }
+
+  @GetMapping(value = "mine/authority")
+  ResponseEntity<ApiResult> getAuthority() {
+    return Result.ok(this.memberService.getItem(AuthenticationUtils.getId()));
   }
 }

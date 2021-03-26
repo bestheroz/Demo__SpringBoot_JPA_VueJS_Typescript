@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +39,6 @@ public class AuthorityEntity extends AbstractCreatedUpdateEntity implements Seri
       orphanRemoval = true,
       fetch = FetchType.LAZY)
   @JsonManagedReference
+  @OrderBy("displayOrder ASC")
   private List<AuthorityItemEntity> items;
 }

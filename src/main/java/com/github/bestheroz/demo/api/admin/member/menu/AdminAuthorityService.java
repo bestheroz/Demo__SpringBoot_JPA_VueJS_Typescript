@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AdminAuthorityService {
   @Resource private AuthorityRepository authorityRepository;
-  @Resource private AuthorityItemRepository authorityItemRepository;
 
   @Transactional
   public List<AuthorityEntity> getItems() {

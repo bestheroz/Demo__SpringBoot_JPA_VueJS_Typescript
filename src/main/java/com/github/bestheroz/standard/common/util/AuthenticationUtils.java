@@ -42,6 +42,10 @@ public class AuthenticationUtils {
     }
   }
 
+  public Long getId() {
+    return getLoginVO().getId();
+  }
+
   public String getUserId() {
     try {
       return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getName())
