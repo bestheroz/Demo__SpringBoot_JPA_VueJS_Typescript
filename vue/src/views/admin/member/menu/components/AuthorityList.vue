@@ -98,7 +98,7 @@ import { Component, Ref, VModel, Vue, Watch } from "vue-property-decorator";
 import { getApi, postApi } from "@/utils/apis";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultAuthorityItemEntity } from "@/common/values";
+import { defaultAuthorityItemEntity, defaultMenuEntity } from "@/common/values";
 import type { AuthorityEntity, MenuEntity } from "@/common/entities";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 
@@ -130,13 +130,18 @@ export default class extends Vue {
 
   @Watch("item")
   protected watchItem(val: AuthorityEntity): void {
-    this.selectedChips = val.items.map((item) =>
-      this.menus.find((menu) => menu.id === item.menu.id),
-    );
+    if (val.id === 1) {
+      this.selectedChips = this.menus;
+    } else {
+      this.selectedChips = val.items.map(
+        (item) =>
+          this.menus.find((menu) => menu.id === item.menu?.id) ||
+          defaultMenuEntity(),
+      );
+    }
   }
 
   protected onDraggableEnd(): void {
-    console.log("onDraggableEnd");
     this.item.items = this.item.items.map((item, index) => {
       return { ...item, displayOrder: index + 1 };
     });
@@ -164,7 +169,7 @@ export default class extends Vue {
       this.item,
     );
     this.saving = false;
-    if (response?.code?.startsWith("S")) {
+    if (response?.code?.startsWith("S") && response.data) {
       await this.$store.dispatch("initAuthority");
       this.item = response.data;
     }

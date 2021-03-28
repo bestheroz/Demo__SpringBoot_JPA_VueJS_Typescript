@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { SelectItem } from "@/common/types";
 import AuthorityList from "@/views/admin/member/menu/components/AuthorityList.vue";
 import { getApi } from "@/utils/apis";
@@ -52,18 +52,23 @@ export default class extends Vue {
   items: AuthorityEntity[] = [];
   authority: string | null = null;
   AUTHORITY: SelectItem[] = [];
+  loading = false;
+  selectedItem: AuthorityEntity | null = null;
 
-  get selectedItem(): AuthorityEntity | null {
-    return this.items.find((item) => item.code === this.authority) || null;
-  }
+  @Watch("authority")
+  watchAuthority(val: string | null) {
+    this.selectedItem = this.items.find((item) => item.code === val) || null;
 
-  set selectedItem(value: AuthorityEntity): void {
-    const findIndex = this.items.findIndex((item) => item.id === value.id);
-    this.items = [
-      ...this.items.slice(0, findIndex),
-      value,
-      ...this.items.slice(findIndex + 1),
-    ];
+    if (this.selectedItem) {
+      const findIndex = this.items.findIndex(
+        (item) => item.id === this.selectedItem?.id,
+      );
+      this.items = [
+        ...this.items.slice(0, findIndex),
+        this.selectedItem,
+        ...this.items.slice(findIndex + 1),
+      ];
+    }
   }
 
   protected async created(): Promise<void> {
@@ -76,7 +81,7 @@ export default class extends Vue {
     this.items = response.data || [];
     this.loading = false;
     this.AUTHORITY = (response?.data || []).map((item) => {
-      return { value: item.code, text: item.name };
+      return { value: item.code || "", text: item.name || "" };
     });
   }
 }

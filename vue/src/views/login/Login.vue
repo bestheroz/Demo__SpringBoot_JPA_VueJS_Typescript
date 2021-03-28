@@ -102,7 +102,7 @@ export default class extends Vue {
 
   protected async mounted(): Promise<void> {
     await this.$store.dispatch("clearUser");
-    await this.$store.dispatch("clearDrawer");
+    await this.$store.dispatch("clearAuthority");
     await this.$store.dispatch("clearCache");
     await this.$store.dispatch("clearMenuSelected");
     window.localStorage.clear();

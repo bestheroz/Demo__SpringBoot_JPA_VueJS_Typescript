@@ -2,18 +2,23 @@ package com.github.bestheroz.demo.api.auth;
 
 import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
 import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
+import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
 import com.github.bestheroz.demo.api.entity.member.MemberRepository;
+import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.authenticate.UserVO;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService implements UserDetailsService {
   @Resource private MemberRepository memberRepository;
   @Resource private AuthorityRepository authorityRepository;
+  @Resource private MenuRepository menuRepository;
 
   @Override
   public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
@@ -141,8 +147,23 @@ public class AuthService implements UserDetailsService {
 
   @Transactional
   AuthorityEntity getAuthorityEntity(final Long id) {
-    return this.authorityRepository
-        .findById(id)
-        .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
+    final AuthorityEntity authorityEntity =
+        this.authorityRepository
+            .findById(id)
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
+    if (authorityEntity.getId().equals(1L)) {
+      authorityEntity.setItems(
+          this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder")).stream()
+              .map(
+                  item -> {
+                    final AuthorityItemEntity authorityItemEntity = new AuthorityItemEntity();
+                    BeanUtils.copyProperties(item, authorityItemEntity);
+                    authorityItemEntity.setMenu(item);
+                    authorityItemEntity.setTypesJson(List.of("VIEW", "WRITE", "DELETE"));
+                    return authorityItemEntity;
+                  })
+              .collect(Collectors.toList()));
+    }
+    return authorityEntity;
   }
 }

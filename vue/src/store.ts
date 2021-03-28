@@ -152,10 +152,12 @@ const authority = {
     },
   },
   actions: {
-    async initAuthority({ commit }: ActionContext<any, any>): Promise<void> {
+    async initAuthority({
+      commit,
+      getters,
+    }: ActionContext<any, any>): Promise<void> {
       const response = await getApi<AuthorityEntity>(
-        // `auth/${getters.user.authorityId}`,
-        "auth/2",
+        `auth/${getters.user.authorityId}`,
       );
       commit("setAuthority", response?.data);
     },
