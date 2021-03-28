@@ -14,7 +14,7 @@ export default class extends Vue {
       await this.$router.push("/login");
       return;
     }
-    this.$store.dispatch("initDrawers").then();
+    this.$store.dispatch("initAuthority").then();
     this.$store.dispatch("initMemberCodes").then();
     await this.$router.push("/index");
   }

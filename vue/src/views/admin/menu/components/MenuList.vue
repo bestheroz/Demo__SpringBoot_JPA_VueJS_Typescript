@@ -143,7 +143,7 @@ export default class extends Vue {
       const response = await deleteApi<MenuEntity>(`admin/menus/${value.id}/`);
       this.saving = false;
       if (response?.code?.startsWith("S")) {
-        await this.$store.dispatch("initDrawers");
+        await this.$store.dispatch("initAuthority");
         this.items = this.items.filter(
           (item) => item.id !== (response.data?.id || 0),
         );
@@ -169,7 +169,7 @@ export default class extends Vue {
     );
     this.saving = false;
     if (response?.code?.startsWith("S")) {
-      await this.$store.dispatch("initDrawers");
+      await this.$store.dispatch("initAuthority");
       this.items = response.data || [];
     }
   }

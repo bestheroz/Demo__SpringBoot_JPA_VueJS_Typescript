@@ -37,7 +37,7 @@ public class AuthorityEntity extends AbstractCreatedUpdateEntity implements Seri
       mappedBy = "authority",
       cascade = CascadeType.ALL,
       orphanRemoval = true,
-      fetch = FetchType.LAZY)
+      fetch = FetchType.EAGER)
   @JsonManagedReference
   @OrderBy("displayOrder ASC")
   private List<AuthorityItemEntity> items;

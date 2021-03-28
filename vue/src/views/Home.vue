@@ -44,6 +44,7 @@ export default class extends Vue {
       this.now = dayjs().format("YYYY년 MM월 DD일 HH시 mm분 ss초");
       this.color = this.getRandomColor();
     }, 1000);
+    this.$store.dispatch("initAuthority").then();
   }
 
   protected getRandomColor(): string {

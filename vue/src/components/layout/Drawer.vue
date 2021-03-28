@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer v-if="!isPopup" v-model="syncedDrawer" app clipped fixed>
     <v-list>
-      <template v-for="item in $store.getters.drawers">
+      <template v-for="item in drawers">
         <v-list-group
           v-if="item.children"
           :key="item.id"
@@ -47,6 +47,7 @@
 <script lang="ts">
 import { Component, PropSync, Vue } from "vue-property-decorator";
 import type { DrawerItem } from "@/common/types";
+import { AuthorityItemEntity } from "@/common/entities";
 
 @Component({
   name: "Drawer",
@@ -54,6 +55,23 @@ import type { DrawerItem } from "@/common/types";
 export default class extends Vue {
   @PropSync("drawer", { required: true, default: true })
   readonly syncedDrawer!: boolean;
+
+  get drawers(): DrawerItem[] {
+    const itemEntities = this.$store.getters.authority.items;
+    return itemEntities
+      .filter((item: AuthorityItemEntity) => item.menu?.type === "G")
+      .map((item: AuthorityItemEntity) => {
+        return {
+          ...item.menu,
+          children: itemEntities
+            .filter(
+              (children: AuthorityItemEntity) =>
+                children.menu?.parentId === item.menu?.id,
+            )
+            .map((children: AuthorityItemEntity) => children.menu),
+        };
+      });
+  }
 
   get isPopup(): boolean {
     return !window.toolbar.visible;

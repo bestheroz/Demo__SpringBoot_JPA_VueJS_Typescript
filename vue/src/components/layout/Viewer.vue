@@ -29,7 +29,7 @@ export default class extends Vue {
     if (this.$route.fullPath === "/index") {
       return "";
     }
-    if (this.$store.getters.drawers?.length > 0) {
+    if (this.$store.getters.authority?.length > 0) {
       return (this.findThisPage().name || "").split("(팝업)").join("");
     }
     return "";

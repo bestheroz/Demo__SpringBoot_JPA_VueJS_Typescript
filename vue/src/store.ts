@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex, { ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import { DrawerItem, SelectItem } from "@/common/types";
+import { SelectItem } from "@/common/types";
 import { axiosInstance, getApi, postApi } from "@/utils/apis";
 // eslint-disable-next-line camelcase
 import jwt_decode from "jwt-decode";
@@ -9,7 +9,7 @@ import axios from "axios";
 import envs from "@/constants/envs";
 import router from "@/router";
 import { defaultUser } from "@/common/values";
-import type { MemberEntity } from "@/common/entities";
+import type { AuthorityEntity, MemberEntity } from "@/common/entities";
 import { errorPage } from "@/utils/errors";
 
 Vue.use(Vuex);
@@ -130,34 +130,37 @@ const user = {
   },
 };
 
-const drawer = {
+const authority = {
   state: {
-    drawers: null,
+    authority: null,
     selected: null,
   },
   getters: {
-    drawers: (state: any): DrawerItem[] => {
-      return state.drawers || [];
+    authority: (state: any): AuthorityEntity => {
+      return state.authority || [];
     },
     selected: (state: any): number | null => {
       return state.selected || null;
     },
   },
   mutations: {
-    setDrawers(state: any, drawers: DrawerItem[]): void {
-      state.drawers = drawers;
+    setAuthority(state: any, authority: AuthorityEntity): void {
+      state.authority = authority;
     },
     setSelected(state: any, selected: number): void {
       state.selected = selected;
     },
   },
   actions: {
-    async initDrawers({ commit }: ActionContext<any, any>): Promise<void> {
-      const response = await getApi<DrawerItem[]>("menus/drawer");
-      commit("setDrawers", response?.data);
+    async initAuthority({ commit }: ActionContext<any, any>): Promise<void> {
+      const response = await getApi<AuthorityEntity>(
+        // `auth/${getters.user.authorityId}`,
+        "auth/2",
+      );
+      commit("setAuthority", response?.data);
     },
-    clearDrawer({ commit }: ActionContext<any, any>): void {
-      commit("setDrawers", null);
+    clearAuthority({ commit }: ActionContext<any, any>): void {
+      commit("setAuthority", null);
     },
     setMenuSelected(
       { commit }: ActionContext<any, any>,
@@ -219,7 +222,7 @@ export default new Vuex.Store({
   strict: true,
   modules: {
     user,
-    drawer,
+    authority,
     codes,
     command,
   },

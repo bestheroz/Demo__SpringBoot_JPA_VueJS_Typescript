@@ -165,7 +165,7 @@ export default class extends Vue {
     );
     this.saving = false;
     if (response?.code?.startsWith("S")) {
-      await this.$store.dispatch("initDrawers");
+      await this.$store.dispatch("initAuthority");
       this.item = response.data;
     }
   }

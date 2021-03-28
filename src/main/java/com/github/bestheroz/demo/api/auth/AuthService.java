@@ -1,5 +1,7 @@
 package com.github.bestheroz.demo.api.auth;
 
+import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
+import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.authenticate.UserVO;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AuthService implements UserDetailsService {
   @Resource private MemberRepository memberRepository;
+  @Resource private AuthorityRepository authorityRepository;
 
   @Override
   public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
@@ -133,6 +136,13 @@ public class AuthService implements UserDetailsService {
               BeanUtils.copyProperties(this.memberRepository.save(memberEntity), userVO);
               return userVO;
             })
+        .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
+  }
+
+  @Transactional
+  AuthorityEntity getAuthorityEntity(final Long id) {
+    return this.authorityRepository
+        .findById(id)
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
   }
 }

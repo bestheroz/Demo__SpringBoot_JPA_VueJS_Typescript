@@ -137,7 +137,7 @@ export default class extends Vue {
     const response = await postApi<MenuEntity>(this.ENDPOINT_URL, this.item);
     this.saving = false;
     if (response?.code?.startsWith("S")) {
-      await this.$store.dispatch("initDrawers");
+      await this.$store.dispatch("initAuthority");
       this.syncedDialog = false;
       this.$emit("created", response.data);
     }
@@ -151,7 +151,7 @@ export default class extends Vue {
     );
     this.saving = false;
     if (response?.code?.startsWith("S")) {
-      await this.$store.dispatch("initDrawers");
+      await this.$store.dispatch("initAuthority");
       this.syncedDialog = false;
       this.$emit("updated", response.data);
     }
