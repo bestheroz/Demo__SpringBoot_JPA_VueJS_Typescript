@@ -14,11 +14,11 @@
           @reload="$emit('click:reload')"
         />
         <v-row dense>
-          <v-col cols="3">
+          <v-col cols="5">
             <v-list dense>
               <draggable
                 tag="div"
-                v-model="item.items"
+                v-model="vModel.items"
                 v-bind="dragOptions"
                 handle=".drag-handle"
                 @end="onDraggableEnd"
@@ -26,7 +26,7 @@
                 <transition-group type="transition" name="flip-list">
                   <v-list-item
                     :key="item.displayOrder"
-                    v-for="item in item.items"
+                    v-for="item in vModel.items"
                     class="elevation-1"
                     dense
                   >
@@ -41,30 +41,40 @@
                         mdi-sort
                       </v-icon>
                       {{ item.menu.name }}
-                      <br />
-                      <v-chip-group
-                        multiple
-                        dense
-                        v-model="item.typesJson"
-                        active-class="accent"
-                      >
-                        <v-chip value="VIEW" disabled>
-                          <v-icon>mdi-eye</v-icon>
-                        </v-chip>
-                        <v-chip filter outlined value="WRITE">
-                          <v-icon>mdi-content-save-outline</v-icon>
-                        </v-chip>
-                        <v-chip filter outlined value="DELETE">
-                          <v-icon>mdi-delete-outline</v-icon>
-                        </v-chip>
-                      </v-chip-group>
                     </v-list-item-content>
+                    <br />
+                    <v-chip-group
+                      multiple
+                      dense
+                      v-model="item.typesJson"
+                      active-class="accent"
+                    >
+                      <v-chip :value="AUTHORITY_TYPE.VIEW" disabled>
+                        <v-icon>mdi-eye</v-icon>
+                      </v-chip>
+                      <v-chip
+                        filter
+                        outlined
+                        :value="AUTHORITY_TYPE.WRITE"
+                        :disabled="vModel.id === 1"
+                      >
+                        <v-icon>mdi-content-save-outline</v-icon>
+                      </v-chip>
+                      <v-chip
+                        filter
+                        outlined
+                        :value="AUTHORITY_TYPE.DELETE"
+                        :disabled="vModel.id === 1"
+                      >
+                        <v-icon>mdi-delete-outline</v-icon>
+                      </v-chip>
+                    </v-chip-group>
                   </v-list-item>
                 </transition-group>
               </draggable>
             </v-list>
           </v-col>
-          <v-col cols="9">
+          <v-col cols="7">
             <v-card-text class="py-0 elevation-1">
               <v-chip-group
                 v-model="selectedChips"
@@ -80,6 +90,7 @@
                   :key="item.id"
                   filter
                   outlined
+                  :disabled="vModel.id === 1"
                 >
                   <v-icon v-text="item.icon" v-if="item.icon" />
                   {{ item.name }}
@@ -101,13 +112,14 @@ import draggable from "vuedraggable";
 import { defaultAuthorityItemEntity, defaultMenuEntity } from "@/common/values";
 import type { AuthorityEntity, MenuEntity } from "@/common/entities";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
+import { AUTHORITY_TYPE } from "@/common/selections";
 
 @Component({
   name: "AuthorityList",
   components: { RefreshDataBar, ButtonSet, draggable },
 })
 export default class extends Vue {
-  @VModel({ required: true }) item!: AuthorityEntity;
+  @VModel({ required: true }) vModel!: AuthorityEntity;
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
   menus: MenuEntity[] = [];
@@ -115,6 +127,8 @@ export default class extends Vue {
   loading = false;
   saving = false;
   drag = false;
+
+  readonly AUTHORITY_TYPE = AUTHORITY_TYPE;
 
   get dragOptions(): { animation: number } {
     return {
@@ -125,10 +139,10 @@ export default class extends Vue {
   protected async created(): Promise<void> {
     const response = await getApi<MenuEntity[]>("admin/menus/");
     this.menus = response?.data || [];
-    this.watchItem(this.item);
+    this.watchItem(this.vModel);
   }
 
-  @Watch("item")
+  @Watch("vModel")
   protected watchItem(val: AuthorityEntity): void {
     if (val.id === 1) {
       this.selectedChips = this.menus;
@@ -139,17 +153,18 @@ export default class extends Vue {
           defaultMenuEntity(),
       );
     }
+    this.onChangeSelected(this.selectedChips);
   }
 
   protected onDraggableEnd(): void {
-    this.item.items = this.item.items.map((item, index) => {
+    this.vModel.items = this.vModel.items.map((item, index) => {
       return { ...item, displayOrder: index + 1 };
     });
   }
 
-  protected onChangeSelected(selected: MenuEntity[]): void {
-    this.item.items = selected.map((select, index) => {
-      const find = this.item.items.find((item) => item.id === select.id);
+  protected onChangeSelected(selectedChips: MenuEntity[]): void {
+    this.vModel.items = selectedChips.map((select, index) => {
+      const find = this.vModel.items.find((item) => item.id === select.id);
       if (find) {
         return { ...find, displayOrder: index + 1 };
       } else {
@@ -157,6 +172,14 @@ export default class extends Vue {
           ...defaultAuthorityItemEntity(),
           menu: select,
           displayOrder: index + 1,
+          typesJson:
+            this.vModel.id === 1
+              ? [
+                  AUTHORITY_TYPE.VIEW,
+                  AUTHORITY_TYPE.WRITE,
+                  AUTHORITY_TYPE.DELETE,
+                ]
+              : [AUTHORITY_TYPE.VIEW],
         };
       }
     });
@@ -165,13 +188,13 @@ export default class extends Vue {
   protected async saveItems(): Promise<void> {
     this.saving = true;
     const response = await postApi<AuthorityEntity>(
-      `admin/authorities/${this.item.code}`,
-      this.item,
+      `admin/authorities/${this.vModel.code}`,
+      this.vModel,
     );
     this.saving = false;
     if (response?.code?.startsWith("S") && response.data) {
       await this.$store.dispatch("initAuthority");
-      this.item = response.data;
+      this.vModel = response.data;
     }
   }
 }

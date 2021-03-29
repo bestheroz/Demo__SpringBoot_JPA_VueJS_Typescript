@@ -78,7 +78,9 @@ export default class extends Vue {
   protected async getList(): Promise<void> {
     this.loading = true;
     const response = await getApi<AuthorityEntity[]>("admin/authorities/");
-    this.items = response.data || [];
+    this.items = (response.data || []).map((item) => {
+      return { ...item, items: item.items || [] };
+    });
     this.loading = false;
     this.AUTHORITY = (response?.data || []).map((item) => {
       return { value: item.code || "", text: item.name || "" };

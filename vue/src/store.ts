@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex, { ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import { SelectItem } from "@/common/types";
+import { DrawerItem, SelectItem } from "@/common/types";
 import { axiosInstance, getApi, postApi } from "@/utils/apis";
 // eslint-disable-next-line camelcase
 import jwt_decode from "jwt-decode";
@@ -11,6 +11,7 @@ import router from "@/router";
 import { defaultUser } from "@/common/values";
 import type { AuthorityEntity, MemberEntity } from "@/common/entities";
 import { errorPage } from "@/utils/errors";
+import { AuthorityItemEntity } from "@/common/entities";
 
 Vue.use(Vuex);
 
@@ -20,6 +21,7 @@ const user = {
     user: defaultUser(),
     accessToken: null,
     refreshToken: null,
+    authority: null,
   },
   getters: {
     user: (state: any) => {
@@ -43,6 +45,25 @@ const user = {
     refreshToken: (state: any): string | null => {
       return state.refreshToken;
     },
+    authority: (state: any): AuthorityEntity => {
+      return state.authority || [];
+    },
+    drawers: (getters: any): DrawerItem[] => {
+      const itemEntities = getters.authority.items;
+      return itemEntities
+        .filter((item: AuthorityItemEntity) => item.menu?.type === "G")
+        .map((item: AuthorityItemEntity) => {
+          return {
+            ...item.menu,
+            children: itemEntities
+              .filter(
+                (children: AuthorityItemEntity) =>
+                  children.menu?.parentId === item.menu?.id,
+              )
+              .map((children: AuthorityItemEntity) => children.menu),
+          };
+        });
+    },
   },
   mutations: {
     setUser(state: any, user: MemberEntity): void {
@@ -57,12 +78,14 @@ const user = {
         userId: string;
         userVO: string;
       }>(accessToken);
-      console.log(JSON.parse(jwt.userVO));
       state.user = JSON.parse(jwt.userVO);
       state.accessToken = accessToken;
     },
     setRefreshToken(state: any, refreshToken: string): void {
       state.refreshToken = refreshToken;
+    },
+    setAuthority(state: any, authority: AuthorityEntity): void {
+      state.authority = authority;
     },
   },
   actions: {
@@ -127,31 +150,6 @@ const user = {
         }
       }
     },
-  },
-};
-
-const authority = {
-  state: {
-    authority: null,
-    selected: null,
-  },
-  getters: {
-    authority: (state: any): AuthorityEntity => {
-      return state.authority || [];
-    },
-    selected: (state: any): number | null => {
-      return state.selected || null;
-    },
-  },
-  mutations: {
-    setAuthority(state: any, authority: AuthorityEntity): void {
-      state.authority = authority;
-    },
-    setSelected(state: any, selected: number): void {
-      state.selected = selected;
-    },
-  },
-  actions: {
     async initAuthority({
       commit,
       getters,
@@ -164,6 +162,24 @@ const authority = {
     clearAuthority({ commit }: ActionContext<any, any>): void {
       commit("setAuthority", null);
     },
+  },
+};
+
+const drawer = {
+  state: {
+    selected: null,
+  },
+  getters: {
+    selected: (state: any): number | null => {
+      return state.selected || null;
+    },
+  },
+  mutations: {
+    setSelected(state: any, selected: number): void {
+      state.selected = selected;
+    },
+  },
+  actions: {
     setMenuSelected(
       { commit }: ActionContext<any, any>,
       selected: number,
@@ -224,7 +240,7 @@ export default new Vuex.Store({
   strict: true,
   modules: {
     user,
-    authority,
+    drawer,
     codes,
     command,
   },

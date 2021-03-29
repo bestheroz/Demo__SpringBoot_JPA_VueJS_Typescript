@@ -6,6 +6,7 @@ import {
   AuthorityItemEntity,
 } from "@/common/entities";
 import dayjs from "dayjs";
+import { AUTHORITY_TYPE } from "@/common/selections";
 
 export function defaultUser(): {
   id: number | null;
@@ -60,7 +61,7 @@ export function defaultAuthorityItemEntity(): AuthorityItemEntity {
   return {
     menu: null,
     displayOrder: 0,
-    typesJson: ["VIEW"],
+    typesJson: [AUTHORITY_TYPE.VIEW],
   };
 }
 export function defaultAuthorityEntity(): AuthorityEntity {
