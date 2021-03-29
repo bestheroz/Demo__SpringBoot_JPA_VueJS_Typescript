@@ -1,6 +1,5 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.response.ApiResult;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminMenuController {
   @Resource private AdminMenuService adminMenuService;
   @Resource private MenuRepository menuRepository;
-  @Resource private AuthorityRepository authorityRepository;
 
   @GetMapping
   ResponseEntity<ApiResult> getItems() {

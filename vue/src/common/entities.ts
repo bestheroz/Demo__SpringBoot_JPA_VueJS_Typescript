@@ -59,5 +59,5 @@ export interface CodeEntity {
   name: string | null;
   available: boolean;
   displayOrder: number | null;
-  authority: number | null;
+  authorityId: number | null;
 }

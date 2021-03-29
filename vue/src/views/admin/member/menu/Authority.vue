@@ -5,7 +5,7 @@
         <v-card flat>
           <v-card-text>
             <v-chip-group
-              v-model="authority"
+              v-model.number="authorityId"
               column
               active-class="accent"
               mandatory
@@ -50,15 +50,19 @@ import { AuthorityEntity } from "@/common/entities";
 })
 export default class extends Vue {
   items: AuthorityEntity[] = [];
-  authority: string | null = null;
-  AUTHORITY: SelectItem[] = [];
+  authorityId: number | null = null;
   loading = false;
   selectedItem: AuthorityEntity | null = null;
 
-  @Watch("authority")
-  watchAuthority(val: string | null) {
-    this.selectedItem = this.items.find((item) => item.code === val) || null;
+  get AUTHORITY(): SelectItem[] {
+    return this.items.map((item) => {
+      return { value: item.id, text: item.name };
+    });
+  }
 
+  @Watch("authorityId")
+  protected watchAuthority(val: number | null): void {
+    this.selectedItem = this.items.find((item) => item.id === val) || null;
     if (this.selectedItem) {
       const findIndex = this.items.findIndex(
         (item) => item.id === this.selectedItem?.id,
@@ -71,7 +75,7 @@ export default class extends Vue {
     }
   }
 
-  protected async created(): Promise<void> {
+  protected created(): void {
     this.getList().then();
   }
 
@@ -82,9 +86,6 @@ export default class extends Vue {
       return { ...item, items: item.items || [] };
     });
     this.loading = false;
-    this.AUTHORITY = (response?.data || []).map((item) => {
-      return { value: item.code || "", text: item.name || "" };
-    });
   }
 }
 </script>

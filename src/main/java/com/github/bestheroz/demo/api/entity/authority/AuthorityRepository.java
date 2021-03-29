@@ -1,6 +1,7 @@
 package com.github.bestheroz.demo.api.entity.authority;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,8 @@ public interface AuthorityRepository extends CrudRepository<AuthorityEntity, Lon
 
   void deleteAllById(Long id);
 
-  //  void deleteByAuthorityAndIdNotIn(Integer authority, List<Long> ids);
+  @Query(
+      value = "SELECT A.ID AS VALUE, A.NAME AS TEXT FROM AUTHORITY A ORDER BY A.NAME ASC",
+      nativeQuery = true)
+  List<Object[]> getCodes();
 }

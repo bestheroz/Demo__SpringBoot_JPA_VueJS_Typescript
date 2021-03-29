@@ -52,8 +52,8 @@
               />
             </span>
           </template>
-          <template v-if="AUTHORITY" #[`item.authority`]="{ item }">
-            {{ item.authority | getCodeText(AUTHORITY) }}
+          <template v-if="AUTHORITY" #[`item.authorityId`]="{ item }">
+            {{ item.authorityId | getCodeText(AUTHORITY) }}
           </template>
           <template #[`item.updatedBy`]="{ item }">
             {{ item.updatedBy | formatMemberNm }}
@@ -77,7 +77,7 @@
 <script lang="ts">
 import { Component, Emit, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 import type { DataTableHeader, SelectItem } from "@/common/types";
-import { deleteApi, getApi, getCodesApi } from "@/utils/apis";
+import { deleteApi, getApi } from "@/utils/apis";
 import envs from "@/constants/envs";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
 import qs from "querystring";
@@ -166,7 +166,8 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    this.AUTHORITY = await getCodesApi("AUTHORITY");
+    const response = await getApi<SelectItem[]>("auth/codes");
+    this.AUTHORITY = response.data || [];
   }
 
   @Watch("type")

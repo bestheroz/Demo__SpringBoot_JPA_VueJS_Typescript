@@ -3,7 +3,6 @@ package com.github.bestheroz.demo.api.admin.member.menu;
 import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
 import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
-import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemRepository;
 import java.util.List;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

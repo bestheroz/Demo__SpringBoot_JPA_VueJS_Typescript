@@ -61,4 +61,9 @@ public class AuthController {
     this.authService.logout();
     AuthenticationUtils.logout();
   }
+
+  @GetMapping(value = "/codes")
+  public ResponseEntity<ApiResult> getCodes() {
+    return Result.ok(this.authService.getCodes());
+  }
 }

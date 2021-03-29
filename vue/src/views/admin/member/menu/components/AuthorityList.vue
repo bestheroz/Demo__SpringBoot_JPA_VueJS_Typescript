@@ -56,7 +56,7 @@
                         filter
                         outlined
                         :value="AUTHORITY_TYPE.WRITE"
-                        :disabled="vModel.id === 1"
+                        :disabled="vModel.code === 'SUPER'"
                       >
                         <v-icon>mdi-content-save-outline</v-icon>
                       </v-chip>
@@ -64,7 +64,7 @@
                         filter
                         outlined
                         :value="AUTHORITY_TYPE.DELETE"
-                        :disabled="vModel.id === 1"
+                        :disabled="vModel.code === 'SUPER'"
                       >
                         <v-icon>mdi-delete-outline</v-icon>
                       </v-chip>
@@ -90,7 +90,7 @@
                   :key="item.id"
                   filter
                   outlined
-                  :disabled="vModel.id === 1"
+                  :disabled="vModel.code === 'SUPER'"
                 >
                   <v-icon v-text="item.icon" v-if="item.icon" />
                   {{ item.name }}
@@ -144,7 +144,7 @@ export default class extends Vue {
 
   @Watch("vModel")
   protected watchItem(val: AuthorityEntity): void {
-    if (val.id === 1) {
+    if (val.code === "SUPER") {
       this.selectedChips = this.menus;
     } else {
       this.selectedChips = val.items.map(
@@ -173,7 +173,7 @@ export default class extends Vue {
           menu: select,
           displayOrder: index + 1,
           typesJson:
-            this.vModel.id === 1
+            this.vModel.code === "SUPER"
               ? [
                   AUTHORITY_TYPE.VIEW,
                   AUTHORITY_TYPE.WRITE,
@@ -186,6 +186,7 @@ export default class extends Vue {
   }
 
   protected async saveItems(): Promise<void> {
+    // TODO: 처음 메뉴 저장시 버그있다.
     this.saving = true;
     const response = await postApi<AuthorityEntity>(
       `admin/authorities/${this.vModel.code}`,

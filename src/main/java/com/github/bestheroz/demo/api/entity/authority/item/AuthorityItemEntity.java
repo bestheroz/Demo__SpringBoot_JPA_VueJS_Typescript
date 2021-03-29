@@ -37,7 +37,6 @@ public class AuthorityItemEntity extends AbstractCreatedUpdateEntity implements 
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  //  private Long authorityId;
   private Integer displayOrder;
 
   @Type(type = "jsonString")

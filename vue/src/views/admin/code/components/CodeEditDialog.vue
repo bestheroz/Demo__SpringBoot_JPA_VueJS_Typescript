@@ -74,7 +74,7 @@
                 >
                   <v-select
                     v-if="AUTHORITY"
-                    v-model.number="item.authority"
+                    v-model.number="item.authorityId"
                     :items="
                       AUTHORITY.map((code) => {
                         return { value: parseInt(code.value), text: code.text };
@@ -119,7 +119,7 @@
 <script lang="ts">
 import { Component, PropSync, Ref, VModel, Vue } from "vue-property-decorator";
 import type { SelectItem } from "@/common/types";
-import { getCodesApi, postApi, putApi } from "@/utils/apis";
+import { getApi, postApi, putApi } from "@/utils/apis";
 import { ValidationObserver } from "vee-validate";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
@@ -149,7 +149,8 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    this.AUTHORITY = await getCodesApi("AUTHORITY");
+    const response = await getApi<SelectItem[]>("auth/codes");
+    this.AUTHORITY = response.data || [];
   }
 
   protected async save(): Promise<void> {

@@ -7,6 +7,7 @@ import com.github.bestheroz.demo.api.entity.member.MemberRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.authenticate.UserVO;
+import com.github.bestheroz.standard.common.code.CodeVO;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
@@ -165,5 +166,11 @@ public class AuthService implements UserDetailsService {
               .collect(Collectors.toList()));
     }
     return authorityEntity;
+  }
+
+  public List<CodeVO> getCodes() {
+    return this.authorityRepository.getCodes().stream()
+        .map(code -> new CodeVO(String.valueOf(code[0]), (String) code[1]))
+        .collect(Collectors.toList());
   }
 }

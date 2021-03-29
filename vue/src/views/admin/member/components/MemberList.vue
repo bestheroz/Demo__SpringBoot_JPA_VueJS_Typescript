@@ -56,8 +56,8 @@
               />
             </span>
           </template>
-          <template v-if="AUTHORITY" #[`item.authority`]="{ item }">
-            {{ item.authority | getCodeText(AUTHORITY) }}
+          <template v-if="AUTHORITY" #[`item.authorityId`]="{ item }">
+            {{ item.authorityId | getCodeText(AUTHORITY) }}
           </template>
           <template #[`item.expired`]="{ item }">
             {{ item.expired | formatDatetime }}
@@ -89,7 +89,7 @@ import type {
   Pagination,
   SelectItem,
 } from "@/common/types";
-import { deleteApi, getApi, getCodesApi, getExcelApi } from "@/utils/apis";
+import { deleteApi, getApi, getExcelApi } from "@/utils/apis";
 import envs from "@/constants/envs";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import MemberEditDialog from "@/views/admin/member/components/MemberEditDialog.vue";
@@ -118,7 +118,7 @@ export default class extends Vue {
   selected: MemberEntity[] = [];
   pagination: Pagination = {
     page: 1,
-    sortBy: ["authority"],
+    sortBy: ["authorityId"],
     sortDesc: [true],
     itemsPerPage: 20,
   };
@@ -146,7 +146,7 @@ export default class extends Vue {
       {
         text: "권한",
         align: "center",
-        value: "authority",
+        value: "authorityId",
         filterType: "select",
         filterSelectItem: this.AUTHORITY,
         width: "8rem",
@@ -190,7 +190,8 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    this.AUTHORITY = await getCodesApi("AUTHORITY");
+    const response = await getApi<SelectItem[]>("auth/codes");
+    this.AUTHORITY = response.data || [];
   }
 
   @Watch("queryString")

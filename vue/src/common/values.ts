@@ -54,7 +54,7 @@ export function defaultCodeEntity(): CodeEntity {
     name: null,
     available: false,
     displayOrder: null,
-    authority: null,
+    authorityId: null,
   };
 }
 export function defaultAuthorityItemEntity(): AuthorityItemEntity {

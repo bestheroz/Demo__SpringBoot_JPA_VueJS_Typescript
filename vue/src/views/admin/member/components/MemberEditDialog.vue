@@ -59,7 +59,7 @@
                 >
                   <v-select
                     v-if="AUTHORITY"
-                    v-model.number="item.authority"
+                    v-model.number="item.authorityId"
                     :items="
                       AUTHORITY.map((code) => {
                         return { value: parseInt(code.value), text: code.text };
@@ -144,7 +144,7 @@
 <script lang="ts">
 import { Component, PropSync, Ref, VModel, Vue } from "vue-property-decorator";
 import type { SelectItem } from "@/common/types";
-import { getCodesApi, patchApi, postApi } from "@/utils/apis";
+import { getApi, patchApi, postApi } from "@/utils/apis";
 import DatetimePicker from "@/components/picker/DatetimePicker.vue";
 import { ValidationObserver } from "vee-validate";
 import pbkdf2 from "pbkdf2";
@@ -176,7 +176,8 @@ export default class extends Vue {
   show2 = false;
 
   protected async created(): Promise<void> {
-    this.AUTHORITY = await getCodesApi("AUTHORITY");
+    const response = await getApi<SelectItem[]>("auth/codes");
+    this.AUTHORITY = response.data || [];
   }
 
   get isNew(): boolean {
