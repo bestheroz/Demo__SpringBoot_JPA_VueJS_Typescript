@@ -82,7 +82,7 @@
                 multiple
                 active-class="accent"
                 dense
-                @change="onChangeSelected"
+                @change="onChangeSelectedChip"
               >
                 <v-chip
                   v-for="item in menus"
@@ -153,7 +153,7 @@ export default class extends Vue {
           defaultMenuEntity(),
       );
     }
-    this.onChangeSelected(this.selectedChips);
+    this.onChangeSelectedChip(this.selectedChips);
   }
 
   protected onDraggableEnd(): void {
@@ -162,9 +162,9 @@ export default class extends Vue {
     });
   }
 
-  protected onChangeSelected(selectedChips: MenuEntity[]): void {
+  protected onChangeSelectedChip(selectedChips: MenuEntity[]): void {
     this.vModel.items = selectedChips.map((select, index) => {
-      const find = this.vModel.items.find((item) => item.id === select.id);
+      const find = this.vModel.items.find((item) => item.menu.id === select.id);
       if (find) {
         return { ...find, displayOrder: index + 1 };
       } else {

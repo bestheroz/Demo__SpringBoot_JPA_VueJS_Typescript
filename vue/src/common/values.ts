@@ -59,15 +59,15 @@ export function defaultCodeEntity(): CodeEntity {
 }
 export function defaultAuthorityItemEntity(): AuthorityItemEntity {
   return {
-    menu: null,
+    menu: defaultMenuEntity(),
     displayOrder: 0,
     typesJson: [AUTHORITY_TYPE.VIEW],
   };
 }
 export function defaultAuthorityEntity(): AuthorityEntity {
   return {
-    code: null,
-    name: null,
+    code: "",
+    name: "",
     items: [],
   };
 }

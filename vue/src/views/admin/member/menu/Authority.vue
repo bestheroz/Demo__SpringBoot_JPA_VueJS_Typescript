@@ -56,7 +56,7 @@ export default class extends Vue {
 
   get AUTHORITY(): SelectItem[] {
     return this.items.map((item) => {
-      return { value: item.id, text: item.name };
+      return { value: (item.id || 0).toString(), text: item.name };
     });
   }
 

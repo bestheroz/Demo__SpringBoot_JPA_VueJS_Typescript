@@ -21,7 +21,7 @@ const user = {
     user: defaultUser(),
     accessToken: null,
     refreshToken: null,
-    authority: null,
+    authority: [],
   },
   getters: {
     user: (state: any) => {
@@ -49,6 +49,9 @@ const user = {
       return state.authority || [];
     },
     drawers: (getters: any): DrawerItem[] => {
+      if (!getters.authority) {
+        return [];
+      }
       const itemEntities = getters.authority.items;
       return itemEntities
         .filter((item: AuthorityItemEntity) => item.menu?.type === "G")
