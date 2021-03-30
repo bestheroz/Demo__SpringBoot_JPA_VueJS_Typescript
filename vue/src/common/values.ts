@@ -9,37 +9,37 @@ import dayjs from "dayjs";
 import { AUTHORITY_TYPE } from "@/common/selections";
 
 export function defaultUser(): {
-  id: number | null;
-  userId: string | null;
-  name: string | null;
-  authorityId: number | null;
+  id: number;
+  userId: string;
+  name: string;
+  authorityId: number;
   theme: string;
 } {
   return {
-    id: null,
-    userId: null,
-    name: null,
-    authorityId: null,
+    id: 0,
+    userId: "",
+    name: "",
+    authorityId: 0,
     theme: "light",
   };
 }
 
 export function defaultMemberEntity(): MemberEntity {
   return {
-    userId: null,
-    name: null,
+    userId: "",
+    name: "",
     loginFailCnt: 0,
     expired: dayjs().add(1, "years").endOf("day"),
     available: false,
-    theme: null,
-    authorityId: null,
-    token: null,
+    theme: "",
+    authorityId: 0,
+    token: "",
   };
 }
 
 export function defaultMenuEntity(): MenuEntity {
   return {
-    name: null,
+    name: "",
     type: "G",
     parentId: 99999,
     displayOrder: 99999,
@@ -49,12 +49,12 @@ export function defaultMenuEntity(): MenuEntity {
 }
 export function defaultCodeEntity(): CodeEntity {
   return {
-    type: null,
-    value: null,
-    name: null,
+    type: "",
+    value: "",
+    name: "",
     available: false,
-    displayOrder: null,
-    authorityId: null,
+    displayOrder: 0,
+    authorityId: 0,
   };
 }
 export function defaultAuthorityItemEntity(): AuthorityItemEntity {

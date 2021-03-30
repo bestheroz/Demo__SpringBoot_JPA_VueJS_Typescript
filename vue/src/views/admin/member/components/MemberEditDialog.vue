@@ -171,7 +171,7 @@ export default class extends Vue {
 
   loading = false;
   AUTHORITY: SelectItem[] = [];
-  password2: string | null = null;
+  password2 = "";
   show1 = false;
   show2 = false;
 

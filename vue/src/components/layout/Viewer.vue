@@ -23,7 +23,7 @@ import { defaultMenuEntity } from "@/common/values";
 
 @Component({ name: "Viewer" })
 export default class extends Vue {
-  icon: string | null = null;
+  icon = "";
 
   get title(): string {
     if (this.$route.fullPath === "/index") {

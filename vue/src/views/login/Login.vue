@@ -88,15 +88,15 @@ import { toastCloseAll, toastError } from "@/utils/alerts";
 export default class extends Vue {
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
-  userId: string | null = null;
-  password: string | null = null;
+  userId = "";
+  password = "";
   show1 = false;
-  title: string | null = null;
+  title = "";
   loading = false;
   dialog = false;
 
   protected async created(): Promise<void> {
-    this.title = await getVariableApi("title");
+    this.title = (await getVariableApi("title")) || "";
     this.$vuetify.theme.dark = false;
   }
 
@@ -133,7 +133,7 @@ export default class extends Vue {
       this.loading = false;
       if (response?.data?.code === "S002") {
         this.dialog = true;
-        this.password = null;
+        this.password = "";
       } else if (
         response?.data?.code?.startsWith("S") &&
         response?.data?.data

@@ -49,7 +49,7 @@ import dayjs from "dayjs";
 })
 export default class extends Vue {
   @PropSync("drawer", { required: true, default: true }) syncedDrawer!: boolean;
-  title: string | null = null;
+  title = "";
   editMeDialog = false;
 
   interval: number | null = null;
@@ -64,7 +64,7 @@ export default class extends Vue {
     });
   }
   protected async created(): Promise<void> {
-    this.title = await getVariableApi("title");
+    this.title = (await getVariableApi("title")) || "";
     this.now = dayjs().format("YYYY년 MM월 DD일 HH시 mm분 ss초");
     this.interval = window.setInterval(() => {
       this.now = dayjs().format("YYYY년 MM월 DD일 HH시 mm분 ss초");

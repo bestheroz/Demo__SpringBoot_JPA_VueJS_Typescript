@@ -86,8 +86,8 @@ export default class extends Vue {
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
   loading = false;
-  password: string | null = null;
-  password2: string | null = null;
+  password = "";
+  password2 = "";
   show1 = false;
   show2 = false;
 

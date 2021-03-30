@@ -1,39 +1,39 @@
 import { DateTime } from "@/common/types";
 
 export interface MemberEntity {
-  id?: number | null;
-  created?: DateTime | null;
-  createdBy?: string | null;
-  updated?: DateTime | null;
-  updatedBy?: string | null;
-  userId: string | null;
-  password?: string | null;
-  name: string | null;
+  id?: number;
+  createdBy?: string;
+  created?: DateTime;
+  updatedBy?: string;
+  updated?: DateTime;
+  userId: string;
+  password?: string;
+  name: string;
   loginFailCnt: number;
-  expired: DateTime | null;
+  expired: DateTime;
   available: boolean;
-  theme: string | null;
-  authorityId: number | null;
-  token: string | null;
+  theme: string;
+  authorityId: number;
+  token: string;
 }
 
 export interface MenuEntity {
-  id?: number | null;
-  created?: DateTime | null;
-  createdBy?: string | null;
-  updated?: DateTime | null;
-  updatedBy?: string | null;
-  name: string | null;
-  type: string | null;
-  parentId: number | null;
-  displayOrder: number | null;
+  id?: number;
+  createdBy?: string;
+  created?: DateTime;
+  updatedBy?: string;
+  updated?: DateTime;
+  name: string;
+  type: string;
+  parentId: number;
+  displayOrder: number;
   icon: string | null;
   url: string | null;
 }
 
 export interface AuthorityItemEntity {
   id?: number | null;
-  displayOrder: number | null;
+  displayOrder: number;
   menu: MenuEntity;
   typesJson: string[];
 }
@@ -49,15 +49,15 @@ export interface AuthorityEntity {
 }
 
 export interface CodeEntity {
-  id?: number | null;
-  created?: DateTime | null;
-  createdBy?: string | null;
-  updated?: DateTime | null;
-  updatedBy?: string | null;
-  type: string | null;
-  value: string | null;
-  name: string | null;
+  id?: number;
+  createdBy?: string;
+  created?: DateTime;
+  updatedBy?: string;
+  updated?: DateTime;
+  type: string;
+  value: string;
+  name: string;
   available: boolean;
-  displayOrder: number | null;
-  authorityId: number | null;
+  displayOrder: number;
+  authorityId: number;
 }

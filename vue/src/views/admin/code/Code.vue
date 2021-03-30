@@ -28,7 +28,7 @@ export default class extends Vue {
   @Ref() readonly refCodeList!: CodeList;
   @Ref() readonly refCodeType!: CodeType;
 
-  type: string | null = null;
+  type = "";
 
   protected mounted(): void {
     this.refCodeList.getList();
