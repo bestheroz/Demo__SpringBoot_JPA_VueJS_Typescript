@@ -9,9 +9,14 @@ import axios from "axios";
 import envs from "@/constants/envs";
 import router from "@/router";
 import { defaultUser } from "@/common/values";
-import type { AuthorityEntity, MemberEntity } from "@/common/entities";
-import { errorPage } from "@/utils/errors";
+import type {
+  AuthorityEntity,
+  MemberEntity,
+  MenuEntity,
+} from "@/common/entities";
 import { AuthorityItemEntity } from "@/common/entities";
+import { errorPage } from "@/utils/errors";
+import _ from "lodash";
 
 Vue.use(Vuex);
 
@@ -52,20 +57,38 @@ const user = {
       if (!getters.authority) {
         return [];
       }
-      const itemEntities = getters.authority.items;
-      return itemEntities
-        .filter((item: AuthorityItemEntity) => item.menu?.type === "G")
-        .map((item: AuthorityItemEntity) => {
-          return {
-            ...item.menu,
-            children: itemEntities
-              .filter(
-                (children: AuthorityItemEntity) =>
-                  children.menu?.parentId === item.menu?.id,
-              )
-              .map((children: AuthorityItemEntity) => children.menu),
-          };
-        });
+      const menuEntities = getters.authority.items.map(
+        (item: AuthorityItemEntity) => item.menu,
+      );
+      const groupItems = menuEntities.filter(
+        (item: MenuEntity) => item.type === "G",
+      );
+      const groupIndex = groupItems.map((group: MenuEntity) =>
+        menuEntities.indexOf(group),
+      );
+      if (!groupIndex || groupIndex.length === 0) {
+        return menuEntities;
+      } else {
+        return [
+          ..._.take(menuEntities, groupIndex[0]),
+          ...groupItems.map((group: MenuEntity, index: number) => {
+            let nextIndex;
+            if (groupIndex.length > index + 1) {
+              nextIndex = groupIndex[index + 1];
+            } else {
+              nextIndex = menuEntities.length;
+            }
+            const numberOfChildren = nextIndex - groupIndex[index] - 1;
+            return {
+              ...group,
+              children: _.take(
+                _.drop(menuEntities, groupIndex[index] + 1),
+                numberOfChildren,
+              ),
+            };
+          }),
+        ];
+      }
     },
   },
   mutations: {
