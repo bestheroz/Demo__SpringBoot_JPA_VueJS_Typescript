@@ -46,14 +46,17 @@ export default class extends Vue {
     if (this.$route.name) {
       return defaultMenuEntity();
     }
-    this.$store.getters.drawers?.forEach((drawer: DrawerItem) => {
-      if (!result) {
-        result = drawer.children?.find((child: DrawerItem) => {
-          return child?.url === this.$route.fullPath;
-        });
-        this.icon = drawer.icon || "mdi-file-document-outline";
-      }
-    });
+    const drawers = this.$store.getters.drawers;
+    if (drawers) {
+      drawers.forEach((drawer: DrawerItem) => {
+        if (!result) {
+          result = drawer.children?.find((child: DrawerItem) => {
+            return child?.url === this.$route.fullPath;
+          });
+          this.icon = drawer.icon || "mdi-file-document-outline";
+        }
+      });
+    }
     if (!result) {
       errorPage(403);
       return defaultMenuEntity();

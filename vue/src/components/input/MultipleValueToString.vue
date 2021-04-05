@@ -12,7 +12,7 @@
           @change="onChange"
           :error-messages="errors"
         >
-          <template v-slot:selection="data">
+          <template #selection="data">
             <v-chip
               :key="JSON.stringify(data.item)"
               v-bind="data.attrs"
@@ -77,7 +77,7 @@ export default class extends Vue {
     }
   }
 
-  protected onChange() {
+  protected onChange(): void {
     this.output =
       this.values.length > 0 ? this.values.join(this.separator) : null;
   }
