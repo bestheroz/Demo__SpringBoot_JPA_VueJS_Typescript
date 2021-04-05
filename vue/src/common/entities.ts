@@ -59,5 +59,13 @@ export interface CodeEntity {
   name: string;
   available: boolean;
   displayOrder: number;
+  authorities: CodeAuthorityEntity[];
+}
+export interface CodeAuthorityEntity {
+  id?: number;
+  createdBy?: string;
+  created?: DateTime;
+  updatedBy?: string;
+  updated?: DateTime;
   authorityId: number;
 }

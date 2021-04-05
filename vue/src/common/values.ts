@@ -4,6 +4,7 @@ import {
   AuthorityEntity,
   MenuEntity,
   AuthorityItemEntity,
+  CodeAuthorityEntity,
 } from "@/common/entities";
 import dayjs from "dayjs";
 import { AUTHORITY_TYPE } from "@/common/selections";
@@ -54,7 +55,7 @@ export function defaultCodeEntity(): CodeEntity {
     name: "",
     available: false,
     displayOrder: 0,
-    authorityId: 0,
+    authorities: [],
   };
 }
 export function defaultAuthorityItemEntity(): AuthorityItemEntity {
@@ -69,5 +70,10 @@ export function defaultAuthorityEntity(): AuthorityEntity {
     code: "",
     name: "",
     items: [],
+  };
+}
+export function defaultCodeAuthorityEntity(): CodeAuthorityEntity {
+  return {
+    authorityId: 0,
   };
 }

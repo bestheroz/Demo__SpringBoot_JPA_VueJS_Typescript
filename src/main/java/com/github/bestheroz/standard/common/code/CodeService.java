@@ -12,9 +12,13 @@ public class CodeService {
   @Resource private CodeRepository codeRepository;
 
   public List<CodeVO> getCodesByTypeByAuthority(final String type) {
-    final Integer authorityId = AuthenticationUtils.getLoginVO().getAuthorityId();
+    final Long authorityId = AuthenticationUtils.getLoginVO().getAuthorityId();
     return this.codeRepository.findAllByTypeOrderByDisplayOrderAsc(type).stream()
-        .filter(item -> item.getAvailable() && item.getAuthorityId() <= authorityId)
+        .filter(
+            item ->
+                item.getAvailable()
+                    && item.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthorityId().equals(authorityId)))
         .map(item -> new CodeVO(item.getValue(), item.getName()))
         .collect(Collectors.toList());
   }
