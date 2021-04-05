@@ -47,6 +47,7 @@
 <script lang="ts">
 import { Component, PropSync, Vue } from "vue-property-decorator";
 import type { DrawerItem } from "@/common/types";
+import { MENU_TYPE } from "@/common/selections";
 
 @Component({
   name: "Drawer",
@@ -76,7 +77,7 @@ export default class extends Vue {
     if (!item.url || item.url === this.$route.fullPath) {
       return;
     }
-    if (item.type === "W") {
+    if (item.type === MENU_TYPE.W) {
       this.popupWindow(item.url);
     } else {
       item.url && this.$router.push(item.url);

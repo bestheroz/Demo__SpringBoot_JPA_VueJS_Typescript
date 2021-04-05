@@ -37,7 +37,7 @@
                 >
                   <v-select
                     v-model="item.type"
-                    :items="MENU_TYPE"
+                    :items="MenuTypeItems"
                     label="*타입"
                     :error-messages="errors"
                   />
@@ -89,14 +89,14 @@
 
 <script lang="ts">
 import { Component, PropSync, Ref, VModel, Vue } from "vue-property-decorator";
-import type { SelectItem } from "@/common/types";
-import { getCodesApi, postApi, putApi } from "@/utils/apis";
+import { postApi, putApi } from "@/utils/apis";
 import { ValidationObserver } from "vee-validate";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
 import type { MenuEntity } from "@/common/entities";
 import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
+import { MenuTypeItems } from "@/common/selections";
 
 @Component({
   name: "MenuEditDialog",
@@ -114,11 +114,7 @@ export default class extends Vue {
 
   readonly ENDPOINT_URL = "admin/menus/";
   saving = false;
-  MENU_TYPE: SelectItem[] = [];
-
-  protected async created(): Promise<void> {
-    this.MENU_TYPE = await getCodesApi("MENU_TYPE");
-  }
+  MenuTypeItems = MenuTypeItems;
 
   get isNew(): boolean {
     return !this.item.id;
