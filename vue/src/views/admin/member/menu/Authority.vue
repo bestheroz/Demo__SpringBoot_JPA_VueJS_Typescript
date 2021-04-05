@@ -2,7 +2,7 @@
   <div>
     <v-row no-gutters>
       <v-col cols="12">
-        <v-card flat>
+        <v-card flat :loading="loading">
           <v-card-text>
             <v-chip-group
               v-model.number="authorityId"
@@ -54,9 +54,9 @@ export default class extends Vue {
   loading = false;
   selectedItem: AuthorityEntity | null = null;
 
-  get AUTHORITY(): SelectItem[] {
+  get AUTHORITY(): SelectItem<number>[] {
     return this.items.map((item) => {
-      return { value: (item.id || 0).toString(), text: item.name };
+      return { value: item.id || 0, text: item.name };
     });
   }
 
@@ -75,7 +75,7 @@ export default class extends Vue {
     }
   }
 
-  protected created(): void {
+  protected mounted(): void {
     this.getList().then();
   }
 

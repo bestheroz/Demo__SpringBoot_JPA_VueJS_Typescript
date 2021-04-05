@@ -3,8 +3,8 @@ import type { MenuEntity } from "@/common/entities";
 
 export type DateTime = dayjs.ConfigType;
 
-export interface SelectItem {
-  value: string;
+export interface SelectItem<T = string> {
+  value: T;
   text: string;
 }
 /* eslint-disable @typescript-eslint/no-explicit-any */
