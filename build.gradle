@@ -2,7 +2,7 @@ plugins {
     id "org.springframework.boot" version "2.4.3"
     id "java"
     id "idea"
-    id "com.diffplug.spotless" version "5.11.0"
+    id "com.diffplug.spotless" version "5.11.1"
 }
 
 repositories {
@@ -11,10 +11,10 @@ repositories {
 
 ext.springBootVersion = "2.4.4"
 ext.javaJwtVersion = "3.14.0"
-ext.lombokVersion = "1.18.18"
+ext.lombokVersion = "1.18.20"
 ext.lang3Version = "3.12.0"
 ext.comonsIoVersion = "2.8.0"
-ext.tikaVersion = "1.25"
+ext.tikaVersion = "1.26"
 ext.poiVersion = "5.0.0"
 ext.sentryVersion = "4.3.0"
 ext.h2Version = "1.4.200"
