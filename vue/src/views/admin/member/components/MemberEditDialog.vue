@@ -170,13 +170,13 @@ export default class extends Vue {
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
   loading = false;
-  AUTHORITY: SelectItem[] = [];
+  AUTHORITY: SelectItem<number>[] = [];
   password2 = "";
   show1 = false;
   show2 = false;
 
   protected async created(): Promise<void> {
-    const response = await getApi<SelectItem[]>("auth/codes");
+    const response = await getApi<SelectItem<number>[]>("auth/codes");
     this.AUTHORITY = response.data || [];
   }
 

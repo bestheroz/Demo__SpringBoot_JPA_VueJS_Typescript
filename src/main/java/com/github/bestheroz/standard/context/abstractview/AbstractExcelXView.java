@@ -8,7 +8,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.time.Instant;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,7 +79,7 @@ public abstract class AbstractExcelXView extends AbstractView {
       final String title,
       final String dbColName,
       final CellType cellType,
-      final List<CodeVO> codeList) {
+      final List<CodeVO<String>> codeList) {
     final ExcelVO excelVO = new ExcelVO();
     excelVO.setTitle(title);
     excelVO.setDbColName(dbColName);

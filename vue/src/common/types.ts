@@ -21,7 +21,7 @@ export interface DataTableHeader {
   sort?: (a: any, b: any) => number;
   // 아래는 filter 를 위한 property 추가
   filterType?: "input" | "select" | "switch";
-  filterSelectItem?: SelectItem[];
+  filterSelectItem?: SelectItem<string | number>[];
   filterDefaultValue?: string;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */

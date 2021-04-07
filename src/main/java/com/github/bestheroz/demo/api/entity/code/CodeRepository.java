@@ -23,5 +23,5 @@ public interface CodeRepository extends CrudRepository<CodeEntity, Long> {
   @Query(
       value =
           "SELECT new com.github.bestheroz.standard.common.code.CodeVO(M.userId, M.name) FROM MEMBER M ORDER BY M.id ASC")
-  List<CodeVO> getMembers() throws BusinessException;
+  List<CodeVO<String>> getMembers() throws BusinessException;
 }

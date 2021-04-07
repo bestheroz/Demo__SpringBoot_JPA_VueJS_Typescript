@@ -127,7 +127,7 @@ export default class extends Vue {
   loading = false;
   saving = false;
   editItem: MemberEntity = defaultMemberEntity();
-  AUTHORITY: SelectItem[] = [];
+  AUTHORITY: SelectItem<number>[] = [];
   dialog = false;
   datatableFilter: { [p: string]: string | number } = {};
 
@@ -190,7 +190,7 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    const response = await getApi<SelectItem[]>("auth/codes");
+    const response = await getApi<SelectItem<number>[]>("auth/codes");
     this.AUTHORITY = response.data || [];
   }
 

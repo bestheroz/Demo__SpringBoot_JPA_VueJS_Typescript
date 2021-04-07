@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { DateTime, SelectItem } from "@/common/types";
-import { getText } from "@/utils/codes";
+import { getTextOfSelectItem } from "@/utils/codes";
 import {
   formatDate,
   formatDatetime,
@@ -27,7 +27,7 @@ Vue.filter(
 Vue.filter(
   "getCodeText",
   function (value: string, codes: SelectItem[] | null): string {
-    return getText(codes, value);
+    return getTextOfSelectItem(codes, value);
   },
 );
 Vue.filter("getEllipseText", function (text: string, length: number): string {

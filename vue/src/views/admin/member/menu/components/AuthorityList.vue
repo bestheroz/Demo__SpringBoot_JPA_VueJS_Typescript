@@ -164,14 +164,10 @@ export default class extends Vue {
 
   protected onChangeSelectedChip(selectedChips: MenuEntity[]): void {
     this.vModel.items = selectedChips.map((select, index) => {
-      const find = this.vModel.items.find((item) => item.menu.id === select.id);
-      if (find) {
-        return { ...find, displayOrder: index + 1 };
-      } else {
-        return {
+      return {
+        ...(this.vModel.items.find((item) => item.menu.id === select.id) || {
           ...defaultAuthorityItemEntity(),
           menu: select,
-          displayOrder: index + 1,
           typesJson:
             this.vModel.code === "SUPER"
               ? [
@@ -180,13 +176,13 @@ export default class extends Vue {
                   AUTHORITY_TYPE.DELETE,
                 ]
               : [AUTHORITY_TYPE.VIEW],
-        };
-      }
+        }),
+        displayOrder: index + 1,
+      };
     });
   }
 
   protected async saveItems(): Promise<void> {
-    // TODO: 처음 메뉴 저장시 버그있다.
     this.saving = true;
     const response = await postApi<AuthorityEntity>(
       `admin/authorities/${this.vModel.code}`,

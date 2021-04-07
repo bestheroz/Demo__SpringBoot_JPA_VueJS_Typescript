@@ -11,6 +11,7 @@ import com.github.bestheroz.standard.common.code.CodeVO;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
+import java.math.BigInteger;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -168,9 +169,9 @@ public class AuthService implements UserDetailsService {
     return authorityEntity;
   }
 
-  public List<CodeVO> getCodes() {
+  public List<CodeVO<Long>> getCodes() {
     return this.authorityRepository.getCodes().stream()
-        .map(code -> new CodeVO(String.valueOf(code[0]), (String) code[1]))
+        .map(code -> new CodeVO<>(((BigInteger) code[0]).longValue(), (String) code[1]))
         .collect(Collectors.toList());
   }
 }

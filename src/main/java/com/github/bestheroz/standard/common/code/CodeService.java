@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class CodeService {
   @Resource private CodeRepository codeRepository;
 
-  public List<CodeVO> getCodesByTypeByAuthority(final String type) {
+  public List<CodeVO<String>> getCodesByTypeByAuthority(final String type) {
     final Long authorityId = AuthenticationUtils.getLoginVO().getAuthorityId();
     return this.codeRepository.findAllByTypeOrderByDisplayOrderAsc(type).stream()
         .filter(
@@ -19,13 +19,13 @@ public class CodeService {
                 item.getAvailable()
                     && item.getAuthorities().stream()
                         .anyMatch(authority -> authority.getAuthorityId().equals(authorityId)))
-        .map(item -> new CodeVO(item.getValue(), item.getName()))
+        .map(item -> new CodeVO<>(item.getValue(), item.getName()))
         .collect(Collectors.toList());
   }
 
-  public List<CodeVO> getCodesByType(final String type) {
+  public List<CodeVO<String>> getCodesByType(final String type) {
     return this.codeRepository.getCodes(type).stream()
-        .map(code -> new CodeVO((String) code[0], (String) code[1]))
+        .map(code -> new CodeVO<>((String) code[0], (String) code[1]))
         .collect(Collectors.toList());
   }
 }
