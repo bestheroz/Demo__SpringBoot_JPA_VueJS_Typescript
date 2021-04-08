@@ -48,6 +48,15 @@ export interface AuthorityEntity {
   items: AuthorityItemEntity[];
 }
 
+export interface CodeAuthorityEntity {
+  id?: number;
+  createdBy?: string;
+  created?: DateTime;
+  updatedBy?: string;
+  updated?: DateTime;
+  authorityId: number;
+}
+
 export interface CodeEntity {
   id?: number;
   createdBy?: string;
@@ -60,12 +69,4 @@ export interface CodeEntity {
   available: boolean;
   displayOrder: number;
   authorities: CodeAuthorityEntity[];
-}
-export interface CodeAuthorityEntity {
-  id?: number;
-  createdBy?: string;
-  created?: DateTime;
-  updatedBy?: string;
-  updated?: DateTime;
-  authorityId: number;
 }
