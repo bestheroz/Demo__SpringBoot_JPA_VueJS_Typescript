@@ -26,6 +26,7 @@
       </v-col>
       <v-col cols="12">
         <authority-list
+          ref="refAuthorityList"
           v-model="selectedItem"
           v-if="selectedItem"
           @click:reload="getList"
@@ -36,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { SelectItem } from "@/common/types";
 import AuthorityList from "@/views/admin/member/menu/components/AuthorityList.vue";
 import { getApi } from "@/utils/apis";
@@ -53,6 +54,8 @@ export default class extends Vue {
   authorityId: number | null = null;
   loading = false;
   selectedItem: AuthorityEntity | null = null;
+
+  @Ref() readonly refAuthorityList!: AuthorityList;
 
   get AUTHORITY(): SelectItem<number>[] {
     return this.items.map((item) => {
@@ -76,7 +79,9 @@ export default class extends Vue {
   }
 
   protected mounted(): void {
-    this.getList().then();
+    this.getList().then(() => {
+      this.refAuthorityList.triggerRefreshed();
+    });
   }
 
   protected async getList(): Promise<void> {

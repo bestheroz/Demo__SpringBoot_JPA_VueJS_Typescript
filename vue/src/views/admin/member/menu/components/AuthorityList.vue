@@ -156,6 +156,9 @@ export default class extends Vue {
     this.onChangeSelectedChip(this.selectedChips);
   }
 
+  public triggerRefreshed(): void {
+    this.refRefreshDataBar.triggerRefreshed();
+  }
   protected onDraggableEnd(): void {
     this.vModel.items = this.vModel.items.map((item, index) => {
       return { ...item, displayOrder: index + 1 };
