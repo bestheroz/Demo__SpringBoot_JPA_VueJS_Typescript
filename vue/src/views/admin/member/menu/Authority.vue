@@ -58,9 +58,11 @@ export default class extends Vue {
   @Ref() readonly refAuthorityList!: AuthorityList;
 
   get AUTHORITY(): SelectItem<number>[] {
-    return this.items.map((item) => {
-      return { value: item.id || 0, text: item.name };
-    });
+    return this.items
+      .filter((i) => i.code !== "SUPER")
+      .map((i) => {
+        return { value: i.id || 0, text: i.name };
+      });
   }
 
   @Watch("authorityId")
