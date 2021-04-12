@@ -20,6 +20,8 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import type { DrawerItem } from "@/common/types";
 import { getVariableApi } from "@/utils/apis";
 import { defaultMenuEntity } from "@/common/values";
+import { errorPage } from "@/utils/errors";
+import _ from "lodash";
 
 @Component({ name: "Viewer" })
 export default class extends Vue {
@@ -29,7 +31,7 @@ export default class extends Vue {
     if (this.$route.fullPath === "/index") {
       return "";
     }
-    if (this.$store.getters.authority?.length > 0) {
+    if (this.$store.getters.authority.items?.length > 0) {
       return (this.findThisPage().name || "").split("(팝업)").join("");
     }
     return "";
@@ -41,22 +43,30 @@ export default class extends Vue {
   }
 
   protected findThisPage(): DrawerItem {
-    let result: DrawerItem | undefined;
-    // if (this.$route.name) {
-    //   return defaultMenuEntity();
-    // }
-    // this.$store.getters.drawers?.forEach((drawer: DrawerItem) => {
-    //   if (!result) {
-    //     result = drawer.children?.find((child: DrawerItem) => {
-    //       return child?.url === this.$route.fullPath;
-    //     });
-    //     this.icon = drawer.icon || "mdi-file-document-outline";
-    //   }
-    // });
-    // if (!result) {
-    //   errorPage(403);
-    //   return defaultMenuEntity();
-    // }
+    if (this.$route.name) {
+      return defaultMenuEntity();
+    }
+    const result: DrawerItem | undefined = _.flattenDeep(
+      this.$store.getters.drawers
+        .map((d) => {
+          return _.isEmpty(d.children)
+            ? d
+            : {
+                ...d,
+                children: d.children.map((c) => {
+                  return { ...c, icon: d.icon };
+                }),
+              };
+        })
+        .map((d) => (_.isEmpty(d.children) ? d : d.children)),
+    ).find((drawer: DrawerItem) => {
+      return drawer.url === this.$route.fullPath;
+    });
+    if (!result) {
+      errorPage(403);
+      return defaultMenuEntity();
+    }
+    this.icon = result?.icon || "mdi-file-document-outline";
     return result || defaultMenuEntity();
   }
 }
