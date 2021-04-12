@@ -26,15 +26,8 @@ public class AdminMenuController {
 
   @GetMapping
   ResponseEntity<ApiResult> getItems() {
-    //    if (List.of(900, 999).contains(AuthenticationUtils.getLoginVO().getAuthority())) {
     return Result.ok(
         this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
-    //    } else {
-    //      return Result.ok(
-    //          this.authorityRepository.findAllByAuthority(
-    //              AuthenticationUtils.getLoginVO().getAuthority(),
-    //              Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
-    //    }
   }
 
   @PostMapping
