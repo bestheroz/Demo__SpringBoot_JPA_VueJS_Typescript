@@ -107,7 +107,7 @@ export default class extends Vue {
           refreshToken: string;
         }>
       >("api/auth/initPassword", {
-        id: this.userId,
+        userId: this.userId,
         password: pbkdf2Password,
       });
       if (response?.data?.code?.startsWith("S")) {

@@ -53,7 +53,7 @@ public class AuthController {
 
   @PostMapping(value = "/initPassword")
   ResponseEntity<ApiResult> initPassword(@RequestBody final MemberEntity payload) {
-    return Result.ok(this.authService.initPassword(payload.getId(), payload.getPassword()));
+    return Result.ok(this.authService.initPassword(payload.getUserId(), payload.getPassword()));
   }
 
   @DeleteMapping(value = "/logout")

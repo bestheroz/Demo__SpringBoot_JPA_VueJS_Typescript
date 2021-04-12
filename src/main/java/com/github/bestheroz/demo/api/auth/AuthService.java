@@ -129,9 +129,9 @@ public class AuthService implements UserDetailsService {
             });
   }
 
-  UserVO initPassword(final Long id, final String password) {
+  UserVO initPassword(final String userId, final String password) {
     return this.memberRepository
-        .findById(id)
+        .findByUserId(userId)
         .map(
             memberEntity -> {
               if (StringUtils.isNotEmpty(memberEntity.getPassword())) {
