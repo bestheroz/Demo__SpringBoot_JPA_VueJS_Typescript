@@ -8,6 +8,8 @@ import javax.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -15,13 +17,13 @@ import lombok.Setter;
 @MappedSuperclass
 public abstract class AbstractCreatedUpdateEntity {
   protected String createdBy;
-  protected Instant created;
+  @CreationTimestamp protected Instant created;
   protected String updatedBy;
-  protected Instant updated;
+  @UpdateTimestamp protected Instant updated;
 
   @PrePersist
   protected void onCreate() {
-    this.updated = this.created = Instant.now();
+    this.updated = this.created = null;
     if (AuthenticationUtils.isLoggedIn()) {
       this.updatedBy = this.createdBy = AuthenticationUtils.getUserId();
     }
@@ -29,7 +31,7 @@ public abstract class AbstractCreatedUpdateEntity {
 
   @PreUpdate
   protected void onUpdate() {
-    this.updated = Instant.now();
+    this.updated = null;
     if (AuthenticationUtils.isLoggedIn()) {
       this.updatedBy = AuthenticationUtils.getUserId();
     }

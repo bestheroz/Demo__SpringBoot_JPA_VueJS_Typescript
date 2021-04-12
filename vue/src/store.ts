@@ -9,8 +9,14 @@ import axios from "axios";
 import envs from "@/constants/envs";
 import router from "@/router";
 import { defaultUser } from "@/common/values";
-import type { MemberEntity } from "@/common/entities";
+import type {
+  AuthorityEntity,
+  MemberEntity,
+  MenuEntity,
+} from "@/common/entities";
+import { AuthorityItemEntity } from "@/common/entities";
 import { errorPage } from "@/utils/errors";
+import _ from "lodash";
 
 Vue.use(Vuex);
 
@@ -20,28 +26,69 @@ const user = {
     user: defaultUser(),
     accessToken: null,
     refreshToken: null,
+    authority: [],
   },
   getters: {
     user: (state: any) => {
       return {
         id: state.user.id,
-        user: state.user.user,
+        userId: state.user.userId,
         name: state.user.name,
-        authority: state.user.authority,
-        theme: state.user.theme,
+        authorityId: state.user.authorityId,
+        theme: state.user.theme || "light",
       };
     },
     loggedIn: (state: any): boolean => {
       return !!state.user.id && !!state.accessToken && !!state.refreshToken;
     },
     theme: (state: any): string => {
-      return state.user.theme || "light";
+      return state.user.theme;
     },
     accessToken: (state: any): string | null => {
       return state.accessToken;
     },
     refreshToken: (state: any): string | null => {
       return state.refreshToken;
+    },
+    authority: (state: any): AuthorityEntity => {
+      return state.authority || [];
+    },
+    drawers: (getters: any): DrawerItem[] => {
+      if (!getters.authority) {
+        return [];
+      }
+      const menuEntities = getters.authority.items.map(
+        (item: AuthorityItemEntity) => item.menu,
+      );
+      const groupItems = menuEntities.filter(
+        (item: MenuEntity) => item.type === "G",
+      );
+      const groupIndex = groupItems.map((group: MenuEntity) =>
+        menuEntities.indexOf(group),
+      );
+      if (!groupIndex || groupIndex.length === 0) {
+        return menuEntities;
+      } else {
+        return [
+          ..._.take(menuEntities, groupIndex[0]),
+          ...groupItems.map((group: MenuEntity, index: number) => {
+            let nextIndex;
+            if (groupIndex.length > index + 1) {
+              nextIndex = groupIndex[index + 1];
+            } else {
+              nextIndex = menuEntities.length;
+            }
+            const numberOfChildren = nextIndex - groupIndex[index] - 1;
+            return {
+              ...group,
+              children: _.take(
+                _.drop(menuEntities, groupIndex[index] + 1),
+                numberOfChildren,
+              ),
+            };
+          }),
+        ];
+      }
     },
   },
   mutations: {
@@ -62,6 +109,9 @@ const user = {
     },
     setRefreshToken(state: any, refreshToken: string): void {
       state.refreshToken = refreshToken;
+    },
+    setAuthority(state: any, authority: AuthorityEntity): void {
+      state.authority = authority;
     },
   },
   actions: {
@@ -126,38 +176,36 @@ const user = {
         }
       }
     },
+    async initAuthority({
+      commit,
+      getters,
+    }: ActionContext<any, any>): Promise<void> {
+      const response = await getApi<AuthorityEntity>(
+        `auth/${getters.user.authorityId}`,
+      );
+      commit("setAuthority", response?.data);
+    },
+    clearAuthority({ commit }: ActionContext<any, any>): void {
+      commit("setAuthority", null);
+    },
   },
 };
 
 const drawer = {
   state: {
-    drawers: null,
     selected: null,
   },
   getters: {
-    drawers: (state: any): DrawerItem[] => {
-      return state.drawers || [];
-    },
     selected: (state: any): number | null => {
       return state.selected || null;
     },
   },
   mutations: {
-    setDrawers(state: any, drawers: DrawerItem[]): void {
-      state.drawers = drawers;
-    },
     setSelected(state: any, selected: number): void {
       state.selected = selected;
     },
   },
   actions: {
-    async initDrawers({ commit }: ActionContext<any, any>): Promise<void> {
-      const response = await getApi<DrawerItem[]>("menus/drawer");
-      commit("setDrawers", response?.data);
-    },
-    clearDrawer({ commit }: ActionContext<any, any>): void {
-      commit("setDrawers", null);
-    },
     setMenuSelected(
       { commit }: ActionContext<any, any>,
       selected: number,

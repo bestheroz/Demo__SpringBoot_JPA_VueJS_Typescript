@@ -3,8 +3,8 @@ import type { MenuEntity } from "@/common/entities";
 
 export type DateTime = dayjs.ConfigType;
 
-export interface SelectItem {
-  value: string;
+export interface SelectItem<T = string> {
+  value: T;
   text: string;
 }
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -12,17 +12,17 @@ export interface DataTableHeader {
   text: string;
   value: string;
   align?: "start" | "center" | "end";
-  sortable?: boolean | null;
-  filterable?: boolean | null;
-  divider?: boolean | null;
+  sortable?: boolean;
+  filterable?: boolean;
+  divider?: boolean;
   class?: string | string[];
   width?: string | number;
   filter?: (value: any, search: string, item: any) => boolean;
   sort?: (a: any, b: any) => number;
   // 아래는 filter 를 위한 property 추가
   filterType?: "input" | "select" | "switch";
-  filterSelectItem?: SelectItem[] | null;
-  filterDefaultValue?: string | null;
+  filterSelectItem?: SelectItem<string | number>[];
+  filterDefaultValue?: string;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 

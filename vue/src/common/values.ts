@@ -1,45 +1,48 @@
 import {
   CodeEntity,
   MemberEntity,
-  MemberMenuEntity,
+  AuthorityEntity,
   MenuEntity,
+  AuthorityItemEntity,
+  CodeAuthorityEntity,
 } from "@/common/entities";
 import dayjs from "dayjs";
+import { AUTHORITY_TYPE } from "@/common/selections";
+
 export function defaultUser(): {
-  id: number | null;
-  userId: string | null;
-  name: string | null;
-  authority: string | null;
+  id: number;
+  userId: string;
+  name: string;
+  authorityId: number;
   theme: string;
 } {
   return {
-    id: null,
-    userId: null,
-    name: null,
-    authority: null,
+    id: 0,
+    userId: "",
+    name: "",
+    authorityId: 0,
     theme: "light",
   };
 }
 
 export function defaultMemberEntity(): MemberEntity {
   return {
-    userId: null,
-    name: null,
+    userId: "",
+    name: "",
     loginFailCnt: 0,
     expired: dayjs().add(1, "years").endOf("day"),
     available: false,
-    theme: null,
-    authority: null,
-    token: null,
+    theme: "",
+    authorityId: 0,
+    token: "",
   };
 }
 
 export function defaultMenuEntity(): MenuEntity {
   return {
-    name: null,
+    name: "",
     type: "G",
     parentId: 99999,
-    authority: null,
     displayOrder: 99999,
     icon: null,
     url: null,
@@ -47,23 +50,30 @@ export function defaultMenuEntity(): MenuEntity {
 }
 export function defaultCodeEntity(): CodeEntity {
   return {
-    type: null,
-    value: null,
-    name: null,
+    type: "",
+    value: "",
+    name: "",
     available: false,
-    displayOrder: null,
-    authority: null,
+    displayOrder: 0,
+    authorities: [],
   };
 }
-export function defaultMemberMenuEntity(): MemberMenuEntity {
+export function defaultAuthorityItemEntity(): AuthorityItemEntity {
   return {
-    authority: null,
-    menuId: null,
-    name: null,
-    type: null,
-    parentId: null,
-    displayOrder: null,
-    icon: null,
-    url: null,
+    menu: defaultMenuEntity(),
+    displayOrder: 0,
+    typesJson: [AUTHORITY_TYPE.VIEW],
+  };
+}
+export function defaultAuthorityEntity(): AuthorityEntity {
+  return {
+    code: "",
+    name: "",
+    items: [],
+  };
+}
+export function defaultCodeAuthorityEntity(): CodeAuthorityEntity {
+  return {
+    authorityId: 0,
   };
 }

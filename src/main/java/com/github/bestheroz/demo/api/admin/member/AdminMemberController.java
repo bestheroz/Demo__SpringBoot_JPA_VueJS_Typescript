@@ -58,7 +58,7 @@ public class AdminMemberController {
             .map(
                 (item) -> {
                   item.setName(payload.getName());
-                  item.setAuthority(payload.getAuthority());
+                  item.setAuthorityId(payload.getAuthorityId());
                   item.setExpired(payload.getExpired());
                   item.setAvailable(payload.getAvailable());
                   return this.memberRepository.save(item);

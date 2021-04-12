@@ -1,6 +1,6 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
+import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AdminMenuService {
   @Resource private MenuRepository menuRepository;
-  @Resource private MemberMenuRepository memberMenuRepository;
+  @Resource private AuthorityRepository authorityRepository;
 
   @Transactional
   public MenuEntity put(final MenuEntity payload, final Long id) {
@@ -21,12 +21,12 @@ public class AdminMenuService {
         .map(
             (item) -> {
               BeanUtils.copyProperties(payload, item);
-              this.memberMenuRepository
+              this.authorityRepository
                   .findAllById(id)
                   .forEach(
-                      memberMenu -> {
-                        BeanUtils.copyProperties(payload, memberMenu);
-                        this.memberMenuRepository.save(memberMenu);
+                      authority -> {
+                        BeanUtils.copyProperties(payload, authority);
+                        this.authorityRepository.save(authority);
                       });
               return this.menuRepository.save(item);
             })
@@ -40,7 +40,7 @@ public class AdminMenuService {
         .map(
             (item) -> {
               this.menuRepository.delete(item);
-              this.memberMenuRepository.deleteAllById(id);
+              this.authorityRepository.deleteAllById(id);
               return item;
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);

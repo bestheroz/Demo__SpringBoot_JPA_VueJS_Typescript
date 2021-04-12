@@ -27,8 +27,8 @@ const routes = () => {
       component: () => import("@/views/admin/menu/Menu.vue"),
     },
     {
-      path: "member-menu",
-      component: () => import("@/views/admin/member/menu/MemberMenu.vue"),
+      path: "authority",
+      component: () => import("@/views/admin/member/menu/Authority.vue"),
     },
     {
       path: "member",

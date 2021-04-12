@@ -72,6 +72,7 @@ import { defaultMenuEntity } from "@/common/values";
 import _ from "lodash";
 import type { MenuEntity } from "@/common/entities";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
+import { MENU_TYPE } from "@/common/selections";
 
 interface MenuVO extends MenuEntity {
   children: MenuEntity[];
@@ -143,7 +144,7 @@ export default class extends Vue {
       const response = await deleteApi<MenuEntity>(`admin/menus/${value.id}/`);
       this.saving = false;
       if (response?.code?.startsWith("S")) {
-        await this.$store.dispatch("initDrawers");
+        await this.$store.dispatch("initAuthority");
         this.items = this.items.filter(
           (item) => item.id !== (response.data?.id || 0),
         );
@@ -157,19 +158,19 @@ export default class extends Vue {
     const response = await postApi<MenuEntity[]>(
       "admin/menus/save",
       this.items.map((item, index) => {
-        if (item.type === "G") {
+        if (item.type === MENU_TYPE.G) {
           parentId = item.id || 0;
         }
         return {
           ...item,
           displayOrder: index + 1,
-          parentId: item.type === "G" ? 0 : parentId,
+          parentId: item.type === MENU_TYPE.G ? 0 : parentId,
         };
       }),
     );
     this.saving = false;
     if (response?.code?.startsWith("S")) {
-      await this.$store.dispatch("initDrawers");
+      await this.$store.dispatch("initAuthority");
       this.items = response.data || [];
     }
   }

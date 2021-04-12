@@ -96,7 +96,7 @@ export default class extends Vue {
       filterMaps.push(header.value);
       filters.push(header.filterDefaultValue || "");
       (header.filterSelectItem || []).forEach(
-        (filterSelectItem: SelectItem) => {
+        (filterSelectItem: SelectItem<string | number>) => {
           filterSelectItem.text = filterSelectItem.text || "-";
         },
       );

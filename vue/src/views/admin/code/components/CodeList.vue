@@ -53,7 +53,13 @@
             </span>
           </template>
           <template v-if="AUTHORITY" #[`item.authority`]="{ item }">
-            {{ item.authority | getCodeText(AUTHORITY) }}
+            <v-chip
+              v-text="getTextOfSelectItem(AUTHORITY, authority.authorityId)"
+              v-for="authority in item.authorities"
+              :key="authority.id"
+              color="accent"
+              outlined
+            />
           </template>
           <template #[`item.updatedBy`]="{ item }">
             {{ item.updatedBy | formatMemberNm }}
@@ -77,7 +83,7 @@
 <script lang="ts">
 import { Component, Emit, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 import type { DataTableHeader, SelectItem } from "@/common/types";
-import { deleteApi, getApi, getCodesApi } from "@/utils/apis";
+import { deleteApi, getApi } from "@/utils/apis";
 import envs from "@/constants/envs";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
 import qs from "querystring";
@@ -88,6 +94,7 @@ import { defaultCodeEntity } from "@/common/values";
 import type { CodeEntity } from "@/common/entities";
 import _ from "lodash";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
+import { getTextOfSelectItem } from "@/utils/codes";
 
 @Component({
   name: "CodeList",
@@ -103,9 +110,10 @@ export default class extends Vue {
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
   readonly envs: typeof envs = envs;
+  readonly getTextOfSelectItem = getTextOfSelectItem;
 
   selected: CodeEntity[] = [];
-  AUTHORITY: SelectItem[] = [];
+  AUTHORITY: SelectItem<number>[] = [];
   saving = false;
   loading = false;
   sortBy: string[] = ["displayOrder"];
@@ -141,12 +149,12 @@ export default class extends Vue {
         width: "6rem",
       },
       {
-        text: "권한(~부터 볼수 있음)",
+        text: "권한",
         align: "center",
         value: "authority",
         filterType: "select",
-        filterSelectItem: this.AUTHORITY,
-        width: "11rem",
+        filterSelectItem: this.AUTHORITY.filter((a) => a.value !== 1),
+        width: "30rem",
       },
       {
         text: "작업 일시",
@@ -166,7 +174,8 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    this.AUTHORITY = await getCodesApi("AUTHORITY");
+    const response = await getApi<SelectItem<number>[]>("auth/codes");
+    this.AUTHORITY = response.data || [];
   }
 
   @Watch("type")

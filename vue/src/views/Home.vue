@@ -22,7 +22,7 @@ import dayjs from "dayjs";
   name: "Home",
 })
 export default class extends Vue {
-  title: string | null = null;
+  title = "";
   interval: number | null = null;
   now = "";
   color = "";
@@ -37,13 +37,14 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    this.title = await getVariableApi("title");
+    this.title = (await getVariableApi("title")) || "";
     this.now = dayjs().format("YYYY년 MM월 DD일 HH시 mm분 ss초");
     this.color = this.getRandomColor();
     this.interval = window.setInterval(() => {
       this.now = dayjs().format("YYYY년 MM월 DD일 HH시 mm분 ss초");
       this.color = this.getRandomColor();
     }, 1000);
+    this.$store.dispatch("initAuthority").then();
   }
 
   protected getRandomColor(): string {

@@ -1,17 +1,26 @@
 package com.github.bestheroz.demo.api.auth;
 
+import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
+import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
+import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
 import com.github.bestheroz.demo.api.entity.member.MemberRepository;
+import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.authenticate.UserVO;
+import com.github.bestheroz.standard.common.code.CodeVO;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
+import java.math.BigInteger;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AuthService implements UserDetailsService {
   @Resource private MemberRepository memberRepository;
+  @Resource private AuthorityRepository authorityRepository;
+  @Resource private MenuRepository menuRepository;
 
   @Override
   public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
@@ -39,7 +50,7 @@ public class AuthService implements UserDetailsService {
                     memberEntity.getId(),
                     memberEntity.getUserId(),
                     memberEntity.getName(),
-                    memberEntity.getAuthority(),
+                    memberEntity.getAuthorityId(),
                     memberEntity.getTheme()))
         .orElseThrow(() -> new UsernameNotFoundException("No user found by `" + username + "`"));
   }
@@ -91,7 +102,7 @@ public class AuthService implements UserDetailsService {
 
   void logout() {
     this.memberRepository
-        .findByUserId(AuthenticationUtils.getUserId())
+        .findById(AuthenticationUtils.getId())
         .ifPresent(
             item -> {
               item.setToken(null);
@@ -118,9 +129,9 @@ public class AuthService implements UserDetailsService {
             });
   }
 
-  UserVO initPassword(final Long id, final String password) {
+  UserVO initPassword(final String userId, final String password) {
     return this.memberRepository
-        .findById(id)
+        .findByUserId(userId)
         .map(
             memberEntity -> {
               if (StringUtils.isNotEmpty(memberEntity.getPassword())) {
@@ -134,5 +145,33 @@ public class AuthService implements UserDetailsService {
               return userVO;
             })
         .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
+  }
+
+  @Transactional
+  AuthorityEntity getAuthorityEntity(final Long id) {
+    final AuthorityEntity authorityEntity =
+        this.authorityRepository
+            .findById(id)
+            .orElseThrow(() -> BusinessException.FAIL_NO_DATA_SUCCESS);
+    if (authorityEntity.getId().equals(1L)) {
+      authorityEntity.setItems(
+          this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder")).stream()
+              .map(
+                  item -> {
+                    final AuthorityItemEntity authorityItemEntity = new AuthorityItemEntity();
+                    BeanUtils.copyProperties(item, authorityItemEntity);
+                    authorityItemEntity.setMenu(item);
+                    authorityItemEntity.setTypesJson(List.of("VIEW", "WRITE", "DELETE"));
+                    return authorityItemEntity;
+                  })
+              .collect(Collectors.toList()));
+    }
+    return authorityEntity;
+  }
+
+  public List<CodeVO<Long>> getCodes() {
+    return this.authorityRepository.getCodes().stream()
+        .map(code -> new CodeVO<>(((BigInteger) code[0]).longValue(), (String) code[1]))
+        .collect(Collectors.toList());
   }
 }

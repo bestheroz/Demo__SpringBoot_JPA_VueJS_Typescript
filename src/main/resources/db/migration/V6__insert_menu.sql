@@ -55,11 +55,11 @@ INTO menu
  CREATED,
  UPDATED_BY,
  UPDATED)
-SELECT '회원메뉴관리',
+SELECT '권한관리',
        'P',
        ID,
        3,
-       '/admin/member-menu',
+       '/admin/authority',
        'developer',
        NOW(),
        'developer',

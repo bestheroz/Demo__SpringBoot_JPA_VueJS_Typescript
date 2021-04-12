@@ -113,8 +113,8 @@ export default class extends Vue {
   protected debouncedHeader(): void {
     this.headers.forEach((value: DataTableHeader) => {
       (value.filterSelectItem || [])
-        .filter((item) => !item)
-        .forEach((item: SelectItem) => {
+        .filter((item: SelectItem<string | number>) => !item)
+        .forEach((item: SelectItem<string | number>) => {
           item.text = item.text || "-";
         });
     });

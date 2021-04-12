@@ -40,7 +40,7 @@ public class ExcelController {
         "권한",
         "authority",
         ExcelService.CellType.STRING_CENTER,
-        this.codeService.getCodesByType("AUTHORITY"));
+        this.codeRepository.getCodesByType("AUTHORITY"));
     AbstractExcelXView.addHeader(excelVOList, "만료일", "expired", ExcelService.CellType.DATE);
     AbstractExcelXView.addHeader(excelVOList, "사용 가능", "available", ExcelService.CellType.STRING);
     AbstractExcelXView.addHeader(excelVOList, "작업 일시", "updated", ExcelService.CellType.DATE);

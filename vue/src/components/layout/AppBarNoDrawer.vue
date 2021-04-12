@@ -35,7 +35,7 @@ import { getVariableApi } from "@/utils/apis";
 
 @Component({ name: "AppBarNoDrawer" })
 export default class extends Vue {
-  title: string | null = null;
+  title = "";
 
   get isPopup(): boolean {
     return (
@@ -48,7 +48,7 @@ export default class extends Vue {
   }
 
   async created(): Promise<void> {
-    this.title = await getVariableApi("title");
+    this.title = (await getVariableApi("title")) || "";
   }
 
   protected goHome(): void {

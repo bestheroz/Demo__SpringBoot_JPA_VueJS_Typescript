@@ -105,9 +105,9 @@ export default class extends Vue {
   readonly DATETIMEPICKER_FORMAT = "YYYY-MM-DD HH:mm:ss";
   readonly TIMEPICKER_MINUTE_FORMAT = "HH:mm";
   readonly TIMEPICKER_FORMAT = "HH:mm:ss";
-  textFieldString: string | null = null;
-  datePickerString: string | null = null;
-  timePickerString: string | null = null;
+  textFieldString = "";
+  datePickerString = "";
+  timePickerString = "";
   dialog = false;
   errors: string[] | null = null;
   valid = false;
@@ -206,7 +206,7 @@ export default class extends Vue {
           : this.DATETIMEPICKER_MINUTE_FORMAT,
       ).isValid()
     ) {
-      this.textFieldString = null;
+      this.textFieldString = "";
       return;
     }
     const _dayjs = dayjs(
@@ -226,7 +226,7 @@ export default class extends Vue {
             envs.DATETIME_MINUTE_FORMAT_STRING,
           ).format(this.DATETIMEPICKER_MINUTE_FORMAT);
     } else {
-      this.textFieldString = null;
+      this.textFieldString = "";
     }
   }
   @Watch("textFieldString", { immediate: true })
@@ -263,8 +263,8 @@ export default class extends Vue {
   }
 
   onClear(): void {
-    this.datePickerString = null;
-    this.timePickerString = null;
+    this.datePickerString = "";
+    this.timePickerString = "";
   }
 
   async validate(): Promise<boolean> {

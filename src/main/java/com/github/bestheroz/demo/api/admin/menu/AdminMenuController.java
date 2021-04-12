@@ -1,11 +1,9 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.member.menu.MemberMenuRepository;
 import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
 import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
-import com.github.bestheroz.standard.common.util.AuthenticationUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -25,19 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminMenuController {
   @Resource private AdminMenuService adminMenuService;
   @Resource private MenuRepository menuRepository;
-  @Resource private MemberMenuRepository memberMenuRepository;
 
   @GetMapping
   ResponseEntity<ApiResult> getItems() {
-    if (List.of(900, 999).contains(AuthenticationUtils.getLoginVO().getAuthority())) {
-      return Result.ok(
-          this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
-    } else {
-      return Result.ok(
-          this.memberMenuRepository.findAllByAuthority(
-              AuthenticationUtils.getLoginVO().getAuthority(),
-              Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
-    }
+    return Result.ok(
+        this.menuRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "displayOrder", "name")));
   }
 
   @PostMapping

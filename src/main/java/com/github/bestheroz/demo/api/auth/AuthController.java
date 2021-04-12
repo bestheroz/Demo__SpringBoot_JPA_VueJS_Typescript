@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
   @Resource private AuthService authService;
   @Resource private MemberRepository memberRepository;
+
+  @GetMapping(value = "{id}")
+  public ResponseEntity<ApiResult> getAuthorityEntity(@PathVariable(value = "id") final Long id) {
+    return Result.ok(this.authService.getAuthorityEntity(id));
+  }
 
   @PostMapping(value = "/login")
   @ResponseBody
@@ -47,12 +53,17 @@ public class AuthController {
 
   @PostMapping(value = "/initPassword")
   ResponseEntity<ApiResult> initPassword(@RequestBody final MemberEntity payload) {
-    return Result.ok(this.authService.initPassword(payload.getId(), payload.getPassword()));
+    return Result.ok(this.authService.initPassword(payload.getUserId(), payload.getPassword()));
   }
 
   @DeleteMapping(value = "/logout")
   public void logout() {
     this.authService.logout();
     AuthenticationUtils.logout();
+  }
+
+  @GetMapping(value = "/codes")
+  public ResponseEntity<ApiResult> getCodes() {
+    return Result.ok(this.authService.getCodes());
   }
 }

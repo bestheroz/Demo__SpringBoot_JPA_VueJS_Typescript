@@ -90,7 +90,7 @@ export default class extends Vue {
 
   readonly envs: typeof envs = envs;
   readonly DATEPICKER_FORMAT = "YYYY-MM-DD";
-  pickerString: string | null = null;
+  pickerString = "";
   dialog = false;
   valid = false;
   errors: string[] | null = null;
