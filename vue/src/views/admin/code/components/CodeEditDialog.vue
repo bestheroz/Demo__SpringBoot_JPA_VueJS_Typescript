@@ -141,7 +141,7 @@ export default class extends Vue {
 
   protected async created(): Promise<void> {
     const response = await getApi<SelectItem<number>[]>("auth/codes");
-    this.AUTHORITY = response.data || [];
+    this.AUTHORITY = (response.data || []).filter((a) => a.value !== 1);
     this.authorities = this.vModel.authorities.map((a) => a.authorityId);
   }
 

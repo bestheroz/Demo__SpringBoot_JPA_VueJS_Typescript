@@ -153,7 +153,7 @@ export default class extends Vue {
         align: "center",
         value: "authority",
         filterType: "select",
-        filterSelectItem: this.AUTHORITY,
+        filterSelectItem: this.AUTHORITY.filter((a) => a.value !== 1),
         width: "30rem",
       },
       {
