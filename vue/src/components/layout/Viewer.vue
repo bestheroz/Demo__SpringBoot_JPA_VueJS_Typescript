@@ -46,21 +46,21 @@ export default class extends Vue {
     if (this.$route.name) {
       return defaultMenuEntity();
     }
-    const result: DrawerItem | undefined = _.flattenDeep(
+    const result: DrawerItem | undefined = (_.flattenDeep(
       this.$store.getters.drawers
-        .map((d) => {
+        .map((d: DrawerItem) => {
           return _.isEmpty(d.children)
             ? d
             : {
                 ...d,
-                children: d.children.map((c) => {
+                children: d.children?.map((c) => {
                   return { ...c, icon: d.icon };
                 }),
               };
         })
-        .map((d) => (_.isEmpty(d.children) ? d : d.children)),
-    ).find((drawer: DrawerItem) => {
-      return drawer.url === this.$route.fullPath;
+        .map((d: DrawerItem) => (_.isEmpty(d.children) ? d : d.children)),
+    ) as DrawerItem[]).find((d: DrawerItem) => {
+      return d.url === this.$route.fullPath;
     });
     if (!result) {
       errorPage(403);
