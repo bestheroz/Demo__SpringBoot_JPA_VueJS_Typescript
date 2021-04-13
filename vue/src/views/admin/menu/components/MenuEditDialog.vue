@@ -22,7 +22,7 @@
                   rules="required|max:50"
                 >
                   <v-text-field
-                    v-model="item.name"
+                    v-model="vModel.name"
                     label="*메뉴명"
                     :counter="50"
                     :error-messages="errors"
@@ -36,21 +36,21 @@
                   rules="required"
                 >
                   <v-select
-                    v-model="item.type"
+                    v-model="vModel.type"
                     :items="MenuTypeItems"
                     label="*타입"
                     :error-messages="errors"
                   />
                 </ValidationProvider>
               </v-col>
-              <v-col cols="12" md="6" v-if="item.type !== 'G'">
+              <v-col cols="12" md="6" v-if="vModel.type !== 'G'">
                 <ValidationProvider
                   v-slot="{ errors }"
                   name="링크 URL"
                   rules="max:255"
                 >
                   <v-text-field
-                    v-model="item.url"
+                    v-model="vModel.url"
                     label="링크 URL"
                     :counter="255"
                     :error-messages="errors"
@@ -58,24 +58,24 @@
                   />
                 </ValidationProvider>
               </v-col>
-              <v-col v-if="item.type === 'G'" cols="12" md="4">
+              <v-col v-if="vModel.type === 'G'" cols="12" md="4">
                 <v-text-field
-                  v-model="item.icon"
+                  v-model="vModel.icon"
                   label="메뉴 아이콘"
                   append-icon="mdi-dock-window"
                   @click:append="linkIconSite"
                 />
               </v-col>
-              <v-col v-if="item.type === 'G'" cols="12" md="1">
-                <v-icon v-text="item.icon" size="3.5rem" />
+              <v-col v-if="vModel.type === 'G'" cols="12" md="1">
+                <v-icon v-text="vModel.icon" size="3.5rem" />
               </v-col>
             </v-row>
           </ValidationObserver>
         </v-card-text>
         <created-updated-bar
-          :created-date-time="item.created"
-          :updated-date-time="item.updated"
-          v-if="item.created || item.updated"
+          :created-date-time="vModel.created"
+          :updated-date-time="vModel.updated"
+          v-if="vModel.created || vModel.updated"
         />
         <dialog-action-button
           :loading="saving"
@@ -108,7 +108,7 @@ import { MenuTypeItems } from "@/common/selections";
   },
 })
 export default class extends Vue {
-  @VModel({ required: true }) item!: Menu;
+  @VModel({ required: true }) vModel!: Menu;
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
@@ -117,7 +117,7 @@ export default class extends Vue {
   MenuTypeItems = MenuTypeItems;
 
   get isNew(): boolean {
-    return !this.item.id;
+    return !this.vModel.id;
   }
 
   protected async save(): Promise<void> {
@@ -130,7 +130,7 @@ export default class extends Vue {
 
   protected async create(): Promise<void> {
     this.saving = true;
-    const response = await postApi<Menu>(this.ENDPOINT_URL, this.item);
+    const response = await postApi<Menu>(this.ENDPOINT_URL, this.vModel);
     this.saving = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initAuthority");
@@ -142,8 +142,8 @@ export default class extends Vue {
   protected async update(): Promise<void> {
     this.saving = true;
     const response = await putApi<Menu>(
-      `${this.ENDPOINT_URL}${this.item.id}/`,
-      this.item,
+      `${this.ENDPOINT_URL}${this.vModel.id}/`,
+      this.vModel,
     );
     this.saving = false;
     if (response?.code?.startsWith("S")) {

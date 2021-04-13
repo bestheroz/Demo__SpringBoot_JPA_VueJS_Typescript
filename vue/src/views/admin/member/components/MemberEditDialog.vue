@@ -22,7 +22,7 @@
                   rules="required|max:50"
                 >
                   <v-text-field
-                    v-model="item.userId"
+                    v-model="vModel.userId"
                     label="*사용자아이디"
                     :counter="50"
                     :error-messages="errors"
@@ -37,7 +37,7 @@
                   rules="required|max:100"
                 >
                   <v-text-field
-                    v-model="item.name"
+                    v-model="vModel.name"
                     label="*사용자명"
                     :counter="100"
                     :error-messages="errors"
@@ -46,8 +46,8 @@
               </v-col>
               <v-col cols="12" md="4">
                 <v-switch
-                  v-model="item.available"
-                  :label="item.available | getSwitchLabel"
+                  v-model="vModel.available"
+                  :label="vModel.available | getSwitchLabel"
                   inset
                 />
               </v-col>
@@ -59,7 +59,7 @@
                 >
                   <v-select
                     v-if="AUTHORITY"
-                    v-model.number="item.authorityId"
+                    v-model.number="vModel.authorityId"
                     :items="
                       AUTHORITY.map((code) => {
                         return { value: parseInt(code.value), text: code.text };
@@ -72,7 +72,7 @@
               </v-col>
               <v-col cols="12" md="4">
                 <datetime-picker
-                  v-model="item.expired"
+                  v-model="vModel.expired"
                   label="만료일"
                   full-width
                 />
@@ -86,7 +86,7 @@
                   rules="max:20"
                 >
                   <v-text-field
-                    v-model="item.password"
+                    v-model="vModel.password"
                     label="비밀번호"
                     :counter="20"
                     :error-messages="errors"
@@ -127,9 +127,9 @@
           </ValidationObserver>
         </v-card-text>
         <created-updated-bar
-          :created-date-time="item.created"
-          :updated-date-time="item.updated"
-          v-if="item.created || item.updated"
+          :created-date-time="vModel.created"
+          :updated-date-time="vModel.updated"
+          v-if="vModel.created || vModel.updated"
         />
         <dialog-action-button
           :loading="loading"
@@ -165,7 +165,7 @@ import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
   },
 })
 export default class extends Vue {
-  @VModel({ required: true }) item!: Member;
+  @VModel({ required: true }) vModel!: Member;
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
@@ -181,7 +181,7 @@ export default class extends Vue {
   }
 
   get isNew(): boolean {
-    return !this.item.id;
+    return !this.vModel.id;
   }
 
   protected async save(): Promise<void> {
@@ -194,7 +194,7 @@ export default class extends Vue {
 
   protected async create(): Promise<void> {
     this.loading = true;
-    const params = { ...this.item };
+    const params = { ...this.vModel };
     if (params.password) {
       params.password = pbkdf2
         .pbkdf2Sync(params.password, "salt", 1, 32, "sha512")
@@ -211,19 +211,19 @@ export default class extends Vue {
 
   protected async update(): Promise<void> {
     this.loading = true;
-    const params = { ...this.item };
+    const params = { ...this.vModel };
     if (params.password) {
       params.password = pbkdf2
         .pbkdf2Sync(params.password, "salt", 1, 32, "sha512")
         .toString();
     }
     const response = await patchApi<Member>(
-      `admin/members/${this.item.id}/`,
+      `admin/members/${this.vModel.id}/`,
       params,
     );
     this.loading = false;
     if (response?.code?.startsWith("S")) {
-      if (this.item.id === this.$store.getters.user.id) {
+      if (this.vModel.id === this.$store.getters.user.id) {
         await this.$store.dispatch("reissueAccessToken");
       }
       await this.$store.dispatch("initMemberCodes");
@@ -235,8 +235,8 @@ export default class extends Vue {
   protected async resetPassword(): Promise<void> {
     this.loading = true;
     await postApi<Member>(
-      `admin/members/${this.item.id}/resetPassword`,
-      this.item,
+      `admin/members/${this.vModel.id}/resetPassword`,
+      this.vModel,
     );
     this.loading = false;
   }

@@ -21,14 +21,11 @@
 <script lang="ts">
 import { Component, Emit, Vue, Watch } from "vue-property-decorator";
 import { getApi } from "@/utils/apis";
-import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
 import { Code } from "@/common/models";
 
 @Component({
   name: "CodeType",
-  components: {
-    DataTableClientSideFilter,
-  },
+  components: {},
 })
 export default class extends Vue {
   selected = "";
