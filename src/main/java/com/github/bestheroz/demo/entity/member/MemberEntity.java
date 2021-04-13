@@ -1,6 +1,6 @@
-package com.github.bestheroz.demo.api.entity.member;
+package com.github.bestheroz.demo.entity.member;
 
-import com.github.bestheroz.demo.api.entity.AbstractCreatedUpdateEntity;
+import com.github.bestheroz.demo.entity.AbstractCreatedUpdateEntity;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.Column;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Entity(name = "MEMBER")
+@Entity(name = "member")
 public class MemberEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 7280716056600887400L;
 

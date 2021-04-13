@@ -1,10 +1,10 @@
 package com.github.bestheroz.demo.api.auth;
 
-import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
-import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
-import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
-import com.github.bestheroz.demo.api.entity.member.MemberRepository;
-import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
+import com.github.bestheroz.demo.entity.authority.AuthorityEntity;
+import com.github.bestheroz.demo.entity.authority.AuthorityRepository;
+import com.github.bestheroz.demo.entity.authority.item.AuthorityItemEntity;
+import com.github.bestheroz.demo.entity.member.MemberRepository;
+import com.github.bestheroz.demo.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.authenticate.UserVO;
 import com.github.bestheroz.standard.common.code.CodeVO;

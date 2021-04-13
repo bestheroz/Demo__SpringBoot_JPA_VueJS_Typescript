@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.admin.menu;
 
-import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
-import com.github.bestheroz.demo.api.entity.menu.MenuRepository;
+import com.github.bestheroz.demo.entity.menu.MenuEntity;
+import com.github.bestheroz.demo.entity.menu.MenuRepository;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
 import java.util.List;

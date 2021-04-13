@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.download;
 
-import com.github.bestheroz.demo.api.entity.code.CodeRepository;
-import com.github.bestheroz.demo.api.entity.member.MemberRepository;
+import com.github.bestheroz.demo.entity.code.CodeRepository;
+import com.github.bestheroz.demo.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.code.CodeService;
 import com.github.bestheroz.standard.common.file.excel.ExcelService;
 import com.github.bestheroz.standard.common.file.excel.ExcelVO;

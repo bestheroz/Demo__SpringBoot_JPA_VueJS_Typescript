@@ -1,8 +1,8 @@
-package com.github.bestheroz.demo.api.entity.code.authority;
+package com.github.bestheroz.demo.entity.code.authority;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.github.bestheroz.demo.api.entity.AbstractCreatedUpdateEntity;
-import com.github.bestheroz.demo.api.entity.code.CodeEntity;
+import com.github.bestheroz.demo.entity.AbstractCreatedUpdateEntity;
+import com.github.bestheroz.demo.entity.code.CodeEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +22,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Entity(name = "CODE_AUTHORITY")
+@Entity(name = "code_authority")
 public class CodeAuthorityEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 6518292219807880047L;
 

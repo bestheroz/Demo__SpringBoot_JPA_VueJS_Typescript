@@ -17,7 +17,7 @@
             <v-row dense>
               <v-col cols="12">
                 <v-text-field
-                  v-model="item.id"
+                  v-model="item.userId"
                   label="사용자아이디"
                   :counter="50"
                   disabled
@@ -92,7 +92,7 @@
 import { Component, PropSync, Ref, Vue } from "vue-property-decorator";
 import { getApi, patchApi } from "@/utils/apis";
 import DatetimePicker from "@/components/picker/DatetimePicker.vue";
-import ChangePasswordDialog from "@/components/layout/components/ChangePasswordDialog.vue";
+import ChangePasswordDialog from "@/views/components/ChangePasswordDialog.vue";
 import { ValidationObserver } from "vee-validate";
 import pbkdf2 from "pbkdf2";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";

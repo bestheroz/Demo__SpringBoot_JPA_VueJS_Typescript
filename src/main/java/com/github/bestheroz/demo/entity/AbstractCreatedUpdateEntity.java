@@ -1,4 +1,4 @@
-package com.github.bestheroz.demo.api.entity;
+package com.github.bestheroz.demo.entity;
 
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
 import java.time.Instant;

@@ -1,4 +1,4 @@
-package com.github.bestheroz.demo.api.entity.member;
+package com.github.bestheroz.demo.entity.member;
 
 import java.util.List;
 import java.util.Optional;

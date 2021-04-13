@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import CodeList from "@/views/admin/code/components/CodeList.vue";
-import CodeType from "@/views/admin/code/components/CodeType.vue";
+import CodeList from "@/views/admin/code/CodeList.vue";
+import CodeType from "@/views/admin/code/CodeType.vue";
 import { Code } from "@/common/models";
 
 @Component({

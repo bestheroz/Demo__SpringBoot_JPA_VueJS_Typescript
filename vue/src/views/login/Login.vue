@@ -79,7 +79,7 @@ import {
   axiosInstance,
   getVariableApi,
 } from "@/utils/apis";
-import NewPasswordDialog from "@/views/login/components/NewPasswordDialog.vue";
+import NewPasswordDialog from "@/views/login/NewPasswordDialog.vue";
 import { ValidationObserver } from "vee-validate";
 import pbkdf2 from "pbkdf2";
 import { toastCloseAll, toastError } from "@/utils/alerts";

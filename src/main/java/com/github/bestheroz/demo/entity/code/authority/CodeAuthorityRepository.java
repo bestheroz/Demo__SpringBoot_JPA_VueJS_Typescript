@@ -1,6 +1,6 @@
-package com.github.bestheroz.demo.api.entity.code.authority;
+package com.github.bestheroz.demo.entity.code.authority;
 
-import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
+import com.github.bestheroz.demo.entity.authority.item.AuthorityItemEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

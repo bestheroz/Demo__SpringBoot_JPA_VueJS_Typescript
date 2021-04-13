@@ -1,6 +1,6 @@
-package com.github.bestheroz.demo.api.admin.member.menu;
+package com.github.bestheroz.demo.api.admin.authority;
 
-import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
+import com.github.bestheroz.demo.entity.authority.AuthorityEntity;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;
 import javax.annotation.Resource;

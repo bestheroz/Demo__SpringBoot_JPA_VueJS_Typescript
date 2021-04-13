@@ -92,7 +92,7 @@ import type {
 import { deleteApi, getApi, getExcelApi } from "@/utils/apis";
 import envs from "@/constants/envs";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
-import MemberEditDialog from "@/views/admin/member/components/MemberEditDialog.vue";
+import MemberEditDialog from "@/views/admin/member/MemberEditDialog.vue";
 import { confirmDelete } from "@/utils/alerts";
 import DataTableFilter from "@/components/datatable/DataTableFilter.vue";
 import qs from "qs";

@@ -88,7 +88,7 @@ import envs from "@/constants/envs";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
 import qs from "querystring";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
-import CodeEditDialog from "@/views/admin/code/components/CodeEditDialog.vue";
+import CodeEditDialog from "@/views/admin/code/CodeEditDialog.vue";
 import { confirmDelete } from "@/utils/alerts";
 import { defaultCode } from "@/common/values";
 import type { Code } from "@/common/models";

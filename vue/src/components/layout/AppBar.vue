@@ -39,7 +39,7 @@
 <script lang="ts">
 import { Component, PropSync, Vue } from "vue-property-decorator";
 import { getVariableApi } from "@/utils/apis";
-import EditMeDialog from "@/components/layout/components/EditMeDialog.vue";
+import EditMeDialog from "@/views/components/EditMeDialog.vue";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import dayjs from "dayjs";
 

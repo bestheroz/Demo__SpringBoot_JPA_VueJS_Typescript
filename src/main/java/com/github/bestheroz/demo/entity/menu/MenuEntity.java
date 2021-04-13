@@ -1,6 +1,6 @@
-package com.github.bestheroz.demo.api.entity.menu;
+package com.github.bestheroz.demo.entity.menu;
 
-import com.github.bestheroz.demo.api.entity.AbstractCreatedUpdateEntity;
+import com.github.bestheroz.demo.entity.AbstractCreatedUpdateEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Entity(name = "MENU")
+@Entity(name = "menu")
 public class MenuEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 2658557582464222508L;
 

@@ -1,8 +1,8 @@
-package com.github.bestheroz.demo.api.admin.member.menu;
+package com.github.bestheroz.demo.api.admin.authority;
 
-import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
-import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
-import com.github.bestheroz.demo.api.entity.authority.item.AuthorityItemEntity;
+import com.github.bestheroz.demo.entity.authority.AuthorityEntity;
+import com.github.bestheroz.demo.entity.authority.AuthorityRepository;
+import com.github.bestheroz.demo.entity.authority.item.AuthorityItemEntity;
 import java.util.List;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

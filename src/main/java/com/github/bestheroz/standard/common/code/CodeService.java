@@ -1,6 +1,6 @@
 package com.github.bestheroz.standard.common.code;
 
-import com.github.bestheroz.demo.api.entity.code.CodeRepository;
+import com.github.bestheroz.demo.entity.code.CodeRepository;
 import com.github.bestheroz.standard.common.util.AuthenticationUtils;
 import java.util.List;
 import javax.annotation.Resource;

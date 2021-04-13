@@ -1,9 +1,9 @@
-package com.github.bestheroz.demo.api.entity.authority.item;
+package com.github.bestheroz.demo.entity.authority.item;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.github.bestheroz.demo.api.entity.AbstractCreatedUpdateEntity;
-import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
-import com.github.bestheroz.demo.api.entity.menu.MenuEntity;
+import com.github.bestheroz.demo.entity.AbstractCreatedUpdateEntity;
+import com.github.bestheroz.demo.entity.authority.AuthorityEntity;
+import com.github.bestheroz.demo.entity.menu.MenuEntity;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import java.io.Serializable;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.hibernate.annotations.TypeDef;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Entity(name = "AUTHORITY_ITEM")
+@Entity(name = "authority_item")
 @TypeDef(name = "jsonString", typeClass = JsonStringType.class)
 public class AuthorityItemEntity extends AbstractCreatedUpdateEntity implements Serializable {
   private static final long serialVersionUID = 6518292219807880047L;

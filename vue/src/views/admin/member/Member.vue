@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import MemberList from "@/views/admin/member/components/MemberList.vue";
+import MemberList from "@/views/admin/member/MemberList.vue";
 
 @Component({
   name: "Member",

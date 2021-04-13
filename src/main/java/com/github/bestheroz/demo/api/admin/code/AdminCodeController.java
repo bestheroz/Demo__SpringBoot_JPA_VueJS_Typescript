@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.admin.code;
 
-import com.github.bestheroz.demo.api.entity.code.CodeEntity;
-import com.github.bestheroz.demo.api.entity.code.CodeRepository;
+import com.github.bestheroz.demo.entity.code.CodeEntity;
+import com.github.bestheroz.demo.entity.code.CodeRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.response.ApiResult;
 import com.github.bestheroz.standard.common.response.Result;

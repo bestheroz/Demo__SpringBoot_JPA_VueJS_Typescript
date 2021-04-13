@@ -65,7 +65,7 @@
 import { Component, Prop, Ref, Vue } from "vue-property-decorator";
 import { deleteApi, getApi, postApi } from "@/utils/apis";
 import { confirmDelete } from "@/utils/alerts";
-import MenuEditDialog from "@/views/admin/menu/components/MenuEditDialog.vue";
+import MenuEditDialog from "@/views/admin/menu/MenuEditDialog.vue";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
 import { defaultMenu } from "@/common/values";

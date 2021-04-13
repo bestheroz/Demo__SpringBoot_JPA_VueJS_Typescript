@@ -1,4 +1,4 @@
-package com.github.bestheroz.demo.api.entity.menu;
+package com.github.bestheroz.demo.entity.menu;
 
 import java.util.List;
 import org.springframework.data.domain.Sort;

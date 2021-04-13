@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.auth;
 
-import com.github.bestheroz.demo.api.entity.member.MemberEntity;
-import com.github.bestheroz.demo.api.entity.member.MemberRepository;
+import com.github.bestheroz.demo.entity.member.MemberEntity;
+import com.github.bestheroz.demo.entity.member.MemberRepository;
 import com.github.bestheroz.standard.common.authenticate.JwtTokenProvider;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.response.ApiResult;

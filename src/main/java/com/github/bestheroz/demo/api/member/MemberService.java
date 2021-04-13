@@ -1,7 +1,7 @@
 package com.github.bestheroz.demo.api.member;
 
-import com.github.bestheroz.demo.api.entity.authority.AuthorityEntity;
-import com.github.bestheroz.demo.api.entity.authority.AuthorityRepository;
+import com.github.bestheroz.demo.entity.authority.AuthorityEntity;
+import com.github.bestheroz.demo.entity.authority.AuthorityRepository;
 import com.github.bestheroz.standard.common.exception.BusinessException;
 import com.github.bestheroz.standard.common.exception.ExceptionCode;
 import javax.annotation.Resource;
