@@ -151,7 +151,7 @@ import pbkdf2 from "pbkdf2";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
-import type { MemberEntity } from "@/common/entities";
+import type { Member } from "@/common/models";
 import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 
 @Component({
@@ -165,7 +165,7 @@ import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
   },
 })
 export default class extends Vue {
-  @VModel({ required: true }) item!: MemberEntity;
+  @VModel({ required: true }) item!: Member;
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
@@ -200,7 +200,7 @@ export default class extends Vue {
         .pbkdf2Sync(params.password, "salt", 1, 32, "sha512")
         .toString();
     }
-    const response = await postApi<MemberEntity>("admin/members/", params);
+    const response = await postApi<Member>("admin/members/", params);
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initMemberCodes");
@@ -217,7 +217,7 @@ export default class extends Vue {
         .pbkdf2Sync(params.password, "salt", 1, 32, "sha512")
         .toString();
     }
-    const response = await patchApi<MemberEntity>(
+    const response = await patchApi<Member>(
       `admin/members/${this.item.id}/`,
       params,
     );
@@ -234,7 +234,7 @@ export default class extends Vue {
 
   protected async resetPassword(): Promise<void> {
     this.loading = true;
-    await postApi<MemberEntity>(
+    await postApi<Member>(
       `admin/members/${this.item.id}/resetPassword`,
       this.item,
     );

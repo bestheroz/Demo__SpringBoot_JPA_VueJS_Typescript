@@ -96,8 +96,8 @@ import MemberEditDialog from "@/views/admin/member/components/MemberEditDialog.v
 import { confirmDelete } from "@/utils/alerts";
 import DataTableFilter from "@/components/datatable/DataTableFilter.vue";
 import qs from "qs";
-import { defaultMemberEntity } from "@/common/values";
-import type { MemberEntity } from "@/common/entities";
+import { defaultMember } from "@/common/values";
+import type { Member } from "@/common/models";
 import _ from "lodash";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 
@@ -115,7 +115,7 @@ export default class extends Vue {
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
   readonly envs: typeof envs = envs;
-  selected: MemberEntity[] = [];
+  selected: Member[] = [];
   pagination: Pagination = {
     page: 1,
     sortBy: ["authorityId"],
@@ -123,10 +123,10 @@ export default class extends Vue {
     itemsPerPage: 20,
   };
 
-  items: MemberEntity[] = [];
+  items: Member[] = [];
   loading = false;
   saving = false;
-  editItem: MemberEntity = defaultMemberEntity();
+  editItem: Member = defaultMember();
   AUTHORITY: SelectItem<number>[] = [];
   dialog = false;
   datatableFilter: { [p: string]: string | number } = {};
@@ -199,7 +199,7 @@ export default class extends Vue {
     this.selected = [];
     this.items = [];
     this.loading = true;
-    const response = await getApi<PageResult<MemberEntity>>(
+    const response = await getApi<PageResult<Member>>(
       `admin/members/?${this.queryString}`,
     );
     this.loading = false;
@@ -207,11 +207,11 @@ export default class extends Vue {
     this.refRefreshDataBar.triggerRefreshed();
   }
 
-  protected onCreated(value: MemberEntity): void {
+  protected onCreated(value: Member): void {
     this.items = [value, ...this.items];
   }
 
-  protected onUpdated(value: MemberEntity): void {
+  protected onUpdated(value: Member): void {
     const findIndex = this.items.findIndex(
       (item) => item.id === this.editItem.id,
     );
@@ -222,11 +222,11 @@ export default class extends Vue {
     ];
   }
   protected showAddDialog(): void {
-    this.editItem = defaultMemberEntity();
+    this.editItem = defaultMember();
     this.dialog = true;
   }
 
-  protected showEditDialog(value: MemberEntity): void {
+  protected showEditDialog(value: Member): void {
     this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
@@ -235,7 +235,7 @@ export default class extends Vue {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
-      const response = await deleteApi<MemberEntity>(
+      const response = await deleteApi<Member>(
         `admin/members/${this.selected[0].id}/`,
       );
       this.saving = false;

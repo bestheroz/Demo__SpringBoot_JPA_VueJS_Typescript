@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { Component, PropSync, Vue } from "vue-property-decorator";
-import type { DrawerItem } from "@/common/types";
+import type { Drawer } from "@/common/types";
 import { MENU_TYPE } from "@/common/selections";
 
 @Component({
@@ -72,7 +72,7 @@ export default class extends Vue {
     );
   }
 
-  protected movePage(item: DrawerItem): void {
+  protected movePage(item: Drawer): void {
     this.$store.dispatch("setMenuSelected", item.id || 0);
     if (!item.url || item.url === this.$route.fullPath) {
       return;

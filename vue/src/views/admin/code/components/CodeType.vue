@@ -22,7 +22,7 @@
 import { Component, Emit, Vue, Watch } from "vue-property-decorator";
 import { getApi } from "@/utils/apis";
 import DataTableClientSideFilter from "@/components/datatable/DataTableClientSideFilter.vue";
-import { CodeEntity } from "@/common/entities";
+import { Code } from "@/common/models";
 
 @Component({
   name: "CodeType",
@@ -52,7 +52,7 @@ export default class extends Vue {
     return val;
   }
 
-  public onCreate(value: CodeEntity): void {
+  public onCreate(value: Code): void {
     if (value.type && !this.items.includes(value.type)) {
       this.items = [value.type, ...this.items];
       this.selected = this.items[0];

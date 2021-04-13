@@ -98,8 +98,8 @@ import pbkdf2 from "pbkdf2";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
-import { defaultMemberEntity } from "@/common/values";
-import type { MemberEntity } from "@/common/entities";
+import { defaultMember } from "@/common/values";
+import type { Member } from "@/common/models";
 import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 
 @Component({
@@ -117,14 +117,14 @@ export default class extends Vue {
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
-  item: MemberEntity = defaultMemberEntity();
+  item: Member = defaultMember();
   loading = false;
   show1 = false;
   newPasswordDialog = false;
 
   protected async created(): Promise<void> {
-    const response = await getApi<MemberEntity>("members/mine");
-    this.item = response?.data || defaultMemberEntity();
+    const response = await getApi<Member>("members/mine");
+    this.item = response?.data || defaultMember();
   }
 
   protected async save(): Promise<void> {
@@ -138,7 +138,7 @@ export default class extends Vue {
     payload.password = pbkdf2
       .pbkdf2Sync(this.item.password || "", "salt", 1, 32, "sha512")
       .toString();
-    const response = await patchApi<MemberEntity>("members/mine", payload);
+    const response = await patchApi<Member>("members/mine", payload);
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("reissueAccessToken");

@@ -41,7 +41,7 @@ import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { SelectItem } from "@/common/types";
 import AuthorityList from "@/views/admin/member/menu/components/AuthorityList.vue";
 import { getApi } from "@/utils/apis";
-import { AuthorityEntity } from "@/common/entities";
+import { Authority } from "@/common/models";
 
 @Component({
   name: "Authority",
@@ -50,10 +50,10 @@ import { AuthorityEntity } from "@/common/entities";
   },
 })
 export default class extends Vue {
-  items: AuthorityEntity[] = [];
+  items: Authority[] = [];
   authorityId: number | null = null;
   loading = false;
-  selectedItem: AuthorityEntity | null = null;
+  selectedItem: Authority | null = null;
 
   @Ref() readonly refAuthorityList!: AuthorityList;
 
@@ -88,7 +88,7 @@ export default class extends Vue {
 
   protected async getList(): Promise<void> {
     this.loading = true;
-    const response = await getApi<AuthorityEntity[]>("admin/authorities/");
+    const response = await getApi<Authority[]>("admin/authorities/");
     this.items = (response.data || []).map((item) => {
       return { ...item, items: item.items || [] };
     });

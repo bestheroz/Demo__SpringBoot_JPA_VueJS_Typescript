@@ -15,7 +15,7 @@
 import { Component, Ref, Vue } from "vue-property-decorator";
 import CodeList from "@/views/admin/code/components/CodeList.vue";
 import CodeType from "@/views/admin/code/components/CodeType.vue";
-import { CodeEntity } from "@/common/entities";
+import { Code } from "@/common/models";
 
 @Component({
   name: "CodeWrapper",
@@ -34,7 +34,7 @@ export default class extends Vue {
     this.refCodeList.getList();
   }
 
-  protected onCreated(value: CodeEntity): void {
+  protected onCreated(value: Code): void {
     this.refCodeType.onCreate(value);
   }
 

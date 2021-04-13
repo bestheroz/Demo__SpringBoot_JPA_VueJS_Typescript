@@ -1,6 +1,6 @@
 import { DateTime } from "@/common/types";
 
-export interface MemberEntity {
+export interface Member {
   id?: number;
   createdBy?: string;
   created?: DateTime;
@@ -17,7 +17,7 @@ export interface MemberEntity {
   token: string;
 }
 
-export interface MenuEntity {
+export interface Menu {
   id?: number;
   createdBy?: string;
   created?: DateTime;
@@ -31,13 +31,13 @@ export interface MenuEntity {
   url: string | null;
 }
 
-export interface AuthorityItemEntity {
+export interface AuthorityItem {
   id?: number | null;
   displayOrder: number;
-  menu: MenuEntity;
+  menu: Menu;
   typesJson: string[];
 }
-export interface AuthorityEntity {
+export interface Authority {
   id?: number;
   createdBy?: string;
   created?: DateTime;
@@ -45,10 +45,10 @@ export interface AuthorityEntity {
   updated?: DateTime;
   code: string;
   name: string;
-  items: AuthorityItemEntity[];
+  items: AuthorityItem[];
 }
 
-export interface CodeAuthorityEntity {
+export interface CodeAuthority {
   id?: number;
   createdBy?: string;
   created?: DateTime;
@@ -57,7 +57,7 @@ export interface CodeAuthorityEntity {
   authorityId: number;
 }
 
-export interface CodeEntity {
+export interface Code {
   id?: number;
   createdBy?: string;
   created?: DateTime;
@@ -68,5 +68,5 @@ export interface CodeEntity {
   name: string;
   available: boolean;
   displayOrder: number;
-  authorities: CodeAuthorityEntity[];
+  authorities: CodeAuthority[];
 }

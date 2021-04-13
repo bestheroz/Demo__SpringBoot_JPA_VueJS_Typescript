@@ -114,7 +114,7 @@ import { ValidationObserver } from "vee-validate";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
-import type { CodeEntity } from "@/common/entities";
+import type { Code } from "@/common/models";
 import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 
 @Component({
@@ -127,7 +127,7 @@ import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
   },
 })
 export default class extends Vue {
-  @VModel({ required: true }) vModel!: CodeEntity;
+  @VModel({ required: true }) vModel!: Code;
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
@@ -165,7 +165,7 @@ export default class extends Vue {
 
   protected async create(): Promise<void> {
     this.loading = true;
-    const response = await postApi<CodeEntity>("admin/codes/", this.vModel);
+    const response = await postApi<Code>("admin/codes/", this.vModel);
     this.loading = false;
     if (response?.code?.startsWith("S")) {
       this.syncedDialog = false;
@@ -175,7 +175,7 @@ export default class extends Vue {
 
   protected async put(): Promise<void> {
     this.loading = true;
-    const response = await putApi<CodeEntity>(
+    const response = await putApi<Code>(
       `admin/codes/${this.vModel.id}/`,
       this.vModel,
     );

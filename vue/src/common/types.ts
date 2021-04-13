@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import type { MenuEntity } from "@/common/entities";
+import type { Menu } from "@/common/models";
 
 export type DateTime = dayjs.ConfigType;
 
@@ -53,6 +53,6 @@ export interface PageResult<T> {
   totalPages: number;
 }
 
-export interface DrawerItem extends MenuEntity {
-  children?: DrawerItem[];
+export interface Drawer extends Menu {
+  children?: Drawer[];
 }

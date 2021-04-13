@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex, { ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import { DrawerItem, SelectItem } from "@/common/types";
+import { Drawer, SelectItem } from "@/common/types";
 import { axiosInstance, getApi, postApi } from "@/utils/apis";
 // eslint-disable-next-line camelcase
 import jwt_decode from "jwt-decode";
@@ -9,12 +9,8 @@ import axios from "axios";
 import envs from "@/constants/envs";
 import router from "@/router";
 import { defaultUser } from "@/common/values";
-import type {
-  AuthorityEntity,
-  MemberEntity,
-  MenuEntity,
-} from "@/common/entities";
-import { AuthorityItemEntity } from "@/common/entities";
+import type { Authority, Member, Menu } from "@/common/models";
+import { AuthorityItem } from "@/common/models";
 import { errorPage } from "@/utils/errors";
 import _ from "lodash";
 
@@ -50,20 +46,18 @@ const user = {
     refreshToken: (state: any): string | null => {
       return state.refreshToken;
     },
-    authority: (state: any): AuthorityEntity => {
+    authority: (state: any): Authority => {
       return state.authority || [];
     },
-    drawers: (getters: any): DrawerItem[] => {
+    drawers: (getters: any): Drawer[] => {
       if (!getters.authority) {
         return [];
       }
       const menuEntities = getters.authority.items.map(
-        (item: AuthorityItemEntity) => item.menu,
+        (item: AuthorityItem) => item.menu,
       );
-      const groupItems = menuEntities.filter(
-        (item: MenuEntity) => item.type === "G",
-      );
-      const groupIndex = groupItems.map((group: MenuEntity) =>
+      const groupItems = menuEntities.filter((item: Menu) => item.type === "G");
+      const groupIndex = groupItems.map((group: Menu) =>
         menuEntities.indexOf(group),
       );
       if (!groupIndex || groupIndex.length === 0) {
@@ -71,7 +65,7 @@ const user = {
       } else {
         return [
           ..._.take(menuEntities, groupIndex[0]),
-          ...groupItems.map((group: MenuEntity, index: number) => {
+          ...groupItems.map((group: Menu, index: number) => {
             let nextIndex;
             if (groupIndex.length > index + 1) {
               nextIndex = groupIndex[index + 1];
@@ -92,7 +86,7 @@ const user = {
     },
   },
   mutations: {
-    setUser(state: any, user: MemberEntity): void {
+    setUser(state: any, user: Member): void {
       state.user = user;
     },
     setTheme(state: any, theme: string): void {
@@ -110,7 +104,7 @@ const user = {
     setRefreshToken(state: any, refreshToken: string): void {
       state.refreshToken = refreshToken;
     },
-    setAuthority(state: any, authority: AuthorityEntity): void {
+    setAuthority(state: any, authority: Authority): void {
       state.authority = authority;
     },
   },
@@ -180,7 +174,7 @@ const user = {
       commit,
       getters,
     }: ActionContext<any, any>): Promise<void> {
-      const response = await getApi<AuthorityEntity>(
+      const response = await getApi<Authority>(
         `auth/${getters.user.authorityId}`,
       );
       commit("setAuthority", response?.data);

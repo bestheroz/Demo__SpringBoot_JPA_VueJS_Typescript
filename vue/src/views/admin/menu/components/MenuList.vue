@@ -68,14 +68,14 @@ import { confirmDelete } from "@/utils/alerts";
 import MenuEditDialog from "@/views/admin/menu/components/MenuEditDialog.vue";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultMenuEntity } from "@/common/values";
+import { defaultMenu } from "@/common/values";
 import _ from "lodash";
-import type { MenuEntity } from "@/common/entities";
+import type { Menu } from "@/common/models";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 import { MENU_TYPE } from "@/common/selections";
 
-interface MenuVO extends MenuEntity {
-  children: MenuEntity[];
+interface MenuVO extends Menu {
+  children: Menu[];
 }
 
 @Component({
@@ -86,12 +86,12 @@ export default class extends Vue {
   @Prop() readonly height!: number | string;
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
-  items: MenuEntity[] = [];
+  items: Menu[] = [];
   loading = false;
   saving = false;
   drag = false;
 
-  editItem: MenuEntity = defaultMenuEntity();
+  editItem: Menu = defaultMenu();
   dialog = false;
 
   get dragOptions(): { animation: number } {
@@ -113,11 +113,11 @@ export default class extends Vue {
     this.refRefreshDataBar.triggerRefreshed();
   }
 
-  protected onCreated(value: MenuEntity): void {
+  protected onCreated(value: Menu): void {
     this.items = [value, ...this.items];
   }
 
-  protected onUpdated(value: MenuEntity): void {
+  protected onUpdated(value: Menu): void {
     const findIndex = this.items.findIndex(
       (item) => item.id === this.editItem.id,
     );
@@ -129,19 +129,19 @@ export default class extends Vue {
   }
 
   protected showAddDialog(): void {
-    this.editItem = defaultMenuEntity();
+    this.editItem = defaultMenu();
     this.dialog = true;
   }
-  protected showEditDialog(value: MenuEntity): void {
+  protected showEditDialog(value: Menu): void {
     this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
 
-  protected async onDelete(value: MenuEntity): Promise<void> {
+  protected async onDelete(value: Menu): Promise<void> {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
-      const response = await deleteApi<MenuEntity>(`admin/menus/${value.id}/`);
+      const response = await deleteApi<Menu>(`admin/menus/${value.id}/`);
       this.saving = false;
       if (response?.code?.startsWith("S")) {
         await this.$store.dispatch("initAuthority");
@@ -155,7 +155,7 @@ export default class extends Vue {
   protected async saveItems(): Promise<void> {
     let parentId = 0;
     this.saving = true;
-    const response = await postApi<MenuEntity[]>(
+    const response = await postApi<Menu[]>(
       "admin/menus/save",
       this.items.map((item, index) => {
         if (item.type === MENU_TYPE.G) {

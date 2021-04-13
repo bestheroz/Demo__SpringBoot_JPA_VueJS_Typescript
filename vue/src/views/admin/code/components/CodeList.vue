@@ -90,8 +90,8 @@ import qs from "querystring";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import CodeEditDialog from "@/views/admin/code/components/CodeEditDialog.vue";
 import { confirmDelete } from "@/utils/alerts";
-import { defaultCodeEntity } from "@/common/values";
-import type { CodeEntity } from "@/common/entities";
+import { defaultCode } from "@/common/values";
+import type { Code } from "@/common/models";
 import _ from "lodash";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 import { getTextOfSelectItem } from "@/utils/codes";
@@ -112,16 +112,16 @@ export default class extends Vue {
   readonly envs: typeof envs = envs;
   readonly getTextOfSelectItem = getTextOfSelectItem;
 
-  selected: CodeEntity[] = [];
+  selected: Code[] = [];
   AUTHORITY: SelectItem<number>[] = [];
   saving = false;
   loading = false;
   sortBy: string[] = ["displayOrder"];
   sortDesc: boolean[] = [false];
-  items: CodeEntity[] = [];
-  filteredItems: CodeEntity[] = [];
+  items: Code[] = [];
+  filteredItems: Code[] = [];
   dialog = false;
-  editItem: CodeEntity = defaultCodeEntity();
+  editItem: Code = defaultCode();
 
   get headers(): DataTableHeader[] {
     return [
@@ -184,7 +184,7 @@ export default class extends Vue {
     this.items = [];
     if (this.type) {
       this.loading = true;
-      const response = await getApi<CodeEntity[]>(
+      const response = await getApi<Code[]>(
         `admin/codes/?${qs.stringify({ type: this.type })}`,
       );
       this.loading = false;
@@ -194,12 +194,12 @@ export default class extends Vue {
   }
 
   @Emit("created")
-  protected onCreated(value: CodeEntity): CodeEntity {
+  protected onCreated(value: Code): Code {
     this.items = [value, ...this.items];
     return value;
   }
 
-  protected onUpdated(value: CodeEntity): void {
+  protected onUpdated(value: Code): void {
     const findIndex = this.items.findIndex(
       (item) => item.id === this.editItem.id,
     );
@@ -210,11 +210,11 @@ export default class extends Vue {
     ];
   }
   protected showAddDialog(): void {
-    this.editItem = { ...defaultCodeEntity(), type: this.type };
+    this.editItem = { ...defaultCode(), type: this.type };
     this.dialog = true;
   }
 
-  protected showEditDialog(value: CodeEntity): void {
+  protected showEditDialog(value: Code): void {
     this.editItem = _.cloneDeep(value);
     this.dialog = true;
   }
@@ -223,7 +223,7 @@ export default class extends Vue {
     const result = await confirmDelete();
     if (result.value) {
       this.saving = true;
-      const response = await deleteApi<CodeEntity>(
+      const response = await deleteApi<Code>(
         `admin/codes/${this.selected[0].id}/`,
       );
       this.saving = false;

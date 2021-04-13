@@ -1,11 +1,11 @@
 import {
-  CodeEntity,
-  MemberEntity,
-  AuthorityEntity,
-  MenuEntity,
-  AuthorityItemEntity,
-  CodeAuthorityEntity,
-} from "@/common/entities";
+  Code,
+  Member,
+  Authority,
+  Menu,
+  AuthorityItem,
+  CodeAuthority,
+} from "@/common/models";
 import dayjs from "dayjs";
 import { AUTHORITY_TYPE } from "@/common/selections";
 
@@ -25,7 +25,7 @@ export function defaultUser(): {
   };
 }
 
-export function defaultMemberEntity(): MemberEntity {
+export function defaultMember(): Member {
   return {
     userId: "",
     name: "",
@@ -38,7 +38,7 @@ export function defaultMemberEntity(): MemberEntity {
   };
 }
 
-export function defaultMenuEntity(): MenuEntity {
+export function defaultMenu(): Menu {
   return {
     name: "",
     type: "G",
@@ -48,7 +48,7 @@ export function defaultMenuEntity(): MenuEntity {
     url: null,
   };
 }
-export function defaultCodeEntity(): CodeEntity {
+export function defaultCode(): Code {
   return {
     type: "",
     value: "",
@@ -58,21 +58,21 @@ export function defaultCodeEntity(): CodeEntity {
     authorities: [],
   };
 }
-export function defaultAuthorityItemEntity(): AuthorityItemEntity {
+export function defaultAuthorityItem(): AuthorityItem {
   return {
-    menu: defaultMenuEntity(),
+    menu: defaultMenu(),
     displayOrder: 0,
     typesJson: [AUTHORITY_TYPE.VIEW],
   };
 }
-export function defaultAuthorityEntity(): AuthorityEntity {
+export function defaultAuthority(): Authority {
   return {
     code: "",
     name: "",
     items: [],
   };
 }
-export function defaultCodeAuthorityEntity(): CodeAuthorityEntity {
+export function defaultCodeAuthority(): CodeAuthority {
   return {
     authorityId: 0,
   };

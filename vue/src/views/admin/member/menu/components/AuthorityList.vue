@@ -109,8 +109,8 @@ import { Component, Ref, VModel, Vue, Watch } from "vue-property-decorator";
 import { getApi, postApi } from "@/utils/apis";
 import ButtonSet from "@/components/speeddial/ButtonSet.vue";
 import draggable from "vuedraggable";
-import { defaultAuthorityItemEntity, defaultMenuEntity } from "@/common/values";
-import type { AuthorityEntity, MenuEntity } from "@/common/entities";
+import { defaultAuthorityItem, defaultMenu } from "@/common/values";
+import type { Authority, Menu } from "@/common/models";
 import RefreshDataBar from "@/components/history/RefreshDataBar.vue";
 import { AUTHORITY_TYPE } from "@/common/selections";
 
@@ -119,11 +119,11 @@ import { AUTHORITY_TYPE } from "@/common/selections";
   components: { RefreshDataBar, ButtonSet, draggable },
 })
 export default class extends Vue {
-  @VModel({ required: true }) vModel!: AuthorityEntity;
+  @VModel({ required: true }) vModel!: Authority;
   @Ref() readonly refRefreshDataBar!: RefreshDataBar;
 
-  menus: MenuEntity[] = [];
-  selectedChips: MenuEntity[] = [];
+  menus: Menu[] = [];
+  selectedChips: Menu[] = [];
   loading = false;
   saving = false;
   drag = false;
@@ -137,20 +137,19 @@ export default class extends Vue {
   }
 
   protected async created(): Promise<void> {
-    const response = await getApi<MenuEntity[]>("admin/menus/");
+    const response = await getApi<Menu[]>("admin/menus/");
     this.menus = response?.data || [];
     this.watchItem(this.vModel);
   }
 
   @Watch("vModel")
-  protected watchItem(val: AuthorityEntity): void {
+  protected watchItem(val: Authority): void {
     if (val.code === "SUPER") {
       this.selectedChips = this.menus;
     } else {
       this.selectedChips = val.items.map(
         (item) =>
-          this.menus.find((menu) => menu.id === item.menu?.id) ||
-          defaultMenuEntity(),
+          this.menus.find((menu) => menu.id === item.menu?.id) || defaultMenu(),
       );
     }
     this.onChangeSelectedChip(this.selectedChips);
@@ -165,11 +164,11 @@ export default class extends Vue {
     });
   }
 
-  protected onChangeSelectedChip(selectedChips: MenuEntity[]): void {
+  protected onChangeSelectedChip(selectedChips: Menu[]): void {
     this.vModel.items = selectedChips.map((select, index) => {
       return {
         ...(this.vModel.items.find((item) => item.menu.id === select.id) || {
-          ...defaultAuthorityItemEntity(),
+          ...defaultAuthorityItem(),
           menu: select,
           typesJson:
             this.vModel.code === "SUPER"
@@ -187,7 +186,7 @@ export default class extends Vue {
 
   protected async saveItems(): Promise<void> {
     this.saving = true;
-    const response = await postApi<AuthorityEntity>(
+    const response = await postApi<Authority>(
       `admin/authorities/${this.vModel.code}`,
       this.vModel,
     );

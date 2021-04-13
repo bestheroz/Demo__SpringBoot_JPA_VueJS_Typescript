@@ -17,9 +17,9 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import type { DrawerItem } from "@/common/types";
+import type { Drawer } from "@/common/types";
 import { getVariableApi } from "@/utils/apis";
-import { defaultMenuEntity } from "@/common/values";
+import { defaultMenu } from "@/common/values";
 import { errorPage } from "@/utils/errors";
 import _ from "lodash";
 
@@ -42,13 +42,13 @@ export default class extends Vue {
     document.title = ((await getVariableApi("title")) || "") + `:: ${val}`;
   }
 
-  protected findThisPage(): DrawerItem {
+  protected findThisPage(): Drawer {
     if (this.$route.name) {
-      return defaultMenuEntity();
+      return defaultMenu();
     }
-    const result: DrawerItem | undefined = (_.flattenDeep(
+    const result: Drawer | undefined = (_.flattenDeep(
       this.$store.getters.drawers
-        .map((d: DrawerItem) => {
+        .map((d: Drawer) => {
           return _.isEmpty(d.children)
             ? d
             : {
@@ -58,16 +58,16 @@ export default class extends Vue {
                 }),
               };
         })
-        .map((d: DrawerItem) => (_.isEmpty(d.children) ? d : d.children)),
-    ) as DrawerItem[]).find((d: DrawerItem) => {
+        .map((d: Drawer) => (_.isEmpty(d.children) ? d : d.children)),
+    ) as Drawer[]).find((d: Drawer) => {
       return d.url === this.$route.fullPath;
     });
     if (!result) {
       errorPage(403);
-      return defaultMenuEntity();
+      return defaultMenu();
     }
     this.icon = result?.icon || "mdi-file-document-outline";
-    return result || defaultMenuEntity();
+    return result || defaultMenu();
   }
 }
 </script>

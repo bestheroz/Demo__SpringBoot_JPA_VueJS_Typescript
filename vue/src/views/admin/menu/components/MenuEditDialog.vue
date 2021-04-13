@@ -94,7 +94,7 @@ import { ValidationObserver } from "vee-validate";
 import ButtonIconTooltip from "@/components/button/ButtonIconTooltip.vue";
 import DialogTitle from "@/components/title/DialogTitle.vue";
 import DialogActionButton from "@/components/button/DialogActionButton.vue";
-import type { MenuEntity } from "@/common/entities";
+import type { Menu } from "@/common/models";
 import CreatedUpdatedBar from "@/components/history/CreatedUpdatedBar.vue";
 import { MenuTypeItems } from "@/common/selections";
 
@@ -108,7 +108,7 @@ import { MenuTypeItems } from "@/common/selections";
   },
 })
 export default class extends Vue {
-  @VModel({ required: true }) item!: MenuEntity;
+  @VModel({ required: true }) item!: Menu;
   @PropSync("dialog", { required: true, type: Boolean }) syncedDialog!: boolean;
   @Ref("observer") readonly observer!: InstanceType<typeof ValidationObserver>;
 
@@ -130,7 +130,7 @@ export default class extends Vue {
 
   protected async create(): Promise<void> {
     this.saving = true;
-    const response = await postApi<MenuEntity>(this.ENDPOINT_URL, this.item);
+    const response = await postApi<Menu>(this.ENDPOINT_URL, this.item);
     this.saving = false;
     if (response?.code?.startsWith("S")) {
       await this.$store.dispatch("initAuthority");
@@ -141,7 +141,7 @@ export default class extends Vue {
 
   protected async update(): Promise<void> {
     this.saving = true;
-    const response = await putApi<MenuEntity>(
+    const response = await putApi<Menu>(
       `${this.ENDPOINT_URL}${this.item.id}/`,
       this.item,
     );
