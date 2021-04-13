@@ -71,13 +71,3 @@ spotless {
         googleJavaFormat("1.9")
     }
 }
-
-bootRun {
-    spotless {
-        java {
-            removeUnusedImports()
-
-            googleJavaFormat("1.9")
-        }
-    }
-}
